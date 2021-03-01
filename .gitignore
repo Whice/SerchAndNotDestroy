@@ -2,3 +2,7 @@
 .vs/SerchAndNotDestroy/v16/.suo
 bin/Debug/SerchAndNotDestroy.exe
 bin/Debug/SerchAndNotDestroy.pdb
+.vs/SerchAndNotDestroy/v16/.suo
+.vs/SerchAndNotDestroy/v16/Server/sqlite3/storage.ide-wal
+bin
+obj
