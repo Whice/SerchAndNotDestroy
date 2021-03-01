@@ -342,7 +342,11 @@ namespace SerchAndNotDestroy
         
         private void TestButton_Click(object sender, EventArgs e)
         {
+<<<<<<< HEAD
             MessageBox.Show("Привет, теперь этот код есть в 'git'!\nНа этом совсем gВсе!")
+=======
+            MessageBox.Show("Привет, теперь этот код есть в 'git'!\nНа этом совсем ghjcnj e;fc Все!");
+>>>>>>> parent of 7b33695 (only Form1)
 
             /*Thread.Sleep(3000);
             srPer.ScreenShotActiveWindow();
