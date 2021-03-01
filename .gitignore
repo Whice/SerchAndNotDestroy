@@ -140,3 +140,4 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+.vs/SerchAndNotDestroy/v16/Server/sqlite3/storage.ide-wal
