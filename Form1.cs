@@ -342,7 +342,7 @@ namespace SerchAndNotDestroy
         
         private void TestButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Привет, теперь этот код есть в 'git'!\nНа этом совсем  Все!");
+            MessageBox.Show("Привет, теперь этот код есть в 'git'!\nНа этом совсем ghjcnj e;fc Все!");
 
             /*Thread.Sleep(3000);
             srPer.ScreenShotActiveWindow();
