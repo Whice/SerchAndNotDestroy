@@ -9,3 +9,14 @@ D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNo
 D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.pdb
 D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.MyLittleMonion.resources
 D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.FormForSelectionFilm.resources
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\bin\Debug\SerchAndNotDestroy.exe.config
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\bin\Debug\SerchAndNotDestroy.exe
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\bin\Debug\SerchAndNotDestroy.pdb
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.csprojAssemblyReference.cache
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.MyLittleMonion.resources
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.Properties.Resources.resources
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.FormForSelectionFilm.resources
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.csproj.GenerateResource.cache
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.csproj.CoreCompileInputs.cache
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.exe
+C:\Users\younk\Source\Repos\Whice\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.pdb
