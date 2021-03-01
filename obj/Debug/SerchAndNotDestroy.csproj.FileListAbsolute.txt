@@ -1,0 +1,11 @@
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\bin\Debug\SerchAndNotDestroy.exe.config
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\bin\Debug\SerchAndNotDestroy.exe
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\bin\Debug\SerchAndNotDestroy.pdb
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.csprojAssemblyReference.cache
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.Properties.Resources.resources
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.csproj.GenerateResource.cache
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.csproj.CoreCompileInputs.cache
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.exe
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.pdb
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.MyLittleMonion.resources
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Debug\SerchAndNotDestroy.FormForSelectionFilm.resources

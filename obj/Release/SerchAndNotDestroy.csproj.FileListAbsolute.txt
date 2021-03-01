@@ -1,0 +1,10 @@
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\bin\Release\SerchAndNotDestroy.exe.config
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\bin\Release\SerchAndNotDestroy.exe
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\bin\Release\SerchAndNotDestroy.pdb
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Release\SerchAndNotDestroy.csprojAssemblyReference.cache
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Release\SerchAndNotDestroy.MyLittleMonion.resources
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Release\SerchAndNotDestroy.Properties.Resources.resources
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Release\SerchAndNotDestroy.csproj.GenerateResource.cache
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Release\SerchAndNotDestroy.csproj.CoreCompileInputs.cache
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Release\SerchAndNotDestroy.exe
+D:\Documents\Visual Studio 2019\Projects\SerchAndNotDestroy\obj\Release\SerchAndNotDestroy.pdb
