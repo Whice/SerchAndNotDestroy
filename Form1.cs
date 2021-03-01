@@ -342,12 +342,14 @@ namespace SerchAndNotDestroy
         
         private void TestButton_Click(object sender, EventArgs e)
         {
-            Thread.Sleep(3000);
+            MessageBox.Show("Привет, теперь этот код есть в 'git'!\nНа этом Все!");
+
+            /*Thread.Sleep(3000);
             srPer.ScreenShotActiveWindow();
             pictureBox2.Image = (Image)srPer.pictureSearchArea;
 
             pictureBox2.Width = srPer.pictureSearchArea.Width;
-            pictureBox2.Height = srPer.pictureSearchArea.Height; 
+            pictureBox2.Height = srPer.pictureSearchArea.Height; */
 
             //srPer.AddIgnorColorsInPicture((Bitmap)pictureBox1.Image);
 
