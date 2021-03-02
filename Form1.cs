@@ -344,7 +344,11 @@ namespace SerchAndNotDestroy
         private void TestButton_Click(object sender, EventArgs e)
         {
             //Thread.Sleep(3000);
-            //srPer.SetPlaceForSearching(new Rectangle(-100, -100, 300, 300));
+            /*srPer.SetPlaceForSearching(
+                Convert.ToInt32(textBoxX.Text),
+                Convert.ToInt32(textBoxY.Text),
+                Convert.ToInt32(textBoxWidth.Text),
+                Convert.ToInt32(textBoxHeight.Text));*/
             srPer.ScreenShotActiveWindow();
             srPer.CreateScreenShot();
             pictureBox2.Image = (Image)srPer.pictureSearchArea;

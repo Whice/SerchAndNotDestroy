@@ -66,7 +66,7 @@
             // FindButton
             // 
             this.FindButton.Location = new System.Drawing.Point(9, 10);
-            this.FindButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.FindButton.Margin = new System.Windows.Forms.Padding(2);
             this.FindButton.Name = "FindButton";
             this.FindButton.Size = new System.Drawing.Size(68, 46);
             this.FindButton.TabIndex = 0;
@@ -78,7 +78,7 @@
             // 
             this.pictureBoxForModelForSearch.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(166, 95);
-            this.pictureBoxForModelForSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBoxForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxForModelForSearch.Name = "pictureBoxForModelForSearch";
             this.pictureBoxForModelForSearch.Size = new System.Drawing.Size(75, 41);
             this.pictureBoxForModelForSearch.TabIndex = 1;
@@ -95,7 +95,7 @@
             // 
             this.SaveImage.Enabled = false;
             this.SaveImage.Location = new System.Drawing.Point(8, 117);
-            this.SaveImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SaveImage.Margin = new System.Windows.Forms.Padding(2);
             this.SaveImage.Name = "SaveImage";
             this.SaveImage.Size = new System.Drawing.Size(120, 34);
             this.SaveImage.TabIndex = 2;
@@ -107,7 +107,7 @@
             // 
             this.buttonNextForColorsForIgnor.Enabled = false;
             this.buttonNextForColorsForIgnor.Location = new System.Drawing.Point(70, 97);
-            this.buttonNextForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonNextForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonNextForColorsForIgnor.Name = "buttonNextForColorsForIgnor";
             this.buttonNextForColorsForIgnor.Size = new System.Drawing.Size(56, 40);
             this.buttonNextForColorsForIgnor.TabIndex = 3;
@@ -119,7 +119,7 @@
             // 
             this.buttonPreviousForColorsForIgnor.Enabled = false;
             this.buttonPreviousForColorsForIgnor.Location = new System.Drawing.Point(10, 97);
-            this.buttonPreviousForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonPreviousForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonPreviousForColorsForIgnor.Name = "buttonPreviousForColorsForIgnor";
             this.buttonPreviousForColorsForIgnor.Size = new System.Drawing.Size(56, 40);
             this.buttonPreviousForColorsForIgnor.TabIndex = 4;
@@ -131,7 +131,7 @@
             // 
             this.FindNextButton.Enabled = false;
             this.FindNextButton.Location = new System.Drawing.Point(9, 65);
-            this.FindNextButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.FindNextButton.Margin = new System.Windows.Forms.Padding(2);
             this.FindNextButton.Name = "FindNextButton";
             this.FindNextButton.Size = new System.Drawing.Size(120, 47);
             this.FindNextButton.TabIndex = 5;
@@ -142,7 +142,7 @@
             // TestButton
             // 
             this.TestButton.Location = new System.Drawing.Point(8, 292);
-            this.TestButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TestButton.Margin = new System.Windows.Forms.Padding(2);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(75, 58);
             this.TestButton.TabIndex = 6;
@@ -184,9 +184,9 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.pictureBox2.BackColor = System.Drawing.Color.White;
             this.pictureBox2.Location = new System.Drawing.Point(116, 292);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(75, 41);
             this.pictureBox2.TabIndex = 12;
@@ -197,7 +197,7 @@
             // 
             this.pictureBoxForIgnorColor.BackColor = System.Drawing.Color.DarkSalmon;
             this.pictureBoxForIgnorColor.Location = new System.Drawing.Point(10, 26);
-            this.pictureBoxForIgnorColor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBoxForIgnorColor.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxForIgnorColor.Name = "pictureBoxForIgnorColor";
             this.pictureBoxForIgnorColor.Size = new System.Drawing.Size(117, 41);
             this.pictureBoxForIgnorColor.TabIndex = 13;
@@ -215,7 +215,7 @@
             this.panelForColorsForIgnor.Controls.Add(this.buttonNextForColorsForIgnor);
             this.panelForColorsForIgnor.Controls.Add(this.labelForNameForIgnorColor);
             this.panelForColorsForIgnor.Location = new System.Drawing.Point(520, 46);
-            this.panelForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panelForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.panelForColorsForIgnor.Name = "panelForColorsForIgnor";
             this.panelForColorsForIgnor.Size = new System.Drawing.Size(340, 181);
             this.panelForColorsForIgnor.TabIndex = 14;
@@ -235,7 +235,7 @@
             // 
             this.buttonForDeleteSelectedColor.Enabled = false;
             this.buttonForDeleteSelectedColor.Location = new System.Drawing.Point(132, 116);
-            this.buttonForDeleteSelectedColor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonForDeleteSelectedColor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonForDeleteSelectedColor.Name = "buttonForDeleteSelectedColor";
             this.buttonForDeleteSelectedColor.Size = new System.Drawing.Size(194, 45);
             this.buttonForDeleteSelectedColor.TabIndex = 16;
@@ -246,7 +246,7 @@
             // buttonAddManyColorsForIgnor
             // 
             this.buttonAddManyColorsForIgnor.Location = new System.Drawing.Point(132, 72);
-            this.buttonAddManyColorsForIgnor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonAddManyColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddManyColorsForIgnor.Name = "buttonAddManyColorsForIgnor";
             this.buttonAddManyColorsForIgnor.Size = new System.Drawing.Size(194, 41);
             this.buttonAddManyColorsForIgnor.TabIndex = 15;
@@ -257,7 +257,7 @@
             // buttonAddSingleColorForIgnor
             // 
             this.buttonAddSingleColorForIgnor.Location = new System.Drawing.Point(132, 27);
-            this.buttonAddSingleColorForIgnor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonAddSingleColorForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddSingleColorForIgnor.Name = "buttonAddSingleColorForIgnor";
             this.buttonAddSingleColorForIgnor.Size = new System.Drawing.Size(194, 41);
             this.buttonAddSingleColorForIgnor.TabIndex = 14;
@@ -269,7 +269,7 @@
             // 
             this.checkBoxForColorsForIgnor.AutoSize = true;
             this.checkBoxForColorsForIgnor.Location = new System.Drawing.Point(520, 22);
-            this.checkBoxForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxForColorsForIgnor.Name = "checkBoxForColorsForIgnor";
             this.checkBoxForColorsForIgnor.Size = new System.Drawing.Size(208, 17);
             this.checkBoxForColorsForIgnor.TabIndex = 15;
@@ -285,7 +285,7 @@
             this.panelForModelForSearch.Controls.Add(this.pictureBoxForModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.label2);
             this.panelForModelForSearch.Location = new System.Drawing.Point(140, 46);
-            this.panelForModelForSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panelForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.panelForModelForSearch.Name = "panelForModelForSearch";
             this.panelForModelForSearch.Size = new System.Drawing.Size(375, 205);
             this.panelForModelForSearch.TabIndex = 16;
@@ -293,7 +293,7 @@
             // buttonForChangeSizeOferyBigModelForSearch
             // 
             this.buttonForChangeSizeOferyBigModelForSearch.Location = new System.Drawing.Point(11, 24);
-            this.buttonForChangeSizeOferyBigModelForSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonForChangeSizeOferyBigModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.buttonForChangeSizeOferyBigModelForSearch.Name = "buttonForChangeSizeOferyBigModelForSearch";
             this.buttonForChangeSizeOferyBigModelForSearch.Size = new System.Drawing.Size(152, 40);
             this.buttonForChangeSizeOferyBigModelForSearch.TabIndex = 10;
@@ -304,7 +304,7 @@
             // buttonAddModelForSearch
             // 
             this.buttonAddModelForSearch.Location = new System.Drawing.Point(11, 68);
-            this.buttonAddModelForSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonAddModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddModelForSearch.Name = "buttonAddModelForSearch";
             this.buttonAddModelForSearch.Size = new System.Drawing.Size(72, 41);
             this.buttonAddModelForSearch.TabIndex = 9;
@@ -373,7 +373,7 @@
             this.Controls.Add(this.FindNextButton);
             this.Controls.Add(this.SaveImage);
             this.Controls.Add(this.FindButton);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MyLittleMonion";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = "Мой маленький помощник";

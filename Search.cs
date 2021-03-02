@@ -210,7 +210,7 @@ namespace SerchAndNotDestroy
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
-        public static extern int BitBlt(IntPtr hDC, int x, int y, int nWidth, int nHeight, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
+        public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
@@ -427,7 +427,8 @@ namespace SerchAndNotDestroy
                     hSrcDC = gsrc.GetHdc();
                     hDC = gdest.GetHdc();
                     retval = BitBlt(hDC, -this.locationOfPlaceForSearchPrivate.X, -this.locationOfPlaceForSearchPrivate.Y,
-                        this.pictureSearchArea.Width, this.pictureSearchArea.Height,
+                        this.pictureSearchArea.Width + this.locationOfPlaceForSearchPrivate.X,
+                        this.pictureSearchArea.Height + this.locationOfPlaceForSearchPrivate.Y,
                         hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
                     gdest.ReleaseHdc();
                     gsrc.ReleaseHdc();
