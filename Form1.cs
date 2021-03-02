@@ -322,7 +322,8 @@ namespace SerchAndNotDestroy
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            while(numberOfCaptureInMemory< TestMemoryMindOfMyLittleMinion.captureInMemory.Count)
+            labelMousePosiotonView.Text = "Mouse position: " + Convert.ToString(Cursor.Position.X) + "; " + Convert.ToString(Cursor.Position.Y) + ";";
+            while (numberOfCaptureInMemory< TestMemoryMindOfMyLittleMinion.captureInMemory.Count)
             {
 
             }
@@ -342,18 +343,16 @@ namespace SerchAndNotDestroy
         
         private void TestButton_Click(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-            MessageBox.Show("Привет, теперь этот код есть в 'git'!\nНа этом совсем gВсе!")
-=======
-            MessageBox.Show("Привет, теперь этот код есть в 'git'!\nНа этом совсем ghjcnj e;fc Все!");
->>>>>>> parent of 7b33695 (only Form1)
-
-            /*Thread.Sleep(3000);
+            //Thread.Sleep(3000);
+            //srPer.SetPlaceForSearching(new Rectangle(-100, -100, 300, 300));
             srPer.ScreenShotActiveWindow();
+            srPer.CreateScreenShot();
             pictureBox2.Image = (Image)srPer.pictureSearchArea;
 
             pictureBox2.Width = srPer.pictureSearchArea.Width;
-            pictureBox2.Height = srPer.pictureSearchArea.Height; */
+            pictureBox2.Height = srPer.pictureSearchArea.Height;
+
+            
 
             //srPer.AddIgnorColorsInPicture((Bitmap)pictureBox1.Image);
 

@@ -141,3 +141,10 @@ $RECYCLE.BIN/
 
 _NCrunch*
 .vs/SerchAndNotDestroy/v16/Server/sqlite3/storage.ide-wal
+obj/Debug/SerchAndNotDestroy.pdb
+obj/Debug/SerchAndNotDestroy.csprojAssemblyReference.cache
+obj/Debug/SerchAndNotDestroy.csproj.GenerateResource.cache
+bin/Debug/SerchAndNotDestroy.pdb
+.vs/SerchAndNotDestroy/v16/Server/sqlite3/storage.ide-wal
+.vs/SerchAndNotDestroy/v16/Server/sqlite3/storage.ide-shm
+.vs/SerchAndNotDestroy/v16/.suo

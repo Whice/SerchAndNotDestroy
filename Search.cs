@@ -254,10 +254,9 @@ namespace SerchAndNotDestroy
             rectangleOfActiveWindow.Bottom = (int)(rectangleOfActiveWindow.Bottom * getScalingFactor());
 
 
-            //Окно это просто очередная область, где надо искать
+            //Окно это просто область, где надо искать
             SetPlaceForSearching(rectangleOfActiveWindow.Left, rectangleOfActiveWindow.Top,
                 rectangleOfActiveWindow.Right, rectangleOfActiveWindow.Bottom);
-            CreateScreenShot();
             /*
             //Запомнить, где находиться окно на экране
             locationOfPlaceForSearchPrivate = new Point(rectangleOfActiveWindow.Left, rectangleOfActiveWindow.Top);
@@ -415,18 +414,19 @@ namespace SerchAndNotDestroy
         //Выполнение поиска КОНЕЦ
 
         //Вспомогательные методы:
-        private void CreateScreenShot()
+        public void CreateScreenShot()
         {
             using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))
             {
                 using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
                 {
+                    
                     IntPtr hSrcDC;
                     IntPtr hDC;
                     int retval;
                     hSrcDC = gsrc.GetHdc();
                     hDC = gdest.GetHdc();
-                    retval = BitBlt(hDC, this.locationOfPlaceForSearch.X, this.locationOfPlaceForSearch.Y,
+                    retval = BitBlt(hDC, -this.locationOfPlaceForSearchPrivate.X, -this.locationOfPlaceForSearchPrivate.Y,
                         this.pictureSearchArea.Width, this.pictureSearchArea.Height,
                         hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
                     gdest.ReleaseHdc();
