@@ -31,11 +31,11 @@ namespace SerchAndNotDestroy
             numberIgnorColorInListPrivate = 0;
             isIgnorColorsPrivate = false;
 
-
+            isEnableFourThreads = false;
 
             CreateBitmapForEmptyModel();
         }
-        /*цвета, которые надо игнрировать НАЧАЛО*/
+        ///цвета, которые надо игнрировать НАЧАЛО*/
         private bool isIgnorColorsPrivate;
         public bool isIgnorColors
         {
@@ -163,9 +163,12 @@ namespace SerchAndNotDestroy
                 return Color.FromArgb(0, 255, 255, 255);
         }
 
-        /*цвета, которые надо игнрировать КОНЕЦ*/
+        ///*цвета, которые надо игнрировать КОНЕЦ*/
 
-        //Область, в которой выполняется поиск НАЧАЛО
+
+
+
+        ///Область, в которой выполняется поиск НАЧАЛО
         private Point locationOfPlaceForSearchPrivate;
         public Point locationOfPlaceForSearch
         {
@@ -195,9 +198,12 @@ namespace SerchAndNotDestroy
         }
 
 
-        //Область, в которой выполняется поиск КОНЕЦ
+        ///Область, в которой выполняется поиск КОНЕЦ
 
-        //Скриншот активного окна НАЧАЛО
+
+
+
+        ///Скриншот активного окна НАЧАЛО
         //Не забыть, что для подсчета координат крусора надо учитывать местоположение окна относительно начала экрана
         
         private bool screeningWindowPrivate;
@@ -223,7 +229,7 @@ namespace SerchAndNotDestroy
             public int Right;
             public int Bottom;
         }
-        public void ScreenShotActiveWindow()
+        public void SetActiveWindowForPlaceForSearching()
         {
             RECT rectangleOfActiveWindow;
             //Получаю дескриптор активного окна
@@ -257,28 +263,17 @@ namespace SerchAndNotDestroy
             //Окно это просто область, где надо искать
             SetPlaceForSearching(rectangleOfActiveWindow.Left, rectangleOfActiveWindow.Top,
                 rectangleOfActiveWindow.Right, rectangleOfActiveWindow.Bottom);
-            /*
-            //Запомнить, где находиться окно на экране
-            locationOfPlaceForSearchPrivate = new Point(rectangleOfActiveWindow.Left, rectangleOfActiveWindow.Top);
-
-            //Создать картинку нужного размера
-            this.pictureSearchArea = new Bitmap(
-                //rectangleOfActiveWindow.Bottom- rectangleOfActiveWindow.Top,
-                rectangleOfActiveWindow.Right- rectangleOfActiveWindow.Left,
-                rectangleOfActiveWindow.Bottom - rectangleOfActiveWindow.Top,
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            //Заполнить картинку изображение активного окна с учетом знания его координат и размера
-            //Получается чуть больше по краям хватает, но это не очень страшно, по логике.
-            CreateScreenShot(rectangleOfActiveWindow.Left, rectangleOfActiveWindow.Top);
-            */
+            
             screeningWindowPrivate = true;
         }
 
 
-        //Скриншот активного окна КОНЕЦ
+        ///Скриншот активного окна КОНЕЦ
 
-        //Выполнение поиска НАЧАЛО
+
+
+
+        ///Выполнение поиска НАЧАЛО
 
         private bool ComparisonUpLeftDiagonalOfmodelAndAreaForSearch(Point pointBeginModelOnSerachArea)
         {
@@ -311,7 +306,7 @@ namespace SerchAndNotDestroy
 
         /// <summary>
         /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра. 
-        /// Если принимает true то ищет только до первой  попавшейся точки.
+        /// Если принимает true, то ищет только до первой попавшейся точки.
         /// </summary>
         /// <param name="stopSearchingAfterFirstPointFound"></param>
         /// <returns></returns>
@@ -411,9 +406,135 @@ namespace SerchAndNotDestroy
             }
         }
 
-        //Выполнение поиска КОНЕЦ
+        ///Выполнение поиска КОНЕЦ
 
-        //Вспомогательные методы:
+
+
+        ///Выполнение поиска с использованием четырех потоков НАЧАЛО
+        public bool isEnableFourThreads;
+        private bool needAbortThreads;
+        private Thread[] fourThread = new Thread[4];
+        public Search[] fourSearchsForThreadPrivate = new Search[4];
+        
+        delegate void iterSearchModelInAreaDelegate();
+        /// <summary>
+        /// Выполняет обычный поиск, но делит область поиска на четыре части, поиск в каждой части выполняется в своем отдельном потоке.
+        /// Вполне может работать медленней, чем последовательный поиск в случае поиска первой попавшейся точки(true).
+        /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра. 
+        /// Если принимает true, то ищет только до первой попавшейся точки.
+        /// </summary>
+        public bool SearchModelInAreaInFourThreads(bool stopSearchingAfterFirstPointFound)
+        {
+            //Для краткости чтения половина ширины и высоты области поиска вычисляются сразу
+            int halfWidthPSA = (int)(this.pictureSearchArea.Width * 0.5);
+            int halfHeightPSA = (int)(this.pictureSearchArea.Height * 0.5);
+
+
+            //В первый поток отправляется первая четверть
+            fourSearchsForThreadPrivate[0] = this.Clone();
+
+                //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
+                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject1 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+                    new Rectangle(
+                        this.locationOfPlaceForSearchPrivate.X, this.locationOfPlaceForSearchPrivate.Y,
+                        //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                        halfWidthPSA + this.pictureModelForSearch.Width, halfHeightPSA + this.pictureModelForSearch.Height
+                        )));
+                iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+
+                fourThread[0] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject1));
+                fourThread[0].Start();
+
+
+
+            //Во второй поток отправляется вторая четверть
+            fourSearchsForThreadPrivate[1] = this.Clone();
+
+                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject2 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+                    new Rectangle(
+                        this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
+                        this.locationOfPlaceForSearchPrivate.Y,
+                        this.pictureSearchArea.Width- halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                        halfHeightPSA + this.pictureModelForSearch.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                        )));
+                iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+                fourThread[1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject2));
+                fourThread[1].Start();
+
+
+
+            //В третий поток отправляется третья четверть
+            fourSearchsForThreadPrivate[2] = this.Clone();
+
+                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+                    new Rectangle(
+                        this.locationOfPlaceForSearchPrivate.X,
+                        this.locationOfPlaceForSearchPrivate.Y+ halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
+                        halfWidthPSA + this.pictureModelForSearch.Width,//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                        this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                        )));
+                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+                fourThread[2] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject3));
+                fourThread[2].Start();
+
+
+
+            //В четвертый поток отправляется четвертая четверть
+            fourSearchsForThreadPrivate[3] = this.Clone();
+
+                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+                    new Rectangle(
+                        this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
+                        this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
+                        this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                        this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                        )));
+                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+                fourThread[3] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject4));
+                fourThread[3].Start();
+
+
+            //надо дописать склейку массивов точек и нормальный return
+
+            isEnableFourThreads = true;
+
+            fourThread[0].Join();
+            fourThread[1].Join();
+            fourThread[2].Join();
+            fourThread[3].Join();
+            return true;
+        }
+        /// <summary>
+        /// Работа с потоками пока не реализована.
+        /// Надо посмотреть класс Task.
+        /// </summary>
+        public void AbortAllThreadForSearch()
+        {
+            if(isEnableFourThreads)
+            {
+                for(int i=0; i<4; i++)
+                {
+                    fourThread[i].Abort();
+                }
+            }
+            isEnableFourThreads = false;
+        }
+
+
+        ///Выполнение поиска с использованием четырех потоков НАЧАЛО
+
+
+
+
+        ///Вспомогательные методы:
         public void CreateScreenShot()
         {
             using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))
@@ -469,7 +590,23 @@ namespace SerchAndNotDestroy
             }
             return false;
         }
-        
+        public Search Clone()
+        {
+            Search cloneThisSearch = new Search();
+
+            cloneThisSearch.foundPoints = this.foundPoints;
+            cloneThisSearch.isEnableFourThreads = this.isEnableFourThreads;
+            cloneThisSearch.isIgnorColorsPrivate = this.isIgnorColorsPrivate;
+            cloneThisSearch.listOfIgnorColors = this.listOfIgnorColors;
+            cloneThisSearch.locationOfPlaceForSearchPrivate = this.locationOfPlaceForSearchPrivate;
+            cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
+            cloneThisSearch.pictureModelForSearch = (Bitmap)this.pictureModelForSearch.Clone();
+            cloneThisSearch.pictureSearchArea = (Bitmap)this.pictureSearchArea.Clone();
+            cloneThisSearch.screeningWindowPrivate = this.screeningWindowPrivate;
+
+            return cloneThisSearch;
+
+        }
         public void ScreenshotFullMonitor()
         {
             //Получаю размер экрана в пикселях.
@@ -477,15 +614,24 @@ namespace SerchAndNotDestroy
             //Оригинальное разрешение почему-то всегда масштабируется и становиться 0.8 от оригинала.
             //Это потому что в винде у меня стоит мастаирование всего на 125%. Если это убрать и оставить 100%, все будет ок.
             //Потому возвращаю его назад
-
+            this.locationOfPlaceForSearchPrivate = new Point(0, 0);
             this.pictureSearchArea = new Bitmap(
                 (int)(resolutionOfFullScreen.Width * getScalingFactor()),
                 (int)(resolutionOfFullScreen.Height * getScalingFactor()));
             CreateScreenShot();
-
         }
-
-        //Помогает узнать масштабирование системы
+        /// <summary>
+        /// Делает null (самую большую по логике) картинку, где хзраниться скришот экрана или его области.
+        /// </summary>
+        public void RemoveScreenshot()
+        {
+            this.pictureSearchArea = null;
+            fourSearchsForThreadPrivate[0].pictureSearchArea = null;
+            fourSearchsForThreadPrivate[1].pictureSearchArea = null;
+            fourSearchsForThreadPrivate[2].pictureSearchArea = null;
+            fourSearchsForThreadPrivate[3].pictureSearchArea = null;
+        }
+        ///Помогает узнать масштабирование системы
         [DllImport("gdi32.dll")]
         static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
         public enum DeviceCap
@@ -509,7 +655,6 @@ namespace SerchAndNotDestroy
 
             return ScreenScalingFactor; // 1.25 = 125%
         }
-
         private static Bitmap CutSmallPictureFromLargePicture(Point locationStartOfLargePicture, Bitmap largePicture, int widthSmallPicture, int heightSmallPicture)
         {
             Bitmap smallPicture = new Bitmap(widthSmallPicture, heightSmallPicture, PixelFormat.Format32bppArgb);

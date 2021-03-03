@@ -56,11 +56,17 @@
             this.textBoxWidth = new System.Windows.Forms.TextBox();
             this.textBoxHeight = new System.Windows.Forms.TextBox();
             this.labelMousePosiotonView = new System.Windows.Forms.Label();
+            this.checkBoxForPlaceOfSearch = new System.Windows.Forms.CheckBox();
+            this.panelForPlaceOfSearch = new System.Windows.Forms.Panel();
+            this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
             this.panelForModelForSearch.SuspendLayout();
+            this.panelForPlaceOfSearch.SuspendLayout();
             this.SuspendLayout();
             // 
             // FindButton
@@ -87,7 +93,6 @@
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
@@ -141,7 +146,7 @@
             // 
             // TestButton
             // 
-            this.TestButton.Location = new System.Drawing.Point(8, 292);
+            this.TestButton.Location = new System.Drawing.Point(11, 389);
             this.TestButton.Margin = new System.Windows.Forms.Padding(2);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(75, 58);
@@ -185,7 +190,7 @@
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.White;
-            this.pictureBox2.Location = new System.Drawing.Point(116, 292);
+            this.pictureBox2.Location = new System.Drawing.Point(14, 451);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(75, 41);
@@ -314,33 +319,33 @@
             // 
             // textBoxX
             // 
-            this.textBoxX.Location = new System.Drawing.Point(8, 224);
+            this.textBoxX.Location = new System.Drawing.Point(6, 39);
             this.textBoxX.Name = "textBoxX";
-            this.textBoxX.Size = new System.Drawing.Size(49, 20);
+            this.textBoxX.Size = new System.Drawing.Size(74, 20);
             this.textBoxX.TabIndex = 17;
             this.textBoxX.Text = "0";
             // 
             // textBoxY
             // 
-            this.textBoxY.Location = new System.Drawing.Point(63, 224);
+            this.textBoxY.Location = new System.Drawing.Point(93, 39);
             this.textBoxY.Name = "textBoxY";
-            this.textBoxY.Size = new System.Drawing.Size(49, 20);
+            this.textBoxY.Size = new System.Drawing.Size(73, 20);
             this.textBoxY.TabIndex = 18;
             this.textBoxY.Text = "0";
             // 
             // textBoxWidth
             // 
-            this.textBoxWidth.Location = new System.Drawing.Point(8, 250);
+            this.textBoxWidth.Location = new System.Drawing.Point(7, 78);
             this.textBoxWidth.Name = "textBoxWidth";
-            this.textBoxWidth.Size = new System.Drawing.Size(49, 20);
+            this.textBoxWidth.Size = new System.Drawing.Size(74, 20);
             this.textBoxWidth.TabIndex = 19;
             this.textBoxWidth.Text = "0";
             // 
             // textBoxHeight
             // 
-            this.textBoxHeight.Location = new System.Drawing.Point(63, 250);
+            this.textBoxHeight.Location = new System.Drawing.Point(94, 78);
             this.textBoxHeight.Name = "textBoxHeight";
-            this.textBoxHeight.Size = new System.Drawing.Size(49, 20);
+            this.textBoxHeight.Size = new System.Drawing.Size(73, 20);
             this.textBoxHeight.TabIndex = 20;
             this.textBoxHeight.Text = "0";
             // 
@@ -353,17 +358,68 @@
             this.labelMousePosiotonView.TabIndex = 21;
             this.labelMousePosiotonView.Text = "labelMousePosiotonView";
             // 
+            // checkBoxForPlaceOfSearch
+            // 
+            this.checkBoxForPlaceOfSearch.AutoSize = true;
+            this.checkBoxForPlaceOfSearch.Location = new System.Drawing.Point(142, 257);
+            this.checkBoxForPlaceOfSearch.Name = "checkBoxForPlaceOfSearch";
+            this.checkBoxForPlaceOfSearch.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxForPlaceOfSearch.TabIndex = 22;
+            this.checkBoxForPlaceOfSearch.Text = "Искать в заданной области";
+            this.checkBoxForPlaceOfSearch.UseVisualStyleBackColor = true;
+            // 
+            // panelForPlaceOfSearch
+            // 
+            this.panelForPlaceOfSearch.BackColor = System.Drawing.Color.DarkSalmon;
+            this.panelForPlaceOfSearch.Controls.Add(this.label3);
+            this.panelForPlaceOfSearch.Controls.Add(this.label1);
+            this.panelForPlaceOfSearch.Controls.Add(this.checkBoxSelectActiveWindow);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxX);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxY);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxWidth);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxHeight);
+            this.panelForPlaceOfSearch.Location = new System.Drawing.Point(143, 280);
+            this.panelForPlaceOfSearch.Name = "panelForPlaceOfSearch";
+            this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 108);
+            this.panelForPlaceOfSearch.TabIndex = 23;
+            // 
+            // checkBoxSelectActiveWindow
+            // 
+            this.checkBoxSelectActiveWindow.AutoSize = true;
+            this.checkBoxSelectActiveWindow.Location = new System.Drawing.Point(3, 3);
+            this.checkBoxSelectActiveWindow.Name = "checkBoxSelectActiveWindow";
+            this.checkBoxSelectActiveWindow.Size = new System.Drawing.Size(309, 17);
+            this.checkBoxSelectActiveWindow.TabIndex = 21;
+            this.checkBoxSelectActiveWindow.Text = "Выбрать активное окно в качестве области для поиска";
+            this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(155, 13);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "Координаты отсчета области";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 62);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(139, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "Ширина и высота области";
+            // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.PeachPuff;
             this.ClientSize = new System.Drawing.Size(881, 504);
+            this.Controls.Add(this.panelForPlaceOfSearch);
+            this.Controls.Add(this.checkBoxForPlaceOfSearch);
             this.Controls.Add(this.labelMousePosiotonView);
-            this.Controls.Add(this.textBoxHeight);
-            this.Controls.Add(this.textBoxWidth);
-            this.Controls.Add(this.textBoxY);
-            this.Controls.Add(this.textBoxX);
             this.Controls.Add(this.panelForModelForSearch);
             this.Controls.Add(this.checkBoxForColorsForIgnor);
             this.Controls.Add(this.panelForColorsForIgnor);
@@ -384,6 +440,8 @@
             this.panelForColorsForIgnor.PerformLayout();
             this.panelForModelForSearch.ResumeLayout(false);
             this.panelForModelForSearch.PerformLayout();
+            this.panelForPlaceOfSearch.ResumeLayout(false);
+            this.panelForPlaceOfSearch.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -418,6 +476,11 @@
         private System.Windows.Forms.TextBox textBoxWidth;
         private System.Windows.Forms.TextBox textBoxHeight;
         private System.Windows.Forms.Label labelMousePosiotonView;
+        private System.Windows.Forms.CheckBox checkBoxForPlaceOfSearch;
+        private System.Windows.Forms.Panel panelForPlaceOfSearch;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBoxSelectActiveWindow;
     }
 }
 

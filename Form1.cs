@@ -322,6 +322,23 @@ namespace SerchAndNotDestroy
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
+            /*if (srPer.isEnableFourThreads)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (srPer.fourSearchsForThreadPrivate[i].foundPoints!=null)
+                    {
+                        srPer.AbortAllThreadForSearch();
+                        srPer.foundPoints = srPer.fourSearchsForThreadPrivate[i].foundPoints;
+
+                        pictureBox2.Image = (Image)srPer.pictureSearchArea;
+                        pictureBox2.Width = srPer.pictureSearchArea.Width;
+                        pictureBox2.Height = srPer.pictureSearchArea.Height;
+
+                        break;
+                    }
+                }
+            }*/
             labelMousePosiotonView.Text = "Mouse position: " + Convert.ToString(Cursor.Position.X) + "; " + Convert.ToString(Cursor.Position.Y) + ";";
             while (numberOfCaptureInMemory< TestMemoryMindOfMyLittleMinion.captureInMemory.Count)
             {
@@ -349,14 +366,15 @@ namespace SerchAndNotDestroy
                 Convert.ToInt32(textBoxY.Text),
                 Convert.ToInt32(textBoxWidth.Text),
                 Convert.ToInt32(textBoxHeight.Text));*/
-            srPer.ScreenShotActiveWindow();
+            //timer1.Enabled = true;
+            srPer.SetActiveWindowForPlaceForSearching();
             srPer.CreateScreenShot();
+            srPer.ScreenshotFullMonitor();
+            srPer.SearchModelInAreaInFourThreads(true);
             pictureBox2.Image = (Image)srPer.pictureSearchArea;
 
             pictureBox2.Width = srPer.pictureSearchArea.Width;
             pictureBox2.Height = srPer.pictureSearchArea.Height;
-
-            
 
             //srPer.AddIgnorColorsInPicture((Bitmap)pictureBox1.Image);
 
