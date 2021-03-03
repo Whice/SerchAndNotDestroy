@@ -58,9 +58,11 @@
             this.labelMousePosiotonView = new System.Windows.Forms.Label();
             this.checkBoxForPlaceOfSearch = new System.Windows.Forms.CheckBox();
             this.panelForPlaceOfSearch = new System.Windows.Forms.Panel();
-            this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
+            this.checkBoxParallelSearch = new System.Windows.Forms.CheckBox();
+            this.checkBoxFirstFoundModelIsEnd = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
@@ -285,6 +287,8 @@
             // panelForModelForSearch
             // 
             this.panelForModelForSearch.BackColor = System.Drawing.Color.LightCoral;
+            this.panelForModelForSearch.Controls.Add(this.checkBoxFirstFoundModelIsEnd);
+            this.panelForModelForSearch.Controls.Add(this.checkBoxParallelSearch);
             this.panelForModelForSearch.Controls.Add(this.buttonForChangeSizeOferyBigModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.buttonAddModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.pictureBoxForModelForSearch);
@@ -383,15 +387,14 @@
             this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 108);
             this.panelForPlaceOfSearch.TabIndex = 23;
             // 
-            // checkBoxSelectActiveWindow
+            // label3
             // 
-            this.checkBoxSelectActiveWindow.AutoSize = true;
-            this.checkBoxSelectActiveWindow.Location = new System.Drawing.Point(3, 3);
-            this.checkBoxSelectActiveWindow.Name = "checkBoxSelectActiveWindow";
-            this.checkBoxSelectActiveWindow.Size = new System.Drawing.Size(309, 17);
-            this.checkBoxSelectActiveWindow.TabIndex = 21;
-            this.checkBoxSelectActiveWindow.Text = "Выбрать активное окно в качестве области для поиска";
-            this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 62);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(139, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "Ширина и высота области";
             // 
             // label1
             // 
@@ -402,14 +405,35 @@
             this.label1.TabIndex = 22;
             this.label1.Text = "Координаты отсчета области";
             // 
-            // label3
+            // checkBoxSelectActiveWindow
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(139, 13);
-            this.label3.TabIndex = 23;
-            this.label3.Text = "Ширина и высота области";
+            this.checkBoxSelectActiveWindow.AutoSize = true;
+            this.checkBoxSelectActiveWindow.Location = new System.Drawing.Point(3, 3);
+            this.checkBoxSelectActiveWindow.Name = "checkBoxSelectActiveWindow";
+            this.checkBoxSelectActiveWindow.Size = new System.Drawing.Size(309, 17);
+            this.checkBoxSelectActiveWindow.TabIndex = 21;
+            this.checkBoxSelectActiveWindow.Text = "Выбрать активное окно в качестве области для поиска";
+            this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxParallelSearch
+            // 
+            this.checkBoxParallelSearch.AutoSize = true;
+            this.checkBoxParallelSearch.Location = new System.Drawing.Point(166, 27);
+            this.checkBoxParallelSearch.Name = "checkBoxParallelSearch";
+            this.checkBoxParallelSearch.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxParallelSearch.TabIndex = 11;
+            this.checkBoxParallelSearch.Text = "Использовать многопоточноть";
+            this.checkBoxParallelSearch.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxFirstFoundModelIsEnd
+            // 
+            this.checkBoxFirstFoundModelIsEnd.AutoSize = true;
+            this.checkBoxFirstFoundModelIsEnd.Location = new System.Drawing.Point(166, 46);
+            this.checkBoxFirstFoundModelIsEnd.Name = "checkBoxFirstFoundModelIsEnd";
+            this.checkBoxFirstFoundModelIsEnd.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxFirstFoundModelIsEnd.TabIndex = 12;
+            this.checkBoxFirstFoundModelIsEnd.Text = "Иcкать до первого найденного";
+            this.checkBoxFirstFoundModelIsEnd.UseVisualStyleBackColor = true;
             // 
             // MyLittleMonion
             // 
@@ -481,6 +505,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxSelectActiveWindow;
+        private System.Windows.Forms.CheckBox checkBoxParallelSearch;
+        private System.Windows.Forms.CheckBox checkBoxFirstFoundModelIsEnd;
     }
 }
 

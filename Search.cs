@@ -17,12 +17,12 @@ namespace SerchAndNotDestroy
     {
         public Bitmap pictureSearchArea;
         public Bitmap pictureModelForSearch;
-        public Point[] foundPoints = new Point[1];
+        public Point[] foundPoints;
         public Search()
         {
             pictureSearchArea = null;
             pictureModelForSearch = null;
-            foundPoints[0] = new Point(-1, -1);
+            foundPoints = null;
 
             locationOfPlaceForSearchPrivate = new Point();
             screeningWindowPrivate = false;
@@ -31,7 +31,7 @@ namespace SerchAndNotDestroy
             numberIgnorColorInListPrivate = 0;
             isIgnorColorsPrivate = false;
 
-            isEnableFourThreads = false;
+            isEnableFourThreadsPrivate = false;
 
             CreateBitmapForEmptyModel();
         }
@@ -397,7 +397,7 @@ namespace SerchAndNotDestroy
         {
             this.foundPoints = listFoundPointsIn.ToArray();
 
-            //В условиях масштабирования windows привит координаты к правильным значениям
+            //В условиях масштабирования windows приводит координаты к правильным значениям
             for (int i = 0; i < foundPoints.Length; i++)
             {
                 this.foundPoints[i] = new Point(
@@ -411,10 +411,11 @@ namespace SerchAndNotDestroy
 
 
         ///Выполнение поиска с использованием четырех потоков НАЧАЛО
-        public bool isEnableFourThreads;
+        private bool isEnableFourThreadsPrivate;
+        public bool isEnableFourThreads { get { return this.isEnableFourThreadsPrivate; } }
         private bool needAbortThreads;
-        private Thread[] fourThread = new Thread[4];
-        public Search[] fourSearchsForThreadPrivate = new Search[4];
+        private Thread[] fourThread;
+        public Search[] fourSearchsForThreadPrivate;
         
         delegate void iterSearchModelInAreaDelegate();
         /// <summary>
@@ -429,6 +430,9 @@ namespace SerchAndNotDestroy
             int halfWidthPSA = (int)(this.pictureSearchArea.Width * 0.5);
             int halfHeightPSA = (int)(this.pictureSearchArea.Height * 0.5);
 
+            //Инициализация потоков и будущих клонов этого экземпляра для этих потоков
+            fourSearchsForThreadPrivate = new Search[4];
+            fourThread = new Thread[4];
 
             //В первый поток отправляется первая четверть
             fourSearchsForThreadPrivate[0] = this.Clone();
@@ -449,54 +453,55 @@ namespace SerchAndNotDestroy
 
 
 
-            //Во второй поток отправляется вторая четверть
+            //В третий поток отправляется третья четверть
             fourSearchsForThreadPrivate[1] = this.Clone();
 
-                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject2 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject2 = (() => fourSearchsForThreadPrivate[1].SetPlaceForSearching(
+                new Rectangle(
+                    this.locationOfPlaceForSearchPrivate.X,
+                    this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
+                    halfWidthPSA + this.pictureModelForSearch.Width,//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                    this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                    )));
+            iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].CreateScreenShot());
+            iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+            fourThread[1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject2));
+            fourThread[1].Start();
+
+
+
+            //Во второй поток отправляется вторая четверть
+            fourSearchsForThreadPrivate[2] = this.Clone();
+
+                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[2].SetPlaceForSearching(
                     new Rectangle(
                         this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
                         this.locationOfPlaceForSearchPrivate.Y,
                         this.pictureSearchArea.Width- halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                         halfHeightPSA + this.pictureModelForSearch.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                         )));
-                iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
-
-                fourThread[1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject2));
-                fourThread[1].Start();
-
-
-
-            //В третий поток отправляется третья четверть
-            fourSearchsForThreadPrivate[2] = this.Clone();
-
-                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
-                    new Rectangle(
-                        this.locationOfPlaceForSearchPrivate.X,
-                        this.locationOfPlaceForSearchPrivate.Y+ halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
-                        halfWidthPSA + this.pictureModelForSearch.Width,//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                        this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
-                        )));
-                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].SearchModelInArea(stopSearchingAfterFirstPointFound));
 
                 fourThread[2] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject3));
                 fourThread[2].Start();
 
 
 
+
             //В четвертый поток отправляется четвертая четверть
             fourSearchsForThreadPrivate[3] = this.Clone();
 
-                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[3].SetPlaceForSearching(
                     new Rectangle(
                         this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
                         this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
                         this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                         this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                         )));
-                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].SearchModelInArea(stopSearchingAfterFirstPointFound));
 
                 fourThread[3] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject4));
                 fourThread[3].Start();
@@ -504,32 +509,60 @@ namespace SerchAndNotDestroy
 
             //надо дописать склейку массивов точек и нормальный return
 
-            isEnableFourThreads = true;
+            this.isEnableFourThreadsPrivate = true;
 
-            fourThread[0].Join();
-            fourThread[1].Join();
-            fourThread[2].Join();
-            fourThread[3].Join();
-            return true;
-        }
-        /// <summary>
-        /// Работа с потоками пока не реализована.
-        /// Надо посмотреть класс Task.
-        /// </summary>
-        public void AbortAllThreadForSearch()
-        {
-            if(isEnableFourThreads)
+            for (int i = 0; i < 4; i++)
+                fourThread[i].Join();
+
+            //Объединение всех найденых точек
+            this.foundPoints = null;
+            List<Point> listFoundPointsInFourThread = null;//Создается новый список дл простоты добавления
+            for (int i = 0; i < 4; i++)
             {
-                for(int i=0; i<4; i++)
+                //Если есть что и куда добавить, то можно добавлять
+                if (listFoundPointsInFourThread != null && fourSearchsForThreadPrivate[i].foundPoints != null)
                 {
-                    fourThread[i].Abort();
+                    //Просматривается каждый элемент на возможность добавления
+                   foreach(Point newPointForList in fourSearchsForThreadPrivate[i].foundPoints)
+                    {
+                        //Если такого элемента еще нет, то происходит добавление
+                        if(!CheckPointInMassive(listFoundPointsInFourThread, newPointForList))
+                        {
+                            //Сортировка при добавлении не нужна, т.к. поиск происходит по строкам каждого столбца. Добавление четвертей происходит в таком же порядке.
+                            //Т.е. сперва врехняя левая, потом нижняя лева, потом верхняя парвая, и потом нижняя правая
+                            listFoundPointsInFourThread.Add(newPointForList);
+                        }
+                    }
+                }
+                else//Если массив точек все еще пуст, то ему надо присвоить любой найденый массив точек
+                {
+                    if(fourSearchsForThreadPrivate[i].foundPoints!=null)//Присваивать пустой, конечно. незачем
+                    {
+                        listFoundPointsInFourThread = new List<Point>();
+                        listFoundPointsInFourThread = fourSearchsForThreadPrivate[i].foundPoints.ToList();
+                    }
                 }
             }
-            isEnableFourThreads = false;
+            this.foundPoints = listFoundPointsInFourThread.ToArray();
+
+            //Освободить память надо
+            fourSearchsForThreadPrivate = null;
+            fourThread = null;
+
+            //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
+            if (this.foundPoints == null)
+                return false;
+            return true;
         }
+        private bool CheckPointInMassive(List<Point> massiveOfPoints, Point pointForCheck)
+        {
+            foreach(Point pointInMassive in massiveOfPoints)
+                if(pointForCheck.X == pointInMassive.X && pointForCheck.Y == pointInMassive.Y)
+                    return true;
 
-
-        ///Выполнение поиска с использованием четырех потоков НАЧАЛО
+            return false;
+        }
+        ///Выполнение поиска с использованием четырех потоков КОНЕЦ
 
 
 
@@ -595,7 +628,7 @@ namespace SerchAndNotDestroy
             Search cloneThisSearch = new Search();
 
             cloneThisSearch.foundPoints = this.foundPoints;
-            cloneThisSearch.isEnableFourThreads = this.isEnableFourThreads;
+            cloneThisSearch.isEnableFourThreadsPrivate = this.isEnableFourThreadsPrivate;
             cloneThisSearch.isIgnorColorsPrivate = this.isIgnorColorsPrivate;
             cloneThisSearch.listOfIgnorColors = this.listOfIgnorColors;
             cloneThisSearch.locationOfPlaceForSearchPrivate = this.locationOfPlaceForSearchPrivate;

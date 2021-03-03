@@ -64,9 +64,9 @@ namespace SerchAndNotDestroy
             pictureBoxForModelForSearch.Size = srPer.pictureModelForSearch.Size;
         }
 
-        
 
 
+        delegate bool srPerSearchModelInArea();
         private void FindButton_Click(object sender, EventArgs e)
         {
             pictureBoxForModelForSearch.Visible = false;
@@ -74,8 +74,15 @@ namespace SerchAndNotDestroy
             srPer.ScreenshotFullMonitor();
             srPer.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
             labelForStatus.Text = "Выполняется поиск...";
-            
-            if(srPer.SearchModelInArea(true))
+
+            srPerSearchModelInArea srPerSearchModelInArea1;
+            if (checkBoxParallelSearch.Checked)
+                srPerSearchModelInArea1 = (() => srPer.SearchModelInAreaInFourThreads(checkBoxFirstFoundModelIsEnd.Checked));
+            else
+                srPerSearchModelInArea1 = (() => srPer.SearchModelInArea(checkBoxFirstFoundModelIsEnd.Checked));
+
+
+            if (srPerSearchModelInArea1())
             { 
                     //MessageBox.Show("Нашел!");
                 Cursor.Position = srPer.foundPoints[0];
@@ -88,7 +95,6 @@ namespace SerchAndNotDestroy
             pictureBoxForModelForSearch.Visible = true;
             labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
         }
-
         
 
         public bool FindModelOnScreenshotOfFullscreen(Bitmap scrFullscreen, Bitmap model, double persCountComparison)
@@ -360,6 +366,26 @@ namespace SerchAndNotDestroy
         
         private void TestButton_Click(object sender, EventArgs e)
         {
+            string text = "";
+            Point[] fourSearchsForThreadPrivate;
+            fourSearchsForThreadPrivate = new Point[] {
+                new Point(1, 0),
+                new Point(2, 45),
+                new Point(6, 3)
+            };
+            List<Point> listFoundPointsInFourThread = fourSearchsForThreadPrivate.ToList();
+            Predicate<Point> pre = delegate (Point a) { return a.X == 6 ;  };
+            text = Convert.ToString( listFoundPointsInFourThread.Find(pre)) + ";   ";
+
+            fourSearchsForThreadPrivate = listFoundPointsInFourThread.ToArray();
+            
+            foreach(var i in fourSearchsForThreadPrivate)
+            {
+                text += Convert.ToString(i) + " ";
+            }
+            MessageBox.Show(text);
+
+
             //Thread.Sleep(3000);
             /*srPer.SetPlaceForSearching(
                 Convert.ToInt32(textBoxX.Text),
@@ -367,14 +393,14 @@ namespace SerchAndNotDestroy
                 Convert.ToInt32(textBoxWidth.Text),
                 Convert.ToInt32(textBoxHeight.Text));*/
             //timer1.Enabled = true;
-            srPer.SetActiveWindowForPlaceForSearching();
+            /*srPer.SetActiveWindowForPlaceForSearching();
             srPer.CreateScreenShot();
             srPer.ScreenshotFullMonitor();
             srPer.SearchModelInAreaInFourThreads(true);
             pictureBox2.Image = (Image)srPer.pictureSearchArea;
 
             pictureBox2.Width = srPer.pictureSearchArea.Width;
-            pictureBox2.Height = srPer.pictureSearchArea.Height;
+            pictureBox2.Height = srPer.pictureSearchArea.Height;*/
 
             //srPer.AddIgnorColorsInPicture((Bitmap)pictureBox1.Image);
 
