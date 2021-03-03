@@ -312,6 +312,8 @@ namespace SerchAndNotDestroy
         /// <returns></returns>
         public bool SearchModelInArea(bool stopSearchingAfterFirstPointFound)
         {
+            //Перед поиском новых точек старые надо забыть
+            this.foundPoints = null;
             //Создать список для записи найденых точек
             List<Point> listFoundPoints = null; 
             //Определить по какому пикселю будет идти поиск. Искать по игнорируемому цвету нельзя.
@@ -414,10 +416,8 @@ namespace SerchAndNotDestroy
         private bool isEnableFourThreadsPrivate;
         public bool isEnableFourThreads { get { return this.isEnableFourThreadsPrivate; } }
         private bool needAbortThreads;
-        private Thread[] fourThread;
-        public Search[] fourSearchsForThreadPrivate;
         
-        delegate void iterSearchModelInAreaDelegate();
+        private delegate void iterSearchModelInAreaDelegate();
         /// <summary>
         /// Выполняет обычный поиск, но делит область поиска на четыре части, поиск в каждой части выполняется в своем отдельном потоке.
         /// Вполне может работать медленней, чем последовательный поиск в случае поиска первой попавшейся точки(true).
@@ -426,30 +426,32 @@ namespace SerchAndNotDestroy
         /// </summary>
         public bool SearchModelInAreaInFourThreads(bool stopSearchingAfterFirstPointFound)
         {
+            //Перед поиском новых точек старые надо забыть
+            this.foundPoints = null;
             //Для краткости чтения половина ширины и высоты области поиска вычисляются сразу
             int halfWidthPSA = (int)(this.pictureSearchArea.Width * 0.5);
             int halfHeightPSA = (int)(this.pictureSearchArea.Height * 0.5);
 
             //Инициализация потоков и будущих клонов этого экземпляра для этих потоков
-            fourSearchsForThreadPrivate = new Search[4];
-            fourThread = new Thread[4];
+            Search[] fourSearchsForThreadPrivate = new Search[4];
+            Thread[] fourThread = new Thread[4];
 
             //В первый поток отправляется первая четверть
             fourSearchsForThreadPrivate[0] = this.Clone();
 
-                //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
-                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject1 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
-                    new Rectangle(
-                        this.locationOfPlaceForSearchPrivate.X, this.locationOfPlaceForSearchPrivate.Y,
-                        //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                        halfWidthPSA + this.pictureModelForSearch.Width, halfHeightPSA + this.pictureModelForSearch.Height
-                        )));
-                iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
+            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject1 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+                new Rectangle(
+                    this.locationOfPlaceForSearchPrivate.X, this.locationOfPlaceForSearchPrivate.Y,
+                    //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                    halfWidthPSA + this.pictureModelForSearch.Width, halfHeightPSA + this.pictureModelForSearch.Height
+                    )));
+            iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
+            iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
 
 
-                fourThread[0] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject1));
-                fourThread[0].Start();
+            fourThread[0] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject1));
+            fourThread[0].Start();
 
 
 
@@ -474,18 +476,18 @@ namespace SerchAndNotDestroy
             //Во второй поток отправляется вторая четверть
             fourSearchsForThreadPrivate[2] = this.Clone();
 
-                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[2].SetPlaceForSearching(
-                    new Rectangle(
-                        this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
-                        this.locationOfPlaceForSearchPrivate.Y,
-                        this.pictureSearchArea.Width- halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
-                        halfHeightPSA + this.pictureModelForSearch.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                        )));
-                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[2].SetPlaceForSearching(
+                new Rectangle(
+                    this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
+                    this.locationOfPlaceForSearchPrivate.Y,
+                    this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                    halfHeightPSA + this.pictureModelForSearch.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                    )));
+            iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].CreateScreenShot());
+            iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].SearchModelInArea(stopSearchingAfterFirstPointFound));
 
-                fourThread[2] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject3));
-                fourThread[2].Start();
+            fourThread[2] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject3));
+            fourThread[2].Start();
 
 
 
@@ -493,21 +495,19 @@ namespace SerchAndNotDestroy
             //В четвертый поток отправляется четвертая четверть
             fourSearchsForThreadPrivate[3] = this.Clone();
 
-                iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[3].SetPlaceForSearching(
-                    new Rectangle(
-                        this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
-                        this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
-                        this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
-                        this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
-                        )));
-                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[3].SetPlaceForSearching(
+                new Rectangle(
+                    this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
+                    this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
+                    this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                    this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
+                    )));
+            iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].CreateScreenShot());
+            iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].SearchModelInArea(stopSearchingAfterFirstPointFound));
 
-                fourThread[3] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject4));
-                fourThread[3].Start();
+            fourThread[3] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject4));
+            fourThread[3].Start();
 
-
-            //надо дописать склейку массивов точек и нормальный return
 
             this.isEnableFourThreadsPrivate = true;
 
@@ -515,7 +515,6 @@ namespace SerchAndNotDestroy
                 fourThread[i].Join();
 
             //Объединение всех найденых точек
-            this.foundPoints = null;
             List<Point> listFoundPointsInFourThread = null;//Создается новый список дл простоты добавления
             for (int i = 0; i < 4; i++)
             {
@@ -523,10 +522,10 @@ namespace SerchAndNotDestroy
                 if (listFoundPointsInFourThread != null && fourSearchsForThreadPrivate[i].foundPoints != null)
                 {
                     //Просматривается каждый элемент на возможность добавления
-                   foreach(Point newPointForList in fourSearchsForThreadPrivate[i].foundPoints)
+                    foreach (Point newPointForList in fourSearchsForThreadPrivate[i].foundPoints)
                     {
                         //Если такого элемента еще нет, то происходит добавление
-                        if(!CheckPointInMassive(listFoundPointsInFourThread, newPointForList))
+                        if (!CheckPointInMassive(listFoundPointsInFourThread, newPointForList))
                         {
                             //Сортировка при добавлении не нужна, т.к. поиск происходит по строкам каждого столбца. Добавление четвертей происходит в таком же порядке.
                             //Т.е. сперва врехняя левая, потом нижняя лева, потом верхняя парвая, и потом нижняя правая
@@ -536,24 +535,138 @@ namespace SerchAndNotDestroy
                 }
                 else//Если массив точек все еще пуст, то ему надо присвоить любой найденый массив точек
                 {
-                    if(fourSearchsForThreadPrivate[i].foundPoints!=null)//Присваивать пустой, конечно. незачем
+                    if (fourSearchsForThreadPrivate[i].foundPoints != null)//Присваивать пустой, конечно. незачем
                     {
                         listFoundPointsInFourThread = new List<Point>();
                         listFoundPointsInFourThread = fourSearchsForThreadPrivate[i].foundPoints.ToList();
                     }
                 }
             }
-            this.foundPoints = listFoundPointsInFourThread.ToArray();
+            
 
             //Освободить память надо
             fourSearchsForThreadPrivate = null;
             fourThread = null;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
-            if (this.foundPoints == null)
+            if (listFoundPointsInFourThread == null)
+            {
                 return false;
+            }
+
+            this.foundPoints = listFoundPointsInFourThread.ToArray();
             return true;
         }
+        public bool SearchModelInAreaInMultyThreads(bool stopSearchingAfterFirstPointFound, int countOfThreads)
+        {
+            //Перед поиском новых точек старые надо забыть
+            this.foundPoints = null;
+            //Для краткости чтения половина ширины области поиска вычисляется сразу
+            int partWidthPSA = (int)(this.pictureSearchArea.Width / countOfThreads);
+
+            //Инициализация потоков и будущих клонов этого экземпляра для этих потоков
+            Search[] fourSearchsForThreadPrivate = new Search[countOfThreads];
+            Thread[] fourThread = new Thread[countOfThreads];
+
+
+            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject;
+
+            for (int i = 0; i < countOfThreads - 1; i++)//В последней части надо не брать нахлест, т.к. это самый конец
+            {
+                //В первый поток отправляется первая четверть
+                fourSearchsForThreadPrivate[i] = this.Clone();
+            }
+
+                for (int i = 0; i < countOfThreads - 2; i++)//В последней части надо не брать нахлест, т.к. это самый конец
+            {
+                //В первый поток отправляется первая четверть
+                //fourSearchsForThreadPrivate[i] = this.Clone();
+
+                //Задать для этого потока координаты и размер новой области, соответсвующие его части
+                iterSearchModelInAreaDelegateObject = (() => fourSearchsForThreadPrivate[i].SetPlaceForSearching(
+                    new Rectangle(
+                        this.locationOfPlaceForSearchPrivate.X + partWidthPSA*i,//Перемещение начала с номером потока
+                        this.locationOfPlaceForSearchPrivate.Y,
+                        //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                        partWidthPSA + this.pictureModelForSearch.Width,
+                        this.pictureModelForSearch.Height
+                        )));
+                iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[i].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[i].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+                fourThread[i] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject));
+                fourThread[i].Start();
+            }
+
+
+            //Последняя часть, без нахлеста
+            //fourSearchsForThreadPrivate[countOfThreads-1] = this.Clone();
+
+            iterSearchModelInAreaDelegateObject = (() => fourSearchsForThreadPrivate[countOfThreads - 1].SetPlaceForSearching(
+                    new Rectangle(
+                        this.locationOfPlaceForSearchPrivate.X + partWidthPSA * (countOfThreads-1),//Перемещение на последнюю не тронутую часть ширины
+                        this.locationOfPlaceForSearchPrivate.Y,
+                        //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                        this.pictureModelForSearch.Width - (partWidthPSA * (countOfThreads - 1)),//Последняя не тронутая часть ширины
+                        this.pictureModelForSearch.Height
+                        )));
+            iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[countOfThreads - 1].CreateScreenShot());
+            iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+            fourThread[countOfThreads - 1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject));
+            fourThread[countOfThreads - 1].Start();
+
+
+
+            this.isEnableFourThreadsPrivate = true;
+
+            for (int i = 0; i < countOfThreads-1; i++)
+                fourThread[i].Join();
+
+            //Объединение всех найденых точек
+            List<Point> listFoundPointsInFourThread = null;//Создается новый список дл простоты добавления
+            for (int i = 0; i < countOfThreads - 1; i++)
+            {
+                //Если есть что и куда добавить, то можно добавлять
+                if (listFoundPointsInFourThread != null && fourSearchsForThreadPrivate[i].foundPoints != null)
+                {
+                    //Просматривается каждый элемент на возможность добавления
+                    foreach (Point newPointForList in fourSearchsForThreadPrivate[i].foundPoints)
+                    {
+                        //Если такого элемента еще нет, то происходит добавление
+                        if (!CheckPointInMassive(listFoundPointsInFourThread, newPointForList))
+                        {
+                            //Сортировка при добавлении не нужна, т.к. поиск происходит по строкам каждого столбца. Добавление частей происходит в таком же порядке.
+                            //Т.е. сперва левые, потом правые
+                            listFoundPointsInFourThread.Add(newPointForList);
+                        }
+                    }
+                }
+                else//Если массив точек все еще пуст, то ему надо присвоить любой найденый массив точек
+                {
+                    if (fourSearchsForThreadPrivate[i].foundPoints != null)//Присваивать пустой, конечно. незачем
+                    {
+                        listFoundPointsInFourThread = new List<Point>();
+                        listFoundPointsInFourThread = fourSearchsForThreadPrivate[i].foundPoints.ToList();
+                    }
+                }
+            }
+
+            //Освободить память надо
+            fourSearchsForThreadPrivate = null;
+            fourThread = null;
+            //iterSearchModelInAreaDelegateObject = null;
+
+            //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
+            if (listFoundPointsInFourThread == null)
+            {
+                return false;
+            }
+
+            this.foundPoints = listFoundPointsInFourThread.ToArray();
+            return true;
+        }
+
         private bool CheckPointInMassive(List<Point> massiveOfPoints, Point pointForCheck)
         {
             foreach(Point pointInMassive in massiveOfPoints)
@@ -659,10 +772,6 @@ namespace SerchAndNotDestroy
         public void RemoveScreenshot()
         {
             this.pictureSearchArea = null;
-            fourSearchsForThreadPrivate[0].pictureSearchArea = null;
-            fourSearchsForThreadPrivate[1].pictureSearchArea = null;
-            fourSearchsForThreadPrivate[2].pictureSearchArea = null;
-            fourSearchsForThreadPrivate[3].pictureSearchArea = null;
         }
         ///Помогает узнать масштабирование системы
         [DllImport("gdi32.dll")]

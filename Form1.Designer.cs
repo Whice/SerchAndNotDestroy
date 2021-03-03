@@ -49,6 +49,10 @@
             this.buttonAddSingleColorForIgnor = new System.Windows.Forms.Button();
             this.checkBoxForColorsForIgnor = new System.Windows.Forms.CheckBox();
             this.panelForModelForSearch = new System.Windows.Forms.Panel();
+            this.textBoxCountOfThreads = new System.Windows.Forms.TextBox();
+            this.checkBoxCountOfThreads = new System.Windows.Forms.CheckBox();
+            this.checkBoxFirstFoundModelIsEnd = new System.Windows.Forms.CheckBox();
+            this.checkBoxParallelSearch = new System.Windows.Forms.CheckBox();
             this.buttonForChangeSizeOferyBigModelForSearch = new System.Windows.Forms.Button();
             this.buttonAddModelForSearch = new System.Windows.Forms.Button();
             this.textBoxX = new System.Windows.Forms.TextBox();
@@ -61,8 +65,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
-            this.checkBoxParallelSearch = new System.Windows.Forms.CheckBox();
-            this.checkBoxFirstFoundModelIsEnd = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
@@ -85,7 +88,7 @@
             // pictureBoxForModelForSearch
             // 
             this.pictureBoxForModelForSearch.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(166, 95);
+            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(90, 120);
             this.pictureBoxForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxForModelForSearch.Name = "pictureBoxForModelForSearch";
             this.pictureBoxForModelForSearch.Size = new System.Drawing.Size(75, 41);
@@ -287,6 +290,8 @@
             // panelForModelForSearch
             // 
             this.panelForModelForSearch.BackColor = System.Drawing.Color.LightCoral;
+            this.panelForModelForSearch.Controls.Add(this.textBoxCountOfThreads);
+            this.panelForModelForSearch.Controls.Add(this.checkBoxCountOfThreads);
             this.panelForModelForSearch.Controls.Add(this.checkBoxFirstFoundModelIsEnd);
             this.panelForModelForSearch.Controls.Add(this.checkBoxParallelSearch);
             this.panelForModelForSearch.Controls.Add(this.buttonForChangeSizeOferyBigModelForSearch);
@@ -298,6 +303,48 @@
             this.panelForModelForSearch.Name = "panelForModelForSearch";
             this.panelForModelForSearch.Size = new System.Drawing.Size(375, 205);
             this.panelForModelForSearch.TabIndex = 16;
+            // 
+            // textBoxCountOfThreads
+            // 
+            this.textBoxCountOfThreads.Enabled = false;
+            this.textBoxCountOfThreads.Location = new System.Drawing.Point(166, 64);
+            this.textBoxCountOfThreads.Name = "textBoxCountOfThreads";
+            this.textBoxCountOfThreads.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCountOfThreads.TabIndex = 14;
+            this.textBoxCountOfThreads.Text = "1";
+            // 
+            // checkBoxCountOfThreads
+            // 
+            this.checkBoxCountOfThreads.AutoSize = true;
+            this.checkBoxCountOfThreads.Enabled = false;
+            this.checkBoxCountOfThreads.Location = new System.Drawing.Point(166, 47);
+            this.checkBoxCountOfThreads.Name = "checkBoxCountOfThreads";
+            this.checkBoxCountOfThreads.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxCountOfThreads.TabIndex = 13;
+            this.checkBoxCountOfThreads.Text = "Задать количество потоков";
+            this.checkBoxCountOfThreads.UseVisualStyleBackColor = true;
+            this.checkBoxCountOfThreads.CheckedChanged += new System.EventHandler(this.CheckBoxCountOfThreads_CheckedChanged);
+            // 
+            // checkBoxFirstFoundModelIsEnd
+            // 
+            this.checkBoxFirstFoundModelIsEnd.AutoSize = true;
+            this.checkBoxFirstFoundModelIsEnd.Location = new System.Drawing.Point(166, 88);
+            this.checkBoxFirstFoundModelIsEnd.Name = "checkBoxFirstFoundModelIsEnd";
+            this.checkBoxFirstFoundModelIsEnd.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxFirstFoundModelIsEnd.TabIndex = 12;
+            this.checkBoxFirstFoundModelIsEnd.Text = "Иcкать до первого найденного";
+            this.checkBoxFirstFoundModelIsEnd.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxParallelSearch
+            // 
+            this.checkBoxParallelSearch.AutoSize = true;
+            this.checkBoxParallelSearch.Location = new System.Drawing.Point(166, 27);
+            this.checkBoxParallelSearch.Name = "checkBoxParallelSearch";
+            this.checkBoxParallelSearch.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxParallelSearch.TabIndex = 11;
+            this.checkBoxParallelSearch.Text = "Использовать многопоточноть";
+            this.checkBoxParallelSearch.UseVisualStyleBackColor = true;
+            this.checkBoxParallelSearch.CheckedChanged += new System.EventHandler(this.CheckBoxParallelSearch_CheckedChanged);
             // 
             // buttonForChangeSizeOferyBigModelForSearch
             // 
@@ -356,7 +403,7 @@
             // labelMousePosiotonView
             // 
             this.labelMousePosiotonView.AutoSize = true;
-            this.labelMousePosiotonView.Location = new System.Drawing.Point(8, 193);
+            this.labelMousePosiotonView.Location = new System.Drawing.Point(187, 23);
             this.labelMousePosiotonView.Name = "labelMousePosiotonView";
             this.labelMousePosiotonView.Size = new System.Drawing.Size(125, 13);
             this.labelMousePosiotonView.TabIndex = 21;
@@ -375,8 +422,10 @@
             // panelForPlaceOfSearch
             // 
             this.panelForPlaceOfSearch.BackColor = System.Drawing.Color.DarkSalmon;
+            this.panelForPlaceOfSearch.Controls.Add(this.button1);
             this.panelForPlaceOfSearch.Controls.Add(this.label3);
             this.panelForPlaceOfSearch.Controls.Add(this.label1);
+            this.panelForPlaceOfSearch.Controls.Add(this.labelMousePosiotonView);
             this.panelForPlaceOfSearch.Controls.Add(this.checkBoxSelectActiveWindow);
             this.panelForPlaceOfSearch.Controls.Add(this.textBoxX);
             this.panelForPlaceOfSearch.Controls.Add(this.textBoxY);
@@ -384,7 +433,7 @@
             this.panelForPlaceOfSearch.Controls.Add(this.textBoxHeight);
             this.panelForPlaceOfSearch.Location = new System.Drawing.Point(143, 280);
             this.panelForPlaceOfSearch.Name = "panelForPlaceOfSearch";
-            this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 108);
+            this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 151);
             this.panelForPlaceOfSearch.TabIndex = 23;
             // 
             // label3
@@ -415,25 +464,14 @@
             this.checkBoxSelectActiveWindow.Text = "Выбрать активное окно в качестве области для поиска";
             this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
             // 
-            // checkBoxParallelSearch
+            // button1
             // 
-            this.checkBoxParallelSearch.AutoSize = true;
-            this.checkBoxParallelSearch.Location = new System.Drawing.Point(166, 27);
-            this.checkBoxParallelSearch.Name = "checkBoxParallelSearch";
-            this.checkBoxParallelSearch.Size = new System.Drawing.Size(184, 17);
-            this.checkBoxParallelSearch.TabIndex = 11;
-            this.checkBoxParallelSearch.Text = "Использовать многопоточноть";
-            this.checkBoxParallelSearch.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxFirstFoundModelIsEnd
-            // 
-            this.checkBoxFirstFoundModelIsEnd.AutoSize = true;
-            this.checkBoxFirstFoundModelIsEnd.Location = new System.Drawing.Point(166, 46);
-            this.checkBoxFirstFoundModelIsEnd.Name = "checkBoxFirstFoundModelIsEnd";
-            this.checkBoxFirstFoundModelIsEnd.Size = new System.Drawing.Size(184, 17);
-            this.checkBoxFirstFoundModelIsEnd.TabIndex = 12;
-            this.checkBoxFirstFoundModelIsEnd.Text = "Иcкать до первого найденного";
-            this.checkBoxFirstFoundModelIsEnd.UseVisualStyleBackColor = true;
+            this.button1.Location = new System.Drawing.Point(9, 105);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(133, 31);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // MyLittleMonion
             // 
@@ -443,7 +481,6 @@
             this.ClientSize = new System.Drawing.Size(881, 504);
             this.Controls.Add(this.panelForPlaceOfSearch);
             this.Controls.Add(this.checkBoxForPlaceOfSearch);
-            this.Controls.Add(this.labelMousePosiotonView);
             this.Controls.Add(this.panelForModelForSearch);
             this.Controls.Add(this.checkBoxForColorsForIgnor);
             this.Controls.Add(this.panelForColorsForIgnor);
@@ -507,6 +544,9 @@
         private System.Windows.Forms.CheckBox checkBoxSelectActiveWindow;
         private System.Windows.Forms.CheckBox checkBoxParallelSearch;
         private System.Windows.Forms.CheckBox checkBoxFirstFoundModelIsEnd;
+        private System.Windows.Forms.TextBox textBoxCountOfThreads;
+        private System.Windows.Forms.CheckBox checkBoxCountOfThreads;
+        private System.Windows.Forms.Button button1;
     }
 }
 

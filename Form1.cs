@@ -76,7 +76,9 @@ namespace SerchAndNotDestroy
             labelForStatus.Text = "Выполняется поиск...";
 
             srPerSearchModelInArea srPerSearchModelInArea1;
-            if (checkBoxParallelSearch.Checked)
+            if(checkBoxCountOfThreads.Checked)
+                srPerSearchModelInArea1 = (() => srPer.SearchModelInAreaInMultyThreads(checkBoxFirstFoundModelIsEnd.Checked, Convert.ToInt32(textBoxCountOfThreads.Text)));
+            else if (checkBoxParallelSearch.Checked)
                 srPerSearchModelInArea1 = (() => srPer.SearchModelInAreaInFourThreads(checkBoxFirstFoundModelIsEnd.Checked));
             else
                 srPerSearchModelInArea1 = (() => srPer.SearchModelInArea(checkBoxFirstFoundModelIsEnd.Checked));
@@ -366,6 +368,7 @@ namespace SerchAndNotDestroy
         
         private void TestButton_Click(object sender, EventArgs e)
         {
+            /*
             string text = "";
             Point[] fourSearchsForThreadPrivate;
             fourSearchsForThreadPrivate = new Point[] {
@@ -384,7 +387,7 @@ namespace SerchAndNotDestroy
                 text += Convert.ToString(i) + " ";
             }
             MessageBox.Show(text);
-
+            */
 
             //Thread.Sleep(3000);
             /*srPer.SetPlaceForSearching(
@@ -403,6 +406,9 @@ namespace SerchAndNotDestroy
             pictureBox2.Height = srPer.pictureSearchArea.Height;*/
 
             //srPer.AddIgnorColorsInPicture((Bitmap)pictureBox1.Image);
+
+            FormForSelectionFilm selectionFilm = new FormForSelectionFilm();
+            selectionFilm.FilmActiveted(new Rectangle());
 
             //selectionFilm.Show();
             /*Thread.Sleep(5000);
@@ -675,6 +681,17 @@ namespace SerchAndNotDestroy
                 panelForModelForSearch.Height = 4000;
             }
         }
+
+        private void CheckBoxParallelSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxCountOfThreads.Enabled = checkBoxParallelSearch.Checked;
+            if (!checkBoxParallelSearch.Checked)
+                checkBoxCountOfThreads.Checked = false;
+        }
+        private void CheckBoxCountOfThreads_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxCountOfThreads.Enabled = checkBoxCountOfThreads.Checked;
+        }
         //Панель для действий с эталоном КОНЕЦ
 
 
@@ -693,13 +710,6 @@ namespace SerchAndNotDestroy
         {
             Thread.Sleep(1000);
         }
-
-
-
-
-
-
-
 
 
         //Вспомогательные методы КОНЕЦ
