@@ -75,6 +75,11 @@ namespace SerchAndNotDestroy
             srPer.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
             labelForStatus.Text = "Выполняется поиск...";
 
+            if(checkBoxForPlaceOfSearch.Checked)
+            {
+                srPer.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text), Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
+            }
+
             srPerSearchModelInArea srPerSearchModelInArea1;
             if(checkBoxCountOfThreads.Checked)
                 srPerSearchModelInArea1 = (() => srPer.SearchModelInAreaInMultyThreads(checkBoxFirstFoundModelIsEnd.Checked, Convert.ToInt32(textBoxCountOfThreads.Text)));
@@ -388,13 +393,72 @@ namespace SerchAndNotDestroy
             });
         }
 
+        private Point[] SortAfterEndSearching(Point[] foundPoints)
+        {
+            if (foundPoints != null)
+            {
+                for (int numberPoint = 1; numberPoint < foundPoints.Length; numberPoint++)
+                {
+                    int numberForSwap = numberPoint;
+                    while(numberForSwap>0)
+                    {
+                        if (foundPoints[numberForSwap].X < foundPoints[numberForSwap - 1].X)
+                        {
+                            Point swapPoint = foundPoints[numberForSwap];
+                            foundPoints[numberForSwap] = foundPoints[numberForSwap - 1];
+                            foundPoints[numberForSwap - 1] = swapPoint;
+                            numberForSwap--;
+                        }
+                        else
+                            break;
+                    }
+                    while (numberForSwap > 0)
+                    {
+                        if ((foundPoints[numberForSwap].X == foundPoints[numberForSwap - 1].X) &&
+                            (foundPoints[numberForSwap].Y < foundPoints[numberForSwap - 1].Y))
+                        {
+                            Point swapPoint = foundPoints[numberForSwap];
+                            foundPoints[numberForSwap] = foundPoints[numberForSwap - 1];
+                            foundPoints[numberForSwap - 1] = swapPoint;
+                            numberForSwap--;
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+            return foundPoints;
+        }
 
         Search srPer;
         Rectangle rectA;
-        delegate void deForFilm();
+        delegate bool deForFilm();
         private void TestButton_Click(object sender, EventArgs e)
         {
-            srPer.ScreenshotFullMonitor(); 
+            Point[] biliberda = new Point[]
+            {
+                new Point(34, 87),
+                new Point(12, 45),
+                new Point(34, 12),
+                new Point(34, 89),
+                new Point(17, 4),
+                new Point(1, 0),
+                new Point(56, 23),
+                new Point(12, 56),
+                new Point(1, 98),
+                new Point(1, 34),
+                new Point(34, 78),
+                new Point(0, 34)
+
+            };
+
+            biliberda = SortAfterEndSearching(biliberda);
+            string print = "";
+            foreach (var point in biliberda)
+                print += Convert.ToString(point.X) + ";" + Convert.ToString(point.Y) + "\n";
+            MessageBox.Show(Convert.ToString(print));
+
+            /*srPer.ScreenshotFullMonitor(); 
             Search ser1 = srPer.Clone();
             Search ser2 = srPer.Clone();
 
@@ -405,10 +469,10 @@ namespace SerchAndNotDestroy
             /*Task t2 = Task.Run(() =>
             {
                 TaskFunction(ser2);
-            });*/
+            });
             t1.Wait();
             //t2.Wait();
-            GC.Collect();
+            GC.Collect();*/
             /*
             string text = "";
             Point[] fourSearchsForThreadPrivate;

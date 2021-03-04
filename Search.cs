@@ -170,14 +170,11 @@ namespace SerchAndNotDestroy
 
         ///Область, в которой выполняется поиск НАЧАЛО
         private Point locationOfPlaceForSearchPrivate;
-        public Point locationOfPlaceForSearch
+        public Point GetLocationOfPlaceForSearch()
         {
-            get
-            {
                 if (this.screeningWindowPrivate)
                     return this.locationOfPlaceForSearchPrivate;
                 return new Point(0, 0);
-            }
         }
 
 
@@ -342,8 +339,8 @@ namespace SerchAndNotDestroy
             }
 
             //Начинать поиск надо не с начала, а сделав отступ сверху и слева на столько же, на сколько смещен искомый
-            //пиксель в эталоне, дабы не вылезать за верхнюю и левую границу оалсти поиска.
-            //Впрочем, этот пискель моет быть и началом.
+            //пиксель в эталоне, дабы не вылезать за верхнюю и левую границу области поиска.
+            //Впрочем, этот пискель может быть и началом.
             //Так же это учитывается и снизу, и справа
             for(int i= pixelOfModelForSearch.X;
                 i<(pictureSearchArea.Width-pictureModelForSearch.Width+pixelOfModelForSearch.X); i++)
@@ -357,21 +354,14 @@ namespace SerchAndNotDestroy
                         {//Если пиксели совпали, надо сравнить диагонали
                             if(ComparisonUpLeftDiagonalOfmodelAndAreaForSearch(new Point(i- pixelOfModelForSearch.X, j- pixelOfModelForSearch.Y)))
                             {//A если совпали и они, то полностью площадь эталона
-                                if(ComparisonOfmodelAndAreaForSearch(new Point(i - pixelOfModelForSearch.X, j - pixelOfModelForSearch.Y)))
+                                if (ComparisonOfmodelAndAreaForSearch(new Point(i - pixelOfModelForSearch.X, j - pixelOfModelForSearch.Y)))
                                 {
                                     if (listFoundPoints == null)
                                         listFoundPoints = new List<Point>();
 
-                                    if (screeningWindow)//Если поиск был в окне, то местонахождение окна надо прибавить
-                                    {
-                                        listFoundPoints.Add(new Point(
-                                            i - pixelOfModelForSearch.X + this.locationOfPlaceForSearchPrivate.X,
-                                            j - pixelOfModelForSearch.Y + this.locationOfPlaceForSearchPrivate.Y));
-                                    }
-                                    else
-                                    {
-                                        listFoundPoints.Add(new Point(i - pixelOfModelForSearch.X, j - pixelOfModelForSearch.Y));
-                                    }
+                                    listFoundPoints.Add(new Point(
+                                        i - pixelOfModelForSearch.X + this.locationOfPlaceForSearchPrivate.X,
+                                        j - pixelOfModelForSearch.Y + this.locationOfPlaceForSearchPrivate.Y));
 
                                     if (stopSearchingAfterFirstPointFound)
                                     {
@@ -386,6 +376,7 @@ namespace SerchAndNotDestroy
             if (listFoundPoints != null)
             {
                 ListToMassiveOfFoundPoints(listFoundPoints);
+                SortAfterEndSearching();
                 return true;
             }
             return false;
@@ -554,6 +545,7 @@ namespace SerchAndNotDestroy
             }
 
             this.foundPoints = listFoundPointsInFourThread.ToArray();
+            SortAfterEndSearching();
             return true;
         }
         public bool SearchModelInAreaInMultyThreads(bool stopSearchingAfterFirstPointFound, int countOfThreads)
@@ -671,6 +663,7 @@ namespace SerchAndNotDestroy
             }
 
             this.foundPoints = listFoundPointsInFourThread.ToArray();
+            SortAfterEndSearching();
             return true;
         }
         Search TaskFunctionThrad(ref Task taskNum, Search srPerClone, int numOfThread, int partWidthPSA, int thispictureSearchAreaHeight,  bool stopSearchingAfterFirstPointFound)
@@ -705,6 +698,46 @@ namespace SerchAndNotDestroy
 
 
         ///Вспомогательные методы:
+        
+        /// <summary>
+        ///Метод для сортировки найденных точек, чтобы они перечислялись всегда сторого в определенном порядке после любого способа поиска.
+        ///Точки сортируются по составляющей X, если она равна, то по состовляющей Y.
+        /// </summary>
+        private void SortAfterEndSearching()
+        {
+            if (this.foundPoints != null)
+            {
+                for (int numberPoint = 1; numberPoint < this.foundPoints.Length; numberPoint++)
+                {
+                    int numberForSwap = numberPoint;
+                    while (numberForSwap > 0)
+                    {
+                        if (this.foundPoints[numberForSwap].X < this.foundPoints[numberForSwap - 1].X)
+                        {
+                            Point swapPoint = this.foundPoints[numberForSwap];
+                            this.foundPoints[numberForSwap] = this.foundPoints[numberForSwap - 1];
+                            this.foundPoints[numberForSwap - 1] = swapPoint;
+                            numberForSwap--;
+                        }
+                        else
+                            break;
+                    }
+                    while (numberForSwap > 0)
+                    {
+                        if ((this.foundPoints[numberForSwap].X == this.foundPoints[numberForSwap - 1].X) &&
+                            (this.foundPoints[numberForSwap].Y < this.foundPoints[numberForSwap - 1].Y))
+                        {
+                            Point swapPoint = this.foundPoints[numberForSwap];
+                            this.foundPoints[numberForSwap] = this.foundPoints[numberForSwap - 1];
+                            this.foundPoints[numberForSwap - 1] = swapPoint;
+                            numberForSwap--;
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+        }
         public void CreateScreenShot()
         {
             using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))

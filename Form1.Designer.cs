@@ -55,10 +55,10 @@
             this.checkBoxParallelSearch = new System.Windows.Forms.CheckBox();
             this.buttonForChangeSizeOferyBigModelForSearch = new System.Windows.Forms.Button();
             this.buttonAddModelForSearch = new System.Windows.Forms.Button();
-            this.textBoxX = new System.Windows.Forms.TextBox();
-            this.textBoxY = new System.Windows.Forms.TextBox();
-            this.textBoxWidth = new System.Windows.Forms.TextBox();
-            this.textBoxHeight = new System.Windows.Forms.TextBox();
+            this.textBoxXBegin = new System.Windows.Forms.TextBox();
+            this.textBoxYBegin = new System.Windows.Forms.TextBox();
+            this.textBoxXEnd = new System.Windows.Forms.TextBox();
+            this.textBoxYEnd = new System.Windows.Forms.TextBox();
             this.labelMousePosiotonView = new System.Windows.Forms.Label();
             this.checkBoxForPlaceOfSearch = new System.Windows.Forms.CheckBox();
             this.panelForPlaceOfSearch = new System.Windows.Forms.Panel();
@@ -97,6 +97,7 @@
             // 
             // timer1
             // 
+            this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
@@ -367,37 +368,37 @@
             this.buttonAddModelForSearch.UseVisualStyleBackColor = true;
             this.buttonAddModelForSearch.Click += new System.EventHandler(this.ButtonAddModelForSearch_Click);
             // 
-            // textBoxX
+            // textBoxXBegin
             // 
-            this.textBoxX.Location = new System.Drawing.Point(6, 39);
-            this.textBoxX.Name = "textBoxX";
-            this.textBoxX.Size = new System.Drawing.Size(74, 20);
-            this.textBoxX.TabIndex = 17;
-            this.textBoxX.Text = "0";
+            this.textBoxXBegin.Location = new System.Drawing.Point(6, 39);
+            this.textBoxXBegin.Name = "textBoxXBegin";
+            this.textBoxXBegin.Size = new System.Drawing.Size(74, 20);
+            this.textBoxXBegin.TabIndex = 17;
+            this.textBoxXBegin.Text = "0";
             // 
-            // textBoxY
+            // textBoxYBegin
             // 
-            this.textBoxY.Location = new System.Drawing.Point(93, 39);
-            this.textBoxY.Name = "textBoxY";
-            this.textBoxY.Size = new System.Drawing.Size(73, 20);
-            this.textBoxY.TabIndex = 18;
-            this.textBoxY.Text = "0";
+            this.textBoxYBegin.Location = new System.Drawing.Point(93, 39);
+            this.textBoxYBegin.Name = "textBoxYBegin";
+            this.textBoxYBegin.Size = new System.Drawing.Size(73, 20);
+            this.textBoxYBegin.TabIndex = 18;
+            this.textBoxYBegin.Text = "0";
             // 
-            // textBoxWidth
+            // textBoxXEnd
             // 
-            this.textBoxWidth.Location = new System.Drawing.Point(7, 78);
-            this.textBoxWidth.Name = "textBoxWidth";
-            this.textBoxWidth.Size = new System.Drawing.Size(74, 20);
-            this.textBoxWidth.TabIndex = 19;
-            this.textBoxWidth.Text = "0";
+            this.textBoxXEnd.Location = new System.Drawing.Point(7, 78);
+            this.textBoxXEnd.Name = "textBoxXEnd";
+            this.textBoxXEnd.Size = new System.Drawing.Size(74, 20);
+            this.textBoxXEnd.TabIndex = 19;
+            this.textBoxXEnd.Text = "0";
             // 
-            // textBoxHeight
+            // textBoxYEnd
             // 
-            this.textBoxHeight.Location = new System.Drawing.Point(94, 78);
-            this.textBoxHeight.Name = "textBoxHeight";
-            this.textBoxHeight.Size = new System.Drawing.Size(73, 20);
-            this.textBoxHeight.TabIndex = 20;
-            this.textBoxHeight.Text = "0";
+            this.textBoxYEnd.Location = new System.Drawing.Point(94, 78);
+            this.textBoxYEnd.Name = "textBoxYEnd";
+            this.textBoxYEnd.Size = new System.Drawing.Size(73, 20);
+            this.textBoxYEnd.TabIndex = 20;
+            this.textBoxYEnd.Text = "0";
             // 
             // labelMousePosiotonView
             // 
@@ -425,10 +426,10 @@
             this.panelForPlaceOfSearch.Controls.Add(this.label1);
             this.panelForPlaceOfSearch.Controls.Add(this.labelMousePosiotonView);
             this.panelForPlaceOfSearch.Controls.Add(this.checkBoxSelectActiveWindow);
-            this.panelForPlaceOfSearch.Controls.Add(this.textBoxX);
-            this.panelForPlaceOfSearch.Controls.Add(this.textBoxY);
-            this.panelForPlaceOfSearch.Controls.Add(this.textBoxWidth);
-            this.panelForPlaceOfSearch.Controls.Add(this.textBoxHeight);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxXBegin);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxYBegin);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxXEnd);
+            this.panelForPlaceOfSearch.Controls.Add(this.textBoxYEnd);
             this.panelForPlaceOfSearch.Location = new System.Drawing.Point(143, 280);
             this.panelForPlaceOfSearch.Name = "panelForPlaceOfSearch";
             this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 112);
@@ -439,9 +440,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 62);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(139, 13);
+            this.label3.Size = new System.Drawing.Size(146, 13);
             this.label3.TabIndex = 23;
-            this.label3.Text = "Ширина и высота области";
+            this.label3.Text = "Координаты конца области";
             // 
             // label1
             // 
@@ -521,10 +522,10 @@
         private System.Windows.Forms.Panel panelForModelForSearch;
         private System.Windows.Forms.Button buttonAddModelForSearch;
         private System.Windows.Forms.Button buttonForChangeSizeOferyBigModelForSearch;
-        private System.Windows.Forms.TextBox textBoxX;
-        private System.Windows.Forms.TextBox textBoxY;
-        private System.Windows.Forms.TextBox textBoxWidth;
-        private System.Windows.Forms.TextBox textBoxHeight;
+        private System.Windows.Forms.TextBox textBoxXBegin;
+        private System.Windows.Forms.TextBox textBoxYBegin;
+        private System.Windows.Forms.TextBox textBoxXEnd;
+        private System.Windows.Forms.TextBox textBoxYEnd;
         private System.Windows.Forms.Label labelMousePosiotonView;
         private System.Windows.Forms.CheckBox checkBoxForPlaceOfSearch;
         private System.Windows.Forms.Panel panelForPlaceOfSearch;
