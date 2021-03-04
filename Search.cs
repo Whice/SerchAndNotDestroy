@@ -11,13 +11,27 @@ using System.Drawing.Imaging;
 namespace SerchAndNotDestroy
 {
     /// <summary>
-    /// Это класс поиска!!!
+    /// Это класс поиска.
+    /// Он позволяет искать заданный эталон на экране, а так же предоставляет инструменты для ускорения поиска этого эталона.
     /// </summary>
     class Search
     {
+        /// <summary>
+        /// Bitmap для хранения области, в которой осуществляется поиск эталона. По умолчанию null.
+        /// </summary>
         public Bitmap pictureSearchArea;
+        /// <summary>
+        /// Bitmap для хранения эталона, поиск местонахождения которого выполняется.
+        /// По умолчанию храниться картинка размером 50х50: две красные диагонали на белом фоне.
+        /// </summary>
         public Bitmap pictureModelForSearch;
+        /// <summary>
+        /// Массив точек, которые были найдены во время поиска. По умолчанию null.
+        /// </summary>
         public Point[] foundPoints;
+        /// <summary>
+        /// Инициализирует новый экземпляр класса поиска.
+        /// </summary>
         public Search()
         {
             pictureSearchArea = null;
@@ -25,7 +39,8 @@ namespace SerchAndNotDestroy
             foundPoints = null;
 
             locationOfPlaceForSearchPrivate = new Point();
-            screeningWindowPrivate = false;
+            isCreateScreenWindowPrivate = false;
+            pointerOnActiveWindow = default(IntPtr);
 
             listOfIgnorColors = null;
             numberIgnorColorInListPrivate = 0;
@@ -35,14 +50,34 @@ namespace SerchAndNotDestroy
 
             CreateBitmapForEmptyModel();
         }
-        ///цвета, которые надо игнрировать НАЧАЛО*/
+
+
+
+
+        ///цвета, которые надо игнорировать НАЧАЛО
+
+        /// <summary>
+        /// Внутреннее поле для хранения сведений о наличии игнорируемых цветов.
+        /// </summary>
         private bool isIgnorColorsPrivate;
+        /// <summary>
+        /// Внешнее свойство для получния сведений о наличии игнорируемых цветов.
+        /// </summary>
         public bool isIgnorColors
         {
             get { return this.isIgnorColorsPrivate; }
         }
+        /// <summary>
+        /// Список игнорируемых цветов.
+        /// </summary>
         private List<Color> listOfIgnorColors;
+        /// <summary>
+        /// Внутренний счетчик игнорируемых цветов.
+        /// </summary>
         private UInt16 numberIgnorColorInListPrivate;
+        /// <summary>
+        /// Внешнее свойство для взаимодействия с счетчиком игнорируемых цветов.
+        /// </summary>
         public UInt16 numberIgnorColorInList
         {
             get { return this.numberIgnorColorInListPrivate; }
@@ -62,6 +97,10 @@ namespace SerchAndNotDestroy
                 }
             }
         }
+        /// <summary>
+        /// Добавляет цвет в список игнорируемых.
+        /// </summary>
+        /// <param name="newColorForIgnor"></param>
         public void AddIgnorColor(Color newColorForIgnor)
         {
             //Если еще не было цветом для игнорирования, то выделить для них память
@@ -87,7 +126,10 @@ namespace SerchAndNotDestroy
                 }
             }
         }
-
+        /// <summary>
+        /// Добавляет все цвета из экземпляра Bitmap в список игнорируемых.
+        /// </summary>
+        /// <param name="picture"></param>
         public void AddIgnorColorsInPicture(Bitmap picture)
         {
             //добавить сразу несколько цветов удобно, да?
@@ -97,7 +139,10 @@ namespace SerchAndNotDestroy
                     AddIgnorColor(picture.GetPixel(i, j));
                 }
         }
-
+        /// <summary>
+        /// Добавляет в список игнорируемых цвет, который находится в месте с заданными координатами.
+        /// </summary>
+        /// <param name="pointNewColorForIgnor"></param>
         public void AddIgnorColorInPoint(Point pointNewColorForIgnor)
         {
             Bitmap newColorForIgnorInPixel = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -119,6 +164,9 @@ namespace SerchAndNotDestroy
 
             AddIgnorColor(newColorForIgnorInPixel.GetPixel(0, 0));
         }
+        /// <summary>
+        /// Удаляет из списока игнорируемых цвет, номер которого соответсвует счетчику.
+        /// </summary>
         public void RemoveIgnorColor()
         {
             if(listOfIgnorColors != null)
@@ -135,7 +183,11 @@ namespace SerchAndNotDestroy
                 }
             }
         }
-
+        /// <summary>
+        /// Проверяет, есть ли цвет в списке игнорируемых. Если есть, то возвращает true.
+        /// </summary>
+        /// <param name="colorForTest"></param>
+        /// <returns></returns>
         public bool IsColorForIgnor(Color colorForTest)
         {
             if(this.listOfIgnorColors!=null)
@@ -152,8 +204,8 @@ namespace SerchAndNotDestroy
         }
 
         /// <summary>
-        /// Показать цвет, который соотвествует выбраному номеру
-        /// Если возвращает прозрачный, то цветов нет
+        /// Показывает цвет, который соотвествует выбраному номеру.
+        /// Если возвращает прозрачный, то цветов нет.
         /// </summary>
         public Color ShowIgnorColor()
         {
@@ -163,37 +215,53 @@ namespace SerchAndNotDestroy
                 return Color.FromArgb(0, 255, 255, 255);
         }
 
-        ///*цвета, которые надо игнрировать КОНЕЦ*/
+        ///цвета, которые надо игнорировать КОНЕЦ
 
 
 
 
         ///Область, в которой выполняется поиск НАЧАЛО
+
+        /// <summary>
+        /// Внутреннее поле для хранения расположения прямоугольника области, где выполняется поиск.
+        /// </summary>
         private Point locationOfPlaceForSearchPrivate;
+        /// <summary>
+        /// Возвращает значение поля для хранения расположения прямоугольника области, где выполняется поиск.
+        /// </summary>
         public Point GetLocationOfPlaceForSearch()
         {
-                if (this.screeningWindowPrivate)
+                if (this.isCreateScreenWindowPrivate)
                     return this.locationOfPlaceForSearchPrivate;
                 return new Point(0, 0);
         }
-
-
+        /// <summary>
+        /// Задает значение расположения и размеров прямоугольника области, где выполняется поиск.
+        /// Принимает прямоугольник содержащий расположение и размеры.
+        /// </summary>
         public void SetPlaceForSearching(Rectangle placeForSearching)
         {
             this.locationOfPlaceForSearchPrivate.X = placeForSearching.X;
             this.locationOfPlaceForSearchPrivate.Y = placeForSearching.Y;
             this.pictureSearchArea = new Bitmap(placeForSearching.Width, placeForSearching.Height);
         }
+        /// <summary>
+        /// Задает значение расположения и размеров прямоугольника области, где выполняется поиск.
+        /// Принимает расположение верней левой и нижней правой точек.
+        /// </summary>
         public void SetPlaceForSearching(Point leftTopAngle, Point rightBottomAngle)
         {
             SetPlaceForSearching(new Rectangle(leftTopAngle, 
                 new Size(rightBottomAngle.X-leftTopAngle.X, rightBottomAngle.Y - leftTopAngle.Y)));
         }
+        /// <summary>
+        /// Задает значение расположения и размеров прямоугольника области, где выполняется поиск.
+        /// Принимает четыре значения границ прямоугольника: левой, верхней, правой и нижней
+        /// </summary>
         public void SetPlaceForSearching(int leftLine, int topLine, int rightLine, int bottomLine)
         {
             SetPlaceForSearching(new Point(leftLine, topLine), new Point(rightLine, bottomLine));
         }
-
 
         ///Область, в которой выполняется поиск КОНЕЦ
 
@@ -201,23 +269,28 @@ namespace SerchAndNotDestroy
 
 
         ///Скриншот активного окна НАЧАЛО
-        //Не забыть, что для подсчета координат крусора надо учитывать местоположение окна относительно начала экрана
-        
-        private bool screeningWindowPrivate;
-        public bool screeningWindow
-        {
-            get { return this.screeningWindowPrivate; }
-        }
 
+        /// <summary>
+        /// Хранит внутренее поле дающего информацию о том, был сделан скриншот активного окна.
+        /// </summary>
+        private bool isCreateScreenWindowPrivate;
+        /// <summary>
+        /// Возвращает значение дающее информацию о том, был сделан скриншот активного окна.
+        /// </summary>
+        public bool isCreateScreenWindow
+        {
+            get { return this.isCreateScreenWindowPrivate; }
+        }
+        /// <summary>
+        /// Хранит внутренее поле указателя на активное окно. По умолчанию равен default(IntPtr).
+        /// </summary>
+        private IntPtr pointerOnActiveWindow;
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
-        public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
-
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
@@ -226,17 +299,18 @@ namespace SerchAndNotDestroy
             public int Right;
             public int Bottom;
         }
+
+        /// <summary>
+        /// Устанавливает активное окна в качестве прямоугольника области для поиска.
+        /// </summary>
         public void SetActiveWindowForPlaceForSearching()
         {
             RECT rectangleOfActiveWindow;
             //Получаю дескриптор активного окна
-            IntPtr pointerOnActiveWindow = GetForegroundWindow();
+            this.pointerOnActiveWindow = GetForegroundWindow();
             //Получаю по дескриптору его размер и координаты(в прямоугольнике)
             GetWindowRect(pointerOnActiveWindow, out rectangleOfActiveWindow);
-            /*System.Windows.Forms.MessageBox.Show(Convert.ToString(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Size.Width) + 
-                "; " + Convert.ToString(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Size.Height));
-                */
-
+            
             //Почему-то окно на весь экран имеет начало координат -8; -8. Так же окно может иметь отрицательные координаты
             if(rectangleOfActiveWindow.Left < 0)
             {
@@ -248,22 +322,18 @@ namespace SerchAndNotDestroy
                 rectangleOfActiveWindow.Bottom -= rectangleOfActiveWindow.Top;
                 rectangleOfActiveWindow.Top = 0;
             }
-            //Оригинальное разрешение почему-то всегда масштабируется и становиться 0.8 от оригинала.
-            //Это потому что в винде у меня стоит мастаирование всего на 125%. Если это убрать и оставить 100%, все будет ок.
-            //Потому возвращаю его назад
+            //Оригинальное разрешение может масштабироваться системой. Потому с помощью метода getScalingFactor координаты приводятся к оригинальным
             rectangleOfActiveWindow.Right = (int)(rectangleOfActiveWindow.Right * getScalingFactor());
             rectangleOfActiveWindow.Left = (int)(rectangleOfActiveWindow.Left * getScalingFactor());
             rectangleOfActiveWindow.Top = (int)(rectangleOfActiveWindow.Top * getScalingFactor());
             rectangleOfActiveWindow.Bottom = (int)(rectangleOfActiveWindow.Bottom * getScalingFactor());
 
-
             //Окно это просто область, где надо искать
             SetPlaceForSearching(rectangleOfActiveWindow.Left, rectangleOfActiveWindow.Top,
                 rectangleOfActiveWindow.Right, rectangleOfActiveWindow.Bottom);
             
-            screeningWindowPrivate = true;
+            isCreateScreenWindowPrivate = true;
         }
-
 
         ///Скриншот активного окна КОНЕЦ
 
@@ -738,6 +808,8 @@ namespace SerchAndNotDestroy
                 }
             }
         }
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
+        public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
         public void CreateScreenShot()
         {
             using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))
@@ -760,7 +832,8 @@ namespace SerchAndNotDestroy
             }
         }
         /// <summary>
-        /// Заполняет эталон небольшой картинкой, которая означает, что он пуст
+        /// Заполняет эталон небольшой картинкой, которая означает, что он пуст.
+        /// Две красные дигонали на белом фоне. Размер картинки 50х50.
         /// </summary>
         private void CreateBitmapForEmptyModel()
         {
@@ -817,7 +890,7 @@ namespace SerchAndNotDestroy
             else
                 cloneThisSearch.pictureSearchArea = null;
 
-            cloneThisSearch.screeningWindowPrivate = this.screeningWindowPrivate;
+            cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
 
             return cloneThisSearch;
         }

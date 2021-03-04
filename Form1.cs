@@ -393,70 +393,15 @@ namespace SerchAndNotDestroy
             });
         }
 
-        private Point[] SortAfterEndSearching(Point[] foundPoints)
-        {
-            if (foundPoints != null)
-            {
-                for (int numberPoint = 1; numberPoint < foundPoints.Length; numberPoint++)
-                {
-                    int numberForSwap = numberPoint;
-                    while(numberForSwap>0)
-                    {
-                        if (foundPoints[numberForSwap].X < foundPoints[numberForSwap - 1].X)
-                        {
-                            Point swapPoint = foundPoints[numberForSwap];
-                            foundPoints[numberForSwap] = foundPoints[numberForSwap - 1];
-                            foundPoints[numberForSwap - 1] = swapPoint;
-                            numberForSwap--;
-                        }
-                        else
-                            break;
-                    }
-                    while (numberForSwap > 0)
-                    {
-                        if ((foundPoints[numberForSwap].X == foundPoints[numberForSwap - 1].X) &&
-                            (foundPoints[numberForSwap].Y < foundPoints[numberForSwap - 1].Y))
-                        {
-                            Point swapPoint = foundPoints[numberForSwap];
-                            foundPoints[numberForSwap] = foundPoints[numberForSwap - 1];
-                            foundPoints[numberForSwap - 1] = swapPoint;
-                            numberForSwap--;
-                        }
-                        else
-                            break;
-                    }
-                }
-            }
-            return foundPoints;
-        }
 
         Search srPer;
         Rectangle rectA;
         delegate bool deForFilm();
         private void TestButton_Click(object sender, EventArgs e)
         {
-            Point[] biliberda = new Point[]
-            {
-                new Point(34, 87),
-                new Point(12, 45),
-                new Point(34, 12),
-                new Point(34, 89),
-                new Point(17, 4),
-                new Point(1, 0),
-                new Point(56, 23),
-                new Point(12, 56),
-                new Point(1, 98),
-                new Point(1, 34),
-                new Point(34, 78),
-                new Point(0, 34)
 
-            };
-
-            biliberda = SortAfterEndSearching(biliberda);
-            string print = "";
-            foreach (var point in biliberda)
-                print += Convert.ToString(point.X) + ";" + Convert.ToString(point.Y) + "\n";
-            MessageBox.Show(Convert.ToString(print));
+            IntPtr arg = default(IntPtr);
+            MessageBox.Show(Convert.ToString(arg == default(IntPtr)));
 
             /*srPer.ScreenshotFullMonitor(); 
             Search ser1 = srPer.Clone();
