@@ -415,7 +415,6 @@ namespace SerchAndNotDestroy
         ///Выполнение поиска с использованием четырех потоков НАЧАЛО
         private bool isEnableFourThreadsPrivate;
         public bool isEnableFourThreads { get { return this.isEnableFourThreadsPrivate; } }
-        private bool needAbortThreads;
         
         private delegate void iterSearchModelInAreaDelegate();
         /// <summary>
@@ -455,7 +454,7 @@ namespace SerchAndNotDestroy
 
 
 
-            //В третий поток отправляется третья четверть
+            //Во второй поток отправляется вторая четверть
             fourSearchsForThreadPrivate[1] = this.Clone();
 
             iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject2 = (() => fourSearchsForThreadPrivate[1].SetPlaceForSearching(
@@ -473,7 +472,7 @@ namespace SerchAndNotDestroy
 
 
 
-            //Во второй поток отправляется вторая четверть
+            //В третий поток отправляется третья четверть 
             fourSearchsForThreadPrivate[2] = this.Clone();
 
             iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[2].SetPlaceForSearching(
@@ -561,77 +560,85 @@ namespace SerchAndNotDestroy
         {
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
+            Size thispictureSearchArea = new Size(this.pictureSearchArea.Width, this.pictureSearchArea.Height);
+            this.pictureSearchArea = null;
+
             //Для краткости чтения половина ширины области поиска вычисляется сразу
-            int partWidthPSA = (int)(this.pictureSearchArea.Width / countOfThreads);
+            int partWidthPSA = (int)(thispictureSearchArea.Width / countOfThreads);
 
             //Инициализация потоков и будущих клонов этого экземпляра для этих потоков
-            Search[] fourSearchsForThreadPrivate = new Search[countOfThreads];
-            Thread[] fourThread = new Thread[countOfThreads];
+            Search[] muchSearchsForThreadPrivate = new Search[countOfThreads];
+            Thread[] muchThreads = new Thread[countOfThreads];
+            System.Threading.Tasks.Task[] muchTasks = new Task[countOfThreads];
+            iterSearchModelInAreaDelegate[] iterSearchModelInAreaDelegateObject = new iterSearchModelInAreaDelegate[countOfThreads];
 
-
-            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject;
-
-            for (int i = 0; i < countOfThreads - 1; i++)//В последней части надо не брать нахлест, т.к. это самый конец
+            
+            for (int i = 0; i < countOfThreads; i++)
             {
-                //В первый поток отправляется первая четверть
-                fourSearchsForThreadPrivate[i] = this.Clone();
+                muchSearchsForThreadPrivate[i] = this.Clone();
             }
 
-                for (int i = 0; i < countOfThreads - 2; i++)//В последней части надо не брать нахлест, т.к. это самый конец
-            {
-                //В первый поток отправляется первая четверть
-                //fourSearchsForThreadPrivate[i] = this.Clone();
 
-                //Задать для этого потока координаты и размер новой области, соответсвующие его части
-                iterSearchModelInAreaDelegateObject = (() => fourSearchsForThreadPrivate[i].SetPlaceForSearching(
+            //Попробую с таксками
+            for (int numOfThread = 0; numOfThread < countOfThreads - 1; numOfThread++)//В последней части надо не брать нахлест, т.к. это самый конец
+            {
+                muchSearchsForThreadPrivate[numOfThread] = TaskFunctionThrad(ref muchTasks[numOfThread], muchSearchsForThreadPrivate[numOfThread].Clone(),
+                    numOfThread, partWidthPSA, thispictureSearchArea.Height, stopSearchingAfterFirstPointFound);
+            }
+               /* for (int numOfThread = 0; numOfThread < countOfThreads - 1; numOfThread++)//В последней части надо не брать нахлест, т.к. это самый конец
+            { //Задать для этого потока координаты и размер новой области, соответсвующие его части
+                fourSearchsForThreadPrivate[numOfThread].SetPlaceForSearching(
                     new Rectangle(
-                        this.locationOfPlaceForSearchPrivate.X + partWidthPSA*i,//Перемещение начала с номером потока
+                        this.locationOfPlaceForSearchPrivate.X + partWidthPSA * numOfThread,//Перемещение начала с номером потока
                         this.locationOfPlaceForSearchPrivate.Y,
                         //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                         partWidthPSA + this.pictureModelForSearch.Width,
-                        this.pictureModelForSearch.Height
-                        )));
-                iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[i].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[i].SearchModelInArea(stopSearchingAfterFirstPointFound));
-
-                fourThread[i] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject));
-                fourThread[i].Start();
+                        thispictureSearchArea.Height
+                        ));
+                //fourSearchsForThreadPrivate[numOfThread].CreateScreenShot();
             }
+            for (int numOfThread = 0; numOfThread < countOfThreads - 1; numOfThread++)//В последней части надо не брать нахлест, т.к. это самый конец
+            {
+                iterSearchModelInAreaDelegateObject[numOfThread] = (() => fourSearchsForThreadPrivate[numOfThread].CreateScreenShot());
+                iterSearchModelInAreaDelegateObject[numOfThread] +=  (() => fourSearchsForThreadPrivate[numOfThread].SearchModelInArea(stopSearchingAfterFirstPointFound));
+
+                fourThread[numOfThread] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject[numOfThread]));
+                fourThread[numOfThread].Start();
+            }*/
+
 
 
             //Последняя часть, без нахлеста
-            //fourSearchsForThreadPrivate[countOfThreads-1] = this.Clone();
-
-            iterSearchModelInAreaDelegateObject = (() => fourSearchsForThreadPrivate[countOfThreads - 1].SetPlaceForSearching(
+            iterSearchModelInAreaDelegateObject[countOfThreads - 1] = (() => muchSearchsForThreadPrivate[countOfThreads - 1].SetPlaceForSearching(
                     new Rectangle(
                         this.locationOfPlaceForSearchPrivate.X + partWidthPSA * (countOfThreads-1),//Перемещение на последнюю не тронутую часть ширины
                         this.locationOfPlaceForSearchPrivate.Y,
                         //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                        this.pictureModelForSearch.Width - (partWidthPSA * (countOfThreads - 1)),//Последняя не тронутая часть ширины
-                        this.pictureModelForSearch.Height
+                        thispictureSearchArea.Width - (partWidthPSA * (countOfThreads - 1)),//Последняя не тронутая часть ширины
+                        thispictureSearchArea.Height
                         )));
-            iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[countOfThreads - 1].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject += (() => fourSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            iterSearchModelInAreaDelegateObject[countOfThreads - 1] += (() => muchSearchsForThreadPrivate[countOfThreads - 1].CreateScreenShot());
+            iterSearchModelInAreaDelegateObject[countOfThreads - 1] += (() => muchSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea(stopSearchingAfterFirstPointFound));
 
-            fourThread[countOfThreads - 1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject));
-            fourThread[countOfThreads - 1].Start();
-
+            muchThreads[countOfThreads - 1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject[countOfThreads - 1]));
+            muchThreads[countOfThreads - 1].Start();
+            muchThreads[countOfThreads-1].Join();
 
 
             this.isEnableFourThreadsPrivate = true;
 
             for (int i = 0; i < countOfThreads-1; i++)
-                fourThread[i].Join();
+                muchTasks[i].Wait();//fourThread[i].Join();
 
             //Объединение всех найденых точек
             List<Point> listFoundPointsInFourThread = null;//Создается новый список дл простоты добавления
-            for (int i = 0; i < countOfThreads - 1; i++)
+            for (int i = 0; i < countOfThreads ; i++)
             {
                 //Если есть что и куда добавить, то можно добавлять
-                if (listFoundPointsInFourThread != null && fourSearchsForThreadPrivate[i].foundPoints != null)
+                if (listFoundPointsInFourThread != null && muchSearchsForThreadPrivate[i].foundPoints != null)
                 {
                     //Просматривается каждый элемент на возможность добавления
-                    foreach (Point newPointForList in fourSearchsForThreadPrivate[i].foundPoints)
+                    foreach (Point newPointForList in muchSearchsForThreadPrivate[i].foundPoints)
                     {
                         //Если такого элемента еще нет, то происходит добавление
                         if (!CheckPointInMassive(listFoundPointsInFourThread, newPointForList))
@@ -644,17 +651,17 @@ namespace SerchAndNotDestroy
                 }
                 else//Если массив точек все еще пуст, то ему надо присвоить любой найденый массив точек
                 {
-                    if (fourSearchsForThreadPrivate[i].foundPoints != null)//Присваивать пустой, конечно. незачем
+                    if (muchSearchsForThreadPrivate[i].foundPoints != null)//Присваивать пустой, конечно. незачем
                     {
                         listFoundPointsInFourThread = new List<Point>();
-                        listFoundPointsInFourThread = fourSearchsForThreadPrivate[i].foundPoints.ToList();
+                        listFoundPointsInFourThread = muchSearchsForThreadPrivate[i].foundPoints.ToList();
                     }
                 }
             }
 
             //Освободить память надо
-            fourSearchsForThreadPrivate = null;
-            fourThread = null;
+            muchSearchsForThreadPrivate = null;
+            muchThreads = null;
             //iterSearchModelInAreaDelegateObject = null;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
@@ -665,6 +672,23 @@ namespace SerchAndNotDestroy
 
             this.foundPoints = listFoundPointsInFourThread.ToArray();
             return true;
+        }
+        Search TaskFunctionThrad(ref Task taskNum, Search srPerClone, int numOfThread, int partWidthPSA, int thispictureSearchAreaHeight,  bool stopSearchingAfterFirstPointFound)
+        {
+            taskNum = Task.Run(() =>
+            {
+                srPerClone.SetPlaceForSearching(
+                new Rectangle(
+                    this.locationOfPlaceForSearchPrivate.X + partWidthPSA * numOfThread,//Перемещение начала с номером потока
+                    this.locationOfPlaceForSearchPrivate.Y,
+                    //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                    partWidthPSA + this.pictureModelForSearch.Width,
+                    thispictureSearchAreaHeight
+                    ));
+                srPerClone.CreateScreenShot();
+                srPerClone.SearchModelInArea(stopSearchingAfterFirstPointFound);
+            });
+            return srPerClone;
         }
 
         private bool CheckPointInMassive(List<Point> massiveOfPoints, Point pointForCheck)
@@ -739,19 +763,30 @@ namespace SerchAndNotDestroy
         public Search Clone()
         {
             Search cloneThisSearch = new Search();
-
             cloneThisSearch.foundPoints = this.foundPoints;
             cloneThisSearch.isEnableFourThreadsPrivate = this.isEnableFourThreadsPrivate;
             cloneThisSearch.isIgnorColorsPrivate = this.isIgnorColorsPrivate;
-            cloneThisSearch.listOfIgnorColors = this.listOfIgnorColors;
+
+            if (this.listOfIgnorColors != null)
+            {
+                Color[] colorListImassiveInList = this.listOfIgnorColors.ToArray();
+                cloneThisSearch.listOfIgnorColors = colorListImassiveInList.ToList();
+            }
+            else
+                cloneThisSearch.listOfIgnorColors = null;
+
             cloneThisSearch.locationOfPlaceForSearchPrivate = this.locationOfPlaceForSearchPrivate;
             cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
             cloneThisSearch.pictureModelForSearch = (Bitmap)this.pictureModelForSearch.Clone();
-            cloneThisSearch.pictureSearchArea = (Bitmap)this.pictureSearchArea.Clone();
+
+            if (this.pictureSearchArea != null)
+                cloneThisSearch.pictureSearchArea = (Bitmap)this.pictureSearchArea.Clone();
+            else
+                cloneThisSearch.pictureSearchArea = null;
+
             cloneThisSearch.screeningWindowPrivate = this.screeningWindowPrivate;
 
             return cloneThisSearch;
-
         }
         public void ScreenshotFullMonitor()
         {

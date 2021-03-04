@@ -65,7 +65,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
@@ -422,7 +421,6 @@
             // panelForPlaceOfSearch
             // 
             this.panelForPlaceOfSearch.BackColor = System.Drawing.Color.DarkSalmon;
-            this.panelForPlaceOfSearch.Controls.Add(this.button1);
             this.panelForPlaceOfSearch.Controls.Add(this.label3);
             this.panelForPlaceOfSearch.Controls.Add(this.label1);
             this.panelForPlaceOfSearch.Controls.Add(this.labelMousePosiotonView);
@@ -433,7 +431,7 @@
             this.panelForPlaceOfSearch.Controls.Add(this.textBoxHeight);
             this.panelForPlaceOfSearch.Location = new System.Drawing.Point(143, 280);
             this.panelForPlaceOfSearch.Name = "panelForPlaceOfSearch";
-            this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 151);
+            this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 112);
             this.panelForPlaceOfSearch.TabIndex = 23;
             // 
             // label3
@@ -463,15 +461,6 @@
             this.checkBoxSelectActiveWindow.TabIndex = 21;
             this.checkBoxSelectActiveWindow.Text = "Выбрать активное окно в качестве области для поиска";
             this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(9, 105);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(133, 31);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // MyLittleMonion
             // 
@@ -546,7 +535,6 @@
         private System.Windows.Forms.CheckBox checkBoxFirstFoundModelIsEnd;
         private System.Windows.Forms.TextBox textBoxCountOfThreads;
         private System.Windows.Forms.CheckBox checkBoxCountOfThreads;
-        private System.Windows.Forms.Button button1;
     }
 }
 

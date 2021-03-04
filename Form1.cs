@@ -362,12 +362,53 @@ namespace SerchAndNotDestroy
 
         }
         
-        
+        void TaskFunction(Search srPerClone)
+        {
+            Search[] srPer5 = new Search[8];
+            for (int i = 0; i < srPer5.Length; i++)
+                srPer5[i] = new Search();//srPerClone.Clone();
+            Task[] taski = new Task[srPer5.Length];
+
+            for (int jk = 0; jk < srPer5.Length; jk++)
+            {
+                TaskFunctionThrad(srPer5[jk].Clone(), ref taski[jk]);
+            }
+
+            for (int i = 0; i < srPer5.Length; i++)
+                taski[i].Wait();
+        }
+        void TaskFunctionThrad(Search srPerClone, ref Task taskNum)
+        {
+            taskNum = Task.Run(() =>
+            {
+                srPerClone.SetPlaceForSearching(44, 44, 444, 444);
+                srPerClone.CreateScreenShot();
+                MessageBox.Show(Convert.ToString(
+                srPerClone.SearchModelInArea(true)));
+            });
+        }
+
+
         Search srPer;
         Rectangle rectA;
-        
+        delegate void deForFilm();
         private void TestButton_Click(object sender, EventArgs e)
         {
+            srPer.ScreenshotFullMonitor(); 
+            Search ser1 = srPer.Clone();
+            Search ser2 = srPer.Clone();
+
+            Task t1 = Task.Run(() =>
+            {
+                TaskFunction(ser1);
+            });
+            /*Task t2 = Task.Run(() =>
+            {
+                TaskFunction(ser2);
+            });*/
+            t1.Wait();
+            //t2.Wait();
+            GC.Collect();
             /*
             string text = "";
             Point[] fourSearchsForThreadPrivate;
@@ -407,8 +448,7 @@ namespace SerchAndNotDestroy
 
             //srPer.AddIgnorColorsInPicture((Bitmap)pictureBox1.Image);
 
-            FormForSelectionFilm selectionFilm = new FormForSelectionFilm();
-            selectionFilm.FilmActiveted(new Rectangle());
+
 
             //selectionFilm.Show();
             /*Thread.Sleep(5000);
