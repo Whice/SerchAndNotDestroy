@@ -538,6 +538,11 @@ namespace SerchAndNotDestroy
         /// </summary>
         public bool SearchModelInAreaInFourThreads(bool stopSearchingAfterFirstPointFound)
         {
+            //Если игнорируемых цветов нет в эталоне, то их надо исключить из спика игнорируемых, 
+            //т.к. они в любом случае будут проигнорированы из-за отсутсвия в эталоне.
+            //Если этого не сделать, то они будут проверяться в пустую, что может замедлить 
+            //выполнение: в лучшем случае скорость останется такой же.
+            RemoveIgnorColorsThatAreNotInModel();
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
             //Для краткости чтения половина ширины и высоты области поиска вычисляются сразу
@@ -672,6 +677,11 @@ namespace SerchAndNotDestroy
         }
         public bool SearchModelInAreaInMultyThreads(bool stopSearchingAfterFirstPointFound, int countOfThreads)
         {
+            //Если игнорируемых цветов нет в эталоне, то их надо исключить из спика игнорируемых, 
+            //т.к. они в любом случае будут проигнорированы из-за отсутсвия в эталоне.
+            //Если этого не сделать, то они будут проверяться в пустую, что может замедлить 
+            //выполнение: в лучшем случае скорость останется такой же.
+            RemoveIgnorColorsThatAreNotInModel();
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
             Size thispictureSearchArea = new Size(this.pictureSearchArea.Width, this.pictureSearchArea.Height);
