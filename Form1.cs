@@ -77,7 +77,10 @@ namespace SerchAndNotDestroy
 
             if(checkBoxForPlaceOfSearch.Checked)
             {
-                srPer.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text), Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
+                if(checkBoxSelectActiveWindow.Checked)
+                    srPer.SetActiveWindowForPlaceForSearching();
+                else
+                    srPer.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text), Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
             }
 
             srPerSearchModelInArea srPerSearchModelInArea1;
@@ -615,9 +618,9 @@ namespace SerchAndNotDestroy
             for (int i = 0; i < 5; i++)
             {
                 buttonAddSingleColorForIgnor.Text = "Наведите курсор на цвет \nдо истечения времени: " + Convert.ToString(5 - i);
-                Thread newThr = new Thread(WaitFunction);
-                newThr.Start();
-                newThr.Join();
+
+                Task waitTask = Task.Run(() => { Thread.Sleep(1000); });
+                waitTask.Wait();
             }
 
             srPer.AddIgnorColorInPoint(new Point((int)(Cursor.Position.X * Search.getScalingFactor()), (int)(Cursor.Position.Y * Search.getScalingFactor())));
@@ -681,10 +684,18 @@ namespace SerchAndNotDestroy
         }
         void UpdateContentPanelOfColorsForIgnor()
         {
-            pictureBoxForIgnorColor.Image = FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
+            if (srPer.ShowIgnorColor().A == 0)
+            {
+                DisableButtonsForEmptyList(false);
+                labelForNumberOfIgnorColor.Text = "Нет цветов";
+            }
+            else
+            {
+                pictureBoxForIgnorColor.Image = FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
                     srPer.ShowIgnorColor());
 
-            labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
+                labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
+            }
         }
 
         //Панель игнорирования цветов КОНЕЦ
@@ -743,6 +754,21 @@ namespace SerchAndNotDestroy
         }
         //Панель для действий с эталоном КОНЕЦ
 
+        //Панель с настройками области поиска НАЧАЛО
+        private void CheckBoxSelectActiveWindow_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxXBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
+            textBoxXEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
+            textBoxYBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
+            textBoxYEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
+        }
+
+        private void CheckBoxForPlaceOfSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            panelForPlaceOfSearch.Visible = checkBoxForPlaceOfSearch.Checked;
+        }
+
+        //Панель с настройками области поиска КОНЕЦ
 
         //Вспомогательные методы НАЧАЛО
         private static Bitmap FillBitmapWithColor(int width, int height, Color colorForFill)
@@ -755,10 +781,7 @@ namespace SerchAndNotDestroy
             
             return pictureForReturn;
         }
-        void WaitFunction()
-        {
-            Thread.Sleep(1000);
-        }
+
 
 
         //Вспомогательные методы КОНЕЦ

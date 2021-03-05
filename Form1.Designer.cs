@@ -227,7 +227,7 @@
             this.panelForColorsForIgnor.Location = new System.Drawing.Point(520, 46);
             this.panelForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.panelForColorsForIgnor.Name = "panelForColorsForIgnor";
-            this.panelForColorsForIgnor.Size = new System.Drawing.Size(340, 181);
+            this.panelForColorsForIgnor.Size = new System.Drawing.Size(340, 205);
             this.panelForColorsForIgnor.TabIndex = 14;
             this.panelForColorsForIgnor.Visible = false;
             // 
@@ -418,6 +418,7 @@
             this.checkBoxForPlaceOfSearch.TabIndex = 22;
             this.checkBoxForPlaceOfSearch.Text = "Искать в заданной области";
             this.checkBoxForPlaceOfSearch.UseVisualStyleBackColor = true;
+            this.checkBoxForPlaceOfSearch.CheckedChanged += new System.EventHandler(this.CheckBoxForPlaceOfSearch_CheckedChanged);
             // 
             // panelForPlaceOfSearch
             // 
@@ -434,6 +435,7 @@
             this.panelForPlaceOfSearch.Name = "panelForPlaceOfSearch";
             this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 112);
             this.panelForPlaceOfSearch.TabIndex = 23;
+            this.panelForPlaceOfSearch.Visible = false;
             // 
             // label3
             // 
@@ -462,6 +464,7 @@
             this.checkBoxSelectActiveWindow.TabIndex = 21;
             this.checkBoxSelectActiveWindow.Text = "Выбрать активное окно в качестве области для поиска";
             this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
+            this.checkBoxSelectActiveWindow.CheckedChanged += new System.EventHandler(this.CheckBoxSelectActiveWindow_CheckedChanged);
             // 
             // MyLittleMonion
             // 

@@ -249,7 +249,10 @@ namespace SerchAndNotDestroy
                     }
                 }
             }
-            this.listOfIgnorColors = newIgnorColorList;
+            if (newIgnorColorList.Count == 0)
+                this.listOfIgnorColors = null;
+            else
+                this.listOfIgnorColors = newIgnorColorList;
         }
 
         ///цвета, которые надо игнорировать КОНЕЦ
@@ -338,7 +341,7 @@ namespace SerchAndNotDestroy
         }
 
         /// <summary>
-        /// Устанавливает активное окна в качестве прямоугольника области для поиска.
+        /// Устанавливает активное окно в качестве прямоугольника области для поиска.
         /// </summary>
         public void SetActiveWindowForPlaceForSearching()
         {
