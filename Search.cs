@@ -68,7 +68,7 @@ namespace SerchAndNotDestroy
             get { return this.isIgnorColorsPrivate; }
         }
         /// <summary>
-        /// Список игнорируемых цветов.
+        /// Список игнорируемых цветов. Очень нежелательно большое количество игнорируемых цветов. Чем меньше, тем лучше.
         /// </summary>
         private List<Color> listOfIgnorColors;
         /// <summary>
@@ -205,7 +205,7 @@ namespace SerchAndNotDestroy
 
         /// <summary>
         /// Показывает цвет, который соотвествует выбраному номеру.
-        /// Если возвращает прозрачный, то цветов нет.
+        /// Если цветов нет, то возвращает прозрачный. Т.е. с альфа-каналом равным 0.
         /// </summary>
         public Color ShowIgnorColor()
         {
@@ -213,6 +213,43 @@ namespace SerchAndNotDestroy
                 return listOfIgnorColors[numberIgnorColorInListPrivate];
             else
                 return Color.FromArgb(0, 255, 255, 255);
+        }
+        /// <summary>
+        /// Проверяет наличие цвета в Bitmap. Не учитывает альфа-канал. Сравнивает только свойства R, G и B.
+        /// </summary>
+        /// <param name="colorForCheck"></param>
+        /// <param name="bitmapForCheck"></param>
+        /// <returns></returns>
+        public static bool CheckColorIsInBitmap(Color colorForCheck, Bitmap bitmapForCheck)
+        {
+            if (bitmapForCheck == null)
+                return false;
+
+            for (int i = 0; i < bitmapForCheck.Width; i++)
+                for (int j = 0; j < bitmapForCheck.Height; j++)
+                    if (CheckColorPixelInPoint(colorForCheck, bitmapForCheck.GetPixel(i, j)))
+                        return true;
+
+            return false;
+        }
+        /// <summary>
+        /// Удаляет цвета из списка игнорируемых, если их нет в эталоне.
+        /// </summary>
+        private void RemoveIgnorColorsThatAreNotInModel()
+        {
+            List<Color> newIgnorColorList = new List<Color>();
+            this.numberIgnorColorInList = 0;
+            if (this.listOfIgnorColors != null)
+            {
+                foreach (Color ignorColor in this.listOfIgnorColors)
+                {
+                    if (CheckColorIsInBitmap(ignorColor, this.pictureModelForSearch))
+                    {
+                        newIgnorColorList.Add(ignorColor);
+                    }
+                }
+            }
+            this.listOfIgnorColors = newIgnorColorList;
         }
 
         ///цвета, которые надо игнорировать КОНЕЦ
@@ -282,9 +319,9 @@ namespace SerchAndNotDestroy
             get { return this.isCreateScreenWindowPrivate; }
         }
         /// <summary>
-        /// Хранит внутренее поле указателя на активное окно. По умолчанию равен default(IntPtr).
+        /// Хранит указатель на активное окно. По умолчанию равен default(IntPtr).
         /// </summary>
-        private IntPtr pointerOnActiveWindow;
+        public IntPtr pointerOnActiveWindow { get; set; }
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
@@ -306,10 +343,10 @@ namespace SerchAndNotDestroy
         public void SetActiveWindowForPlaceForSearching()
         {
             RECT rectangleOfActiveWindow;
-            //Получаю дескриптор активного окна
-            this.pointerOnActiveWindow = GetForegroundWindow();
-            //Получаю по дескриптору его размер и координаты(в прямоугольнике)
-            GetWindowRect(pointerOnActiveWindow, out rectangleOfActiveWindow);
+            //Запомнить дескриптор активного окна
+            RemmemberPointerOnActiveWindow();
+            //Получить по дескриптору размер и координаты(в прямоугольнике) окна по указателю, который был запомнен
+            GetWindowRect(this.pointerOnActiveWindow, out rectangleOfActiveWindow);
             
             //Почему-то окно на весь экран имеет начало координат -8; -8. Так же окно может иметь отрицательные координаты
             if(rectangleOfActiveWindow.Left < 0)
@@ -333,6 +370,14 @@ namespace SerchAndNotDestroy
                 rectangleOfActiveWindow.Right, rectangleOfActiveWindow.Bottom);
             
             isCreateScreenWindowPrivate = true;
+        }
+        /// <summary>
+        /// Запомнить указатель на активное окно.
+        /// </summary>
+        public void RemmemberPointerOnActiveWindow()
+        {
+
+            this.pointerOnActiveWindow = GetForegroundWindow();
         }
 
         ///Скриншот активного окна КОНЕЦ
@@ -382,7 +427,14 @@ namespace SerchAndNotDestroy
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
             //Создать список для записи найденых точек
-            List<Point> listFoundPoints = null; 
+            List<Point> listFoundPoints = null;
+
+            //Если игнорируемых цветов нет в эталоне, то их надо исключить из спика игнорируемых, 
+            //т.к. они в любом случае будут проигнорированы из-за отсутсвия в эталоне.
+            //Если этого не сделать, то они будут проверяться в пустую, что может замедлить 
+            //выполнение: в лучшем случае скорость останется такой же.
+            RemoveIgnorColorsThatAreNotInModel();
+
             //Определить по какому пикселю будет идти поиск. Искать по игнорируемому цвету нельзя.
             Point pixelOfModelForSearch = new Point();
             if (listOfIgnorColors == null)//Если нет игнорируемых цветов
@@ -851,7 +903,13 @@ namespace SerchAndNotDestroy
                     }
                 }
         }
-        private bool CheckColorPixelInPoint(Color firstColor, Color secondColor)
+        /// <summary>
+        /// сравнивает два цвета только по свойствам R, G и B
+        /// </summary>
+        /// <param name="firstColor"></param>
+        /// <param name="secondColor"></param>
+        /// <returns></returns>
+        public static bool CheckColorPixelInPoint(Color firstColor, Color secondColor)
         {
 
             if (firstColor.R == secondColor.R)
@@ -891,6 +949,7 @@ namespace SerchAndNotDestroy
                 cloneThisSearch.pictureSearchArea = null;
 
             cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
+            cloneThisSearch.pointerOnActiveWindow = this.pointerOnActiveWindow;
 
             return cloneThisSearch;
         }
