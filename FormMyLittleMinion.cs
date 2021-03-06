@@ -71,7 +71,6 @@ namespace MyLittleMinion
         {
             pictureBoxForModelForSearch.Visible = false;
             DateTime testTimeOfSearch = DateTime.Now;
-            srPer.ScreenshotFullMonitor();
             srPer.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
             labelForStatus.Text = "Выполняется поиск...";
 
@@ -81,6 +80,11 @@ namespace MyLittleMinion
                     srPer.SetActiveWindowForPlaceForSearching();
                 else
                     srPer.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text), Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
+                srPer.CreateScreenShot();
+            }
+            else
+            {
+                srPer.ScreenshotFullMonitor();
             }
 
             srPerSearchModelInArea srPerSearchModelInArea1;
@@ -107,102 +111,6 @@ namespace MyLittleMinion
         }
         
 
-        public bool FindModelOnScreenshotOfFullscreen(Bitmap scrFullscreen, Bitmap model, double persCountComparison)
-        {
-            /*model тут имеется ввиду, как эталон*/
-            //Бегаем до краев скрина экарана, недоходя на ширину/высоту эталона, дабы вылетов не было
-            //for (int forSpeed = 0; forSpeed < 3; forSpeed++)//Для ускорения за чет передвиения в шахматном поряке, с пропуском по 3 пикселя
-                for (int i = 0; i < (scrFullscreen.Width - model.Width); i ++)
-                    for (int j = 0; j < (scrFullscreen.Height - model.Height); j++)
-                    {
-                        if (CheckColorPixelInPoint(scrFullscreen.GetPixel(i, j), model.GetPixel(0, 0)))
-                        {
-                            var cutSmallPicture = CutSmallPictureFromLargePicture(new Point(i, j), scrFullscreen, model.Width, model.Height);
-                        double pCULDOTBP = PercentageComparisonUpLeftDiagonalOfTwoBitmapPictures(cutSmallPicture, model);
-                            if (pCULDOTBP > persCountComparison)
-                            {
-                            double pCOTBP = PercentageComparisonOfTwoBitmapPictures(cutSmallPicture, model);
-                                if (pCOTBP > persCountComparison)
-                                {
-                                    RememberCursorPoisition = new Point(i, j);
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-            return false;
-        }
-
-        private Bitmap CutSmallPictureFromLargePicture(Point locationStartOfLargePicture, Bitmap largePicture, int widthSmallPicture, int heightSmallPicture)
-        {
-            Bitmap smallPicture = new Bitmap(widthSmallPicture, heightSmallPicture, PixelFormat.Format32bppArgb);
-            for (int i = 0; i < widthSmallPicture; i++)
-                for (int j = 0; j < heightSmallPicture; j++)
-                {
-                    smallPicture.SetPixel(i, j, largePicture.GetPixel(locationStartOfLargePicture.X + i, locationStartOfLargePicture.Y + j));
-                }
-            return smallPicture;
-        }
-
-        private double PercentageComparisonUpLeftDiagonalOfTwoBitmapPictures(Bitmap pictureOne, Bitmap pictureTwo)
-        {
-            //Находим меньшую из сторон
-            int lesserSide = pictureOne.Height > pictureOne.Width ? pictureOne.Width : pictureOne.Height;
-            int counter = 0;
-
-            for (int i = 0; i < lesserSide; i++)
-                if (CheckColorPixelInPoint(pictureOne.GetPixel(i, i), pictureTwo.GetPixel(i, i)))
-                {
-                    counter++;
-                }
-
-            return ((double)counter / lesserSide);
-        }
-        private double PercentageComparisonOfTwoBitmapPictures(Bitmap pictureOne, Bitmap pictureTwo)
-        {
-            int counter = 0;
-
-            for (int i = 0; i < pictureOne.Width; i++)
-                for (int j = 0; j < pictureOne.Height; j++)
-                {
-                    if (CheckColorPixelInPoint(pictureOne.GetPixel(i, j), pictureTwo.GetPixel(i, j)))
-                    {
-                        counter++;
-                    }
-                }
-            return ((double)counter / (pictureOne.Width * pictureOne.Height));
-        }
-
-        public bool CheckColorPixelInPoint(Color firstColor, Color secondColor)
-        {
-
-            if (firstColor.R == secondColor.R)
-            {
-                if (firstColor.G == secondColor.G)
-                {
-                    if (firstColor.B == secondColor.B)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private void MouseClickLeftButton(Point cursorPosition)
-        {
-            mouse_event(MouseEvent.MOUSEEVENTF_LEFTDOWN,
-            cursorPosition.X,
-            cursorPosition.Y,
-            0,
-            0);
-            mouse_event(MouseEvent.MOUSEEVENTF_LEFTUP,
-                        cursorPosition.X,
-                        cursorPosition.Y,
-                        0,
-                        0);
-        }
-
         private void SaveImage_Click(object sender, EventArgs e)
         {
             TestMemoryMindOfMyLittleMinion.captureInMemory.Add((Bitmap)pictureBoxForModelForSearch.Image);
@@ -211,125 +119,6 @@ namespace MyLittleMinion
                 numberOfCaptureInMemory = TestMemoryMindOfMyLittleMinion.captureInMemory.Count - 1;
             }
         }
-
-        
-
-        class QuantityColorInPicture
-        {
-            public Color pixelColor;
-            public int quantity;
-
-            public QuantityColorInPicture(Color pixelColorIn, int quantityIn)
-            {
-                pixelColor = pixelColorIn;
-                quantity = quantityIn;
-            }
-        }
-
-        QuantityColorInPicture[][] quantityColorOnImage;
-        class BitmapAndCountThread
-        {
-            public Bitmap picture;
-            public int countOfThread;
-
-            public BitmapAndCountThread(Bitmap pictureIn, int countOfThreadIn)
-            {
-                picture = pictureIn;
-                countOfThread = countOfThreadIn;
-            }
-        }
-
-        private QuantityColorInPicture[] CalculateQuantityColorInPicture(Bitmap picture)
-        {
-            List<QuantityColorInPicture> masQuantityColorInPicture = new List<QuantityColorInPicture>();
-
-            masQuantityColorInPicture.Add(new QuantityColorInPicture(picture.GetPixel(0, 0), 1));
-
-
-
-            for (int i = 0; i < picture.Width; i++)
-                for (int j = 1; j < picture.Height; j++)
-                {
-                    bool colorPresent = false;
-                    for (int g = 0; g < masQuantityColorInPicture.Count; g++)
-                    {
-                        if (CheckColorPixelInPoint(picture.GetPixel(i, j), masQuantityColorInPicture[g].pixelColor))
-                        {
-                            masQuantityColorInPicture[g].quantity++;
-                            colorPresent = true;
-                            break;
-                        }
-                    }
-                    if (!colorPresent)
-                    {
-                        masQuantityColorInPicture.Add(new QuantityColorInPicture(picture.GetPixel(i, j), 1));
-                    }
-                }
-
-            return masQuantityColorInPicture.ToArray();
-        }
-        private void CalculateQuantityColorInPicture(object bitmapPictureAndCountThreadIn)
-        {
-            BitmapAndCountThread bitmapPictureAndCountThread = (BitmapAndCountThread)bitmapPictureAndCountThreadIn;
-
-            Bitmap picture = bitmapPictureAndCountThread.picture;
-
-            List<QuantityColorInPicture> masQuantityColorInPicture = new List<QuantityColorInPicture>();
-            //Блокировка картинки
-            /*Rectangle rect = new Rectangle((bitmapPictureAndCountThread.countOfThread * picture.Width) / maxCountOfThreadMinusTwo,
-                0, ((bitmapPictureAndCountThread.countOfThread + 1) * picture.Width) / maxCountOfThreadMinusTwo, picture.Height);
-            System.Drawing.Imaging.BitmapData bmpData =
-                picture.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                picture.PixelFormat);
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride) * picture.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            // Set every third value to 255. A 24bpp bitmap will look red.  
-            for (int counter = (bitmapPictureAndCountThread.countOfThread * rgbValues.Length) / maxCountOfThreadMinusTwo; counter < ((bitmapPictureAndCountThread.countOfThread + 1) * rgbValues.Length) / maxCountOfThreadMinusTwo; counter ++)
-                rgbValues[counter] = 255;
-
-            // Copy the RGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);*/
-
-
-            masQuantityColorInPicture.Add(new QuantityColorInPicture(picture.GetPixel(0, 0), 1));
-
-
-
-            /*for (int i = (bitmapPictureAndCountThread.countOfThread* picture.Width)/maxCountOfThreadMinusTwo; i < ((bitmapPictureAndCountThread.countOfThread+1) * picture.Width) / maxCountOfThreadMinusTwo; i++)
-                for (int j = 1; j < picture.Height; j++)
-                {
-                    bool colorPresent = false;
-                    for (int g = 0; g < masQuantityColorInPicture.Count; g++)
-                    {
-                        if (CheckColorPixelInPoint(picture.GetPixel(i, j), masQuantityColorInPicture[g].pixelColor))
-                        {
-                            masQuantityColorInPicture[g].quantity++;
-                            colorPresent = true;
-                            break;
-                        }
-                    }
-                    if (!colorPresent)
-                    {
-                        masQuantityColorInPicture.Add(new QuantityColorInPicture(picture.GetPixel(i, j), 1));
-                    }
-                }*/
-
-            //picture.UnlockBits(bmpData);
-            quantityColorOnImage[bitmapPictureAndCountThread.countOfThread] = new QuantityColorInPicture[masQuantityColorInPicture.Count];
-            quantityColorOnImage[bitmapPictureAndCountThread.countOfThread] = masQuantityColorInPicture.ToArray();
-        }
-
-        
-
-        
 
         private void FindNextButton_Click(object sender, EventArgs e)
         {
@@ -362,233 +151,18 @@ namespace MyLittleMinion
             }
         }
 
-        private Bitmap ReduceTheImageBySpecifiedPercentage(Bitmap picture, double percent)
-        {
-            Bitmap newSmallPicture;
-            newSmallPicture = new Bitmap(picture, (int)(picture.Size.Width * percent), (int)(picture.Size.Height * percent));
-            return newSmallPicture;
-
-        }
         
-        void TaskFunction(Search srPerClone)
-        {
-            Search[] srPer5 = new Search[8];
-            for (int i = 0; i < srPer5.Length; i++)
-                srPer5[i] = new Search();//srPerClone.Clone();
-            Task[] taski = new Task[srPer5.Length];
-
-            for (int jk = 0; jk < srPer5.Length; jk++)
-            {
-                TaskFunctionThrad(srPer5[jk].Clone(), ref taski[jk]);
-            }
-
-            for (int i = 0; i < srPer5.Length; i++)
-                taski[i].Wait();
-        }
-        void TaskFunctionThrad(Search srPerClone, ref Task taskNum)
-        {
-            taskNum = Task.Run(() =>
-            {
-                srPerClone.SetPlaceForSearching(44, 44, 444, 444);
-                srPerClone.CreateScreenShot();
-                MessageBox.Show(Convert.ToString(
-                srPerClone.SearchModelInArea(true)));
-            });
-        }
-
+        
 
         Search srPer;
-        Rectangle rectA;
-        delegate bool deForFilm();
         private void TestButton_Click(object sender, EventArgs e)
         {
-
-            IntPtr arg = default(IntPtr);
-            MessageBox.Show(Convert.ToString(arg == default(IntPtr)));
-
-            /*srPer.ScreenshotFullMonitor(); 
-            Search ser1 = srPer.Clone();
-            Search ser2 = srPer.Clone();
-
-            Task t1 = Task.Run(() =>
-            {
-                TaskFunction(ser1);
-            });
-            /*Task t2 = Task.Run(() =>
-            {
-                TaskFunction(ser2);
-            });
-            t1.Wait();
-            //t2.Wait();
-            GC.Collect();*/
-            /*
-            string text = "";
-            Point[] fourSearchsForThreadPrivate;
-            fourSearchsForThreadPrivate = new Point[] {
-                new Point(1, 0),
-                new Point(2, 45),
-                new Point(6, 3)
-            };
-            List<Point> listFoundPointsInFourThread = fourSearchsForThreadPrivate.ToList();
-            Predicate<Point> pre = delegate (Point a) { return a.X == 6 ;  };
-            text = Convert.ToString( listFoundPointsInFourThread.Find(pre)) + ";   ";
-
-            fourSearchsForThreadPrivate = listFoundPointsInFourThread.ToArray();
-            
-            foreach(var i in fourSearchsForThreadPrivate)
-            {
-                text += Convert.ToString(i) + " ";
-            }
-            MessageBox.Show(text);
-            */
-
-            //Thread.Sleep(3000);
-            /*srPer.SetPlaceForSearching(
-                Convert.ToInt32(textBoxX.Text),
-                Convert.ToInt32(textBoxY.Text),
-                Convert.ToInt32(textBoxWidth.Text),
-                Convert.ToInt32(textBoxHeight.Text));*/
-            //timer1.Enabled = true;
-            /*srPer.SetActiveWindowForPlaceForSearching();
-            srPer.CreateScreenShot();
-            srPer.ScreenshotFullMonitor();
-            srPer.SearchModelInAreaInFourThreads(true);
-            pictureBox2.Image = (Image)srPer.pictureSearchArea;
-
-            pictureBox2.Width = srPer.pictureSearchArea.Width;
-            pictureBox2.Height = srPer.pictureSearchArea.Height;*/
-
-            //srPer.AddIgnorColorsInPicture((Bitmap)pictureBox1.Image);
-
-
-
-            //selectionFilm.Show();
-            /*Thread.Sleep(5000);
-            srPer.AddIgnorColorInPoint(new Point(Cursor.Position.X*5/4, Cursor.Position.Y*5/4));
-            ShowColor(srPer.ShowIgnorColor());*/
-
-            /*
-            srPer.ScreenShotActiveWindow();
-            pictureBox3.Image = (Image)srPer.fullScreenshot;
-            pictureBox3.Width = srPer.fullScreenshot.Width;
-            pictureBox3.Height = srPer.fullScreenshot.Height;*/
-
-            //persCountCompar = Convert.ToDouble(percentageOfComplianceTextBox.Text);
-            /*Point sizeScreen = new Point(1920, 1080);
-            //Скриншот всего экрана
-            Bitmap fullScreenPixel = new Bitmap(sizeScreen.X, sizeScreen.Y, PixelFormat.Format32bppArgb);
-            using (Graphics gdest = Graphics.FromImage(fullScreenPixel))
-            {
-                using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
-                {
-                    hSrcDC = gsrc.GetHdc();
-                    hDC = gdest.GetHdc();
-                    retval = BitBlt(hDC, 0, 0, sizeScreen.X, sizeScreen.Y, hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
-                    gdest.ReleaseHdc();
-                    gsrc.ReleaseHdc();
-                }
-            }
-            *//*
-            double persOfFull = Convert.ToDouble(screenReductionPercentageTextBox.Text);
-
-            pictureBox2.Image = (Image)(ReduceTheImageBySpecifiedPercentage((Bitmap)pictureBox1.Image, persOfFull));
-            pictureBox2.Size = new Size((int)(pictureBox1.Image.Size.Width * persOfFull), (int)(pictureBox1.Image.Size.Height * persOfFull));
-            */
-              //QuantityColorInPicture[] quantityColorOnImage = CalculateQuantityColorInPicture((Bitmap)pictureBox1.Image);
-              /*Bitmap[] aFewPicture= new Bitmap[maxCountOfThreadMinusTwo];
-              //for (int i = 0; i < maxCountOfThreadMinusTwo; i++) { aFewPicture[i] = (Bitmap)pictureBox1.Image.Clone(); }
-               quantityColorOnImage = new QuantityColorInPicture[maxCountOfThreadMinusTwo][];
-              Thread[] threadForCalculateQuantityColorInPicture = new Thread[maxCountOfThreadMinusTwo];
-              //maxCountOfThreadMinusTwo = 1;
-              for (int i = 0; i < maxCountOfThreadMinusTwo; i++)
-              {
-                  threadForCalculateQuantityColorInPicture[i] = new Thread(new ParameterizedThreadStart(CalculateQuantityColorInPicture));
-                  threadForCalculateQuantityColorInPicture[i].Start(new BitmapAndCountThread((Bitmap)pictureBox1.Image.Clone(), i));
-              }
-              for (int i = 0; i < maxCountOfThreadMinusTwo; i++)
-              {
-                  threadForCalculateQuantityColorInPicture[i].Join();
-              }
-              List<QuantityColorInPicture> list = new List<QuantityColorInPicture>();
-              list.AddRange(quantityColorOnImage[0]);
-              for (int i = 1; i < maxCountOfThreadMinusTwo; i++)
-              {
-                  list.AddRange(quantityColorOnImage[i]);
-              }
-              quantityColorOnImage[0] = list.ToArray();
-              label1.Text = "";
-              for (int i = 0; i< 6; i++)
-              {
-                  label1.Text += Convert.ToString(quantityColorOnImage[0][i].pixelColor) + " - " + Convert.ToString(quantityColorOnImage[0][i].quantity) + ";\n";
-              }
-              */
-              /*
-              Bitmap tbmp1 = (Bitmap)pictureBox1.Image.Clone();
-              Bitmap tbmp2 = (Bitmap)pictureBox1.Image.Clone();
-              pictureBox1.Image = (Image)(new Bitmap(12, 12));
-
-              Thread mythr1 = new Thread(new ParameterizedThreadStart(TestFunction));
-              Thread mythr2 = new Thread(new ParameterizedThreadStart(TestFunction));
-              mythr1.Start(tbmp1);
-              mythr2.Start(tbmp2);
-              mythr1.Join();
-              mythr2.Join();
-              label1.Text = "end";*/
+            Thread.Sleep(2000);
+            ActionOfMinion.MouseDoubleClickLeftButton(Cursor.Position);
         }
 
-        private void TestFunction(object objIm)
-        {
-            Bitmap btmp =(Bitmap)objIm;
-            for (int g = 0; g < 999; g++)
-            {
-                for (int i = 0; i < btmp.Width; i++)
-                {
-                    for (int j = 0; j < btmp.Height; j++)
-                    {
-                        btmp.GetPixel(i, j);
-                    }
-                }
-            }
-        }
 
-        private void PictureBox2_Click(object sender, EventArgs e)
-        {
-            Bitmap image; //Bitmap для открываемого изображения
-
-            OpenFileDialog open_dialog = new OpenFileDialog(); //создание диалогового окна для выбора файла
-            open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
-            if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
-            {
-                try
-                {
-                    image = new Bitmap(open_dialog.FileName);
-                    //вместо pictureBox1 укажите pictureBox, в который нужно загрузить изображение 
-                    this.pictureBox2.Size = image.Size;
-                    pictureBox2.Image = image;
-                    pictureBox2.Invalidate();
-                }
-                catch
-                {
-                    DialogResult rezult = MessageBox.Show("Невозможно открыть выбранный файл",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            /*
-            double persOfFull = (1/(Convert.ToDouble(screenReductionPercentageTextBox.Text)));
-
-            pictureBox2.Image = (Image)(ReduceTheImageBySpecifiedPercentage((Bitmap)pictureBox2.Image, persOfFull));
-            pictureBox2.Size = new Size((int)(pictureBox2.Image.Size.Width * persOfFull), (int)(pictureBox2.Image.Size.Height * persOfFull));
-            */
-        }
-
-        private void Label1_Click(object sender, EventArgs e)
-        {
-            labelForNameForIgnorColor.Text = "Выделено от " + Convert.ToString(rectA.X) + ":" +
-           Convert.ToString(rectA.Y) + " до " +
-           Convert.ToString(rectA.Width + rectA.X) + ":" +
-           Convert.ToString(rectA.Height + rectA.Y);
-        }
-
+        
 
 
 
@@ -601,14 +175,14 @@ namespace MyLittleMinion
         private void Next_Click(object sender, EventArgs e)
         {
             srPer.numberIgnorColorInList++;
-            pictureBoxForIgnorColor.Image = FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
+            pictureBoxForIgnorColor.Image = AdditionalFunctions.FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
                 srPer.ShowIgnorColor());
             labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
         }
         private void Prev_Click(object sender, EventArgs e)
         {
             srPer.numberIgnorColorInList--;
-            pictureBoxForIgnorColor.Image = FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
+            pictureBoxForIgnorColor.Image = AdditionalFunctions.FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
                 srPer.ShowIgnorColor());
             labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
         }
@@ -691,7 +265,7 @@ namespace MyLittleMinion
             }
             else
             {
-                pictureBoxForIgnorColor.Image = FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
+                pictureBoxForIgnorColor.Image = AdditionalFunctions.FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
                     srPer.ShowIgnorColor());
 
                 labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
@@ -771,17 +345,7 @@ namespace MyLittleMinion
         //Панель с настройками области поиска КОНЕЦ
 
         //Вспомогательные методы НАЧАЛО
-        private static Bitmap FillBitmapWithColor(int width, int height, Color colorForFill)
-        {
-            Bitmap pictureForReturn = new Bitmap(width, height);
-
-            for (int i = 0; i < pictureForReturn.Width; i++)
-                for (int j = 0; j < pictureForReturn.Height; j++)
-                    pictureForReturn.SetPixel(i, j, colorForFill);
-            
-            return pictureForReturn;
-        }
-
+        
         private void NumericUpDownPercentageComplianceWithModel_ValueChanged(object sender, EventArgs e)
         {
             if (numericUpDownPercentageComplianceWithModel.Value < 1)

@@ -40,7 +40,6 @@
             this.labelForNameForIgnorColor = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.labelForStatus = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBoxForIgnorColor = new System.Windows.Forms.PictureBox();
             this.panelForColorsForIgnor = new System.Windows.Forms.Panel();
             this.labelForNumberOfIgnorColor = new System.Windows.Forms.Label();
@@ -68,7 +67,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
             this.panelForModelForSearch.SuspendLayout();
@@ -172,7 +170,6 @@
             this.labelForNameForIgnorColor.Size = new System.Drawing.Size(142, 13);
             this.labelForNameForIgnorColor.TabIndex = 7;
             this.labelForNameForIgnorColor.Text = "Цвета для игнорирования:";
-            this.labelForNameForIgnorColor.Click += new System.EventHandler(this.Label1_Click);
             // 
             // label2
             // 
@@ -194,17 +191,6 @@
             this.labelForStatus.Size = new System.Drawing.Size(205, 22);
             this.labelForStatus.TabIndex = 10;
             this.labelForStatus.Text = "Поиск не выполняется";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackColor = System.Drawing.Color.White;
-            this.pictureBox2.Location = new System.Drawing.Point(14, 451);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(75, 41);
-            this.pictureBox2.TabIndex = 12;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.PictureBox2_Click);
             // 
             // pictureBoxForIgnorColor
             // 
@@ -505,7 +491,6 @@
             this.Controls.Add(this.panelForModelForSearch);
             this.Controls.Add(this.checkBoxForColorsForIgnor);
             this.Controls.Add(this.panelForColorsForIgnor);
-            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.labelForStatus);
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.FindNextButton);
@@ -516,7 +501,6 @@
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = "Мой маленький помощник";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).EndInit();
             this.panelForColorsForIgnor.ResumeLayout(false);
             this.panelForColorsForIgnor.PerformLayout();
@@ -543,7 +527,6 @@
         private System.Windows.Forms.Label labelForNameForIgnorColor;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labelForStatus;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBoxForIgnorColor;
         private System.Windows.Forms.Panel panelForColorsForIgnor;
         private System.Windows.Forms.CheckBox checkBoxForColorsForIgnor;

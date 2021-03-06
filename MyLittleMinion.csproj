@@ -46,12 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionOfMinion.cs" />
+    <Compile Include="AdditionalFunctions.cs" />
     <Compile Include="FormMyLittleMinion.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormMyLittleMinion.Designer.cs">
       <DependentUpon>FormMyLittleMinion.cs</DependentUpon>
     </Compile>
+    <Compile Include="ListOfActionsOfMinion.cs" />
     <Compile Include="MenagmentOfActionsOfMinion.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
