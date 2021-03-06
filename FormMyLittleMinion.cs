@@ -71,7 +71,6 @@ namespace MyLittleMinion
         {
             pictureBoxForModelForSearch.Visible = false;
             DateTime testTimeOfSearch = DateTime.Now;
-            srPer.ScreenshotFullMonitor();
             srPer.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
             labelForStatus.Text = "Выполняется поиск...";
 
@@ -81,6 +80,11 @@ namespace MyLittleMinion
                     srPer.SetActiveWindowForPlaceForSearching();
                 else
                     srPer.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text), Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
+                srPer.CreateScreenShot();
+            }
+            else
+            {
+                srPer.ScreenshotFullMonitor();
             }
 
             srPerSearchModelInArea srPerSearchModelInArea1;
