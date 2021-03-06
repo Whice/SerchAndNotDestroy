@@ -49,7 +49,7 @@ namespace MyLittleMinion
 
 
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
-            exemplarsOfLAM[numberLOEOLAM].listOfSearching = new 
+            //exemplarsOfLAM[numberLOEOLAM].listOfSearching = new 
             srPer = new Search();
             pictureBoxForModelForSearch.Image = (Image)srPer.pictureModelForSearch;
             pictureBoxForModelForSearch.Size = srPer.pictureModelForSearch.Size;
