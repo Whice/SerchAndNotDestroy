@@ -26,28 +26,7 @@ namespace MyLittleMinion
             public List<Bitmap> captureInMemory = new List<Bitmap>();
         }
 
-        //Для кликов мышью
-        public enum MouseEvent
-        {
-            MOUSEEVENTF_LEFTDOWN = 0x02,
-            MOUSEEVENTF_LEFTUP = 0x04,
-            MOUSEEVENTF_RIGHTDOWN = 0x08,
-            MOUSEEVENTF_RIGHTUP = 0x10,
-        }
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern void mouse_event(MouseEvent dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
-
-        [DllImport("user32.dll")]
-        static extern bool GetCursorPos(ref Point lpPoint);
-
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
-        public static extern int BitBlt(IntPtr hDC, int x, int y, int nWidth, int nHeight, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
-
-
-        //Чтобы помнить, где был курсор
-        Point RememberCursorPoisition;
-
-
+        
         const string FileName = @"C:/Users/Forni/source/repos/ReadForDisplayPixel/SavedMemoryMindOfMyLittleMinion.bin";
         MemoryMindOfMyLittleMinion TestMemoryMindOfMyLittleMinion;
         int numberOfCaptureInMemory;
@@ -95,19 +74,19 @@ namespace MyLittleMinion
             else
                 srPerSearchModelInArea1 = (() => srPer.SearchModelInArea(checkBoxFirstFoundModelIsEnd.Checked));
 
-
             if (srPerSearchModelInArea1())
             { 
                     //MessageBox.Show("Нашел!");
                 Cursor.Position = srPer.foundPoints[0];
                 //MouseClickLeftButton(RememberCursorPoisition);
+                labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
             }
             else
             {
+                labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
                 MessageBox.Show("No!");
             }
             pictureBoxForModelForSearch.Visible = true;
-            labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
         }
         
 
@@ -158,7 +137,9 @@ namespace MyLittleMinion
         private void TestButton_Click(object sender, EventArgs e)
         {
             Thread.Sleep(2000);
-            ActionOfMinion.MouseDoubleClickLeftButton(Cursor.Position);
+            ActionOfMinion aMinion = new ActionOfMinion();
+            aMinion.cursorPosition = Cursor.Position;
+                aMinion.MouseDoubleClickLeftButton();
         }
 
 

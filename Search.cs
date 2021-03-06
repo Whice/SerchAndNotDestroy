@@ -280,9 +280,12 @@ namespace MyLittleMinion
         /// <summary>
         /// Задает значение расположения и размеров прямоугольника области, где выполняется поиск.
         /// Принимает прямоугольник содержащий расположение и размеры.
+        /// Если ширина или высота оказывается меньше 1, то этот параметр устанавливается равным 1.
         /// </summary>
         public void SetPlaceForSearching(Rectangle placeForSearching)
         {
+            if (placeForSearching.Width < 1) placeForSearching.Width = 1;
+            if (placeForSearching.Height < 1) placeForSearching.Height = 1;
             this.locationOfPlaceForSearchPrivate.X = placeForSearching.X;
             this.locationOfPlaceForSearchPrivate.Y = placeForSearching.Y;
             this.pictureSearchArea = new Bitmap(placeForSearching.Width, placeForSearching.Height);

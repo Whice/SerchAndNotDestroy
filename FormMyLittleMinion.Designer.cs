@@ -32,10 +32,10 @@
             this.FindButton = new System.Windows.Forms.Button();
             this.pictureBoxForModelForSearch = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.SaveImage = new System.Windows.Forms.Button();
+            this.buttonSaveListOfAction = new System.Windows.Forms.Button();
             this.buttonNextForColorsForIgnor = new System.Windows.Forms.Button();
             this.buttonPreviousForColorsForIgnor = new System.Windows.Forms.Button();
-            this.FindNextButton = new System.Windows.Forms.Button();
+            this.buttonFindAndPerformAllAction = new System.Windows.Forms.Button();
             this.TestButton = new System.Windows.Forms.Button();
             this.labelForNameForIgnorColor = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -66,22 +66,34 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonOpenListOfAction = new System.Windows.Forms.Button();
+            this.comboBoxForSelectAction = new System.Windows.Forms.ComboBox();
+            this.buttonFindAndPerformThisAction = new System.Windows.Forms.Button();
+            this.buttonPrevAction = new System.Windows.Forms.Button();
+            this.buttonNextAction = new System.Windows.Forms.Button();
+            this.buttonAddAction = new System.Windows.Forms.Button();
+            this.labelNumberOfSearchAndAction = new System.Windows.Forms.Label();
+            this.labelWaitAfterThisAction = new System.Windows.Forms.Label();
+            this.numericUpDownWaitAfterThisAction = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
             this.panelForModelForSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).BeginInit();
             this.panelForPlaceOfSearch.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).BeginInit();
             this.SuspendLayout();
             // 
             // FindButton
             // 
-            this.FindButton.Location = new System.Drawing.Point(9, 10);
+            this.FindButton.Location = new System.Drawing.Point(12, 11);
             this.FindButton.Margin = new System.Windows.Forms.Padding(2);
             this.FindButton.Name = "FindButton";
-            this.FindButton.Size = new System.Drawing.Size(68, 46);
+            this.FindButton.Size = new System.Drawing.Size(86, 46);
             this.FindButton.TabIndex = 0;
-            this.FindButton.Text = "Найти";
+            this.FindButton.Text = "Попробовать найти";
             this.FindButton.UseVisualStyleBackColor = true;
             this.FindButton.Click += new System.EventHandler(this.FindButton_Click);
             // 
@@ -102,17 +114,16 @@
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // SaveImage
+            // buttonSaveListOfAction
             // 
-            this.SaveImage.Enabled = false;
-            this.SaveImage.Location = new System.Drawing.Point(8, 117);
-            this.SaveImage.Margin = new System.Windows.Forms.Padding(2);
-            this.SaveImage.Name = "SaveImage";
-            this.SaveImage.Size = new System.Drawing.Size(120, 34);
-            this.SaveImage.TabIndex = 2;
-            this.SaveImage.Text = "Сохранить";
-            this.SaveImage.UseVisualStyleBackColor = true;
-            this.SaveImage.Click += new System.EventHandler(this.SaveImage_Click);
+            this.buttonSaveListOfAction.Location = new System.Drawing.Point(8, 395);
+            this.buttonSaveListOfAction.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonSaveListOfAction.Name = "buttonSaveListOfAction";
+            this.buttonSaveListOfAction.Size = new System.Drawing.Size(120, 39);
+            this.buttonSaveListOfAction.TabIndex = 2;
+            this.buttonSaveListOfAction.Text = "Сохранить список действий";
+            this.buttonSaveListOfAction.UseVisualStyleBackColor = true;
+            this.buttonSaveListOfAction.Click += new System.EventHandler(this.SaveImage_Click);
             // 
             // buttonNextForColorsForIgnor
             // 
@@ -138,21 +149,20 @@
             this.buttonPreviousForColorsForIgnor.UseVisualStyleBackColor = true;
             this.buttonPreviousForColorsForIgnor.Click += new System.EventHandler(this.Prev_Click);
             // 
-            // FindNextButton
+            // buttonFindAndPerformAllAction
             // 
-            this.FindNextButton.Enabled = false;
-            this.FindNextButton.Location = new System.Drawing.Point(9, 65);
-            this.FindNextButton.Margin = new System.Windows.Forms.Padding(2);
-            this.FindNextButton.Name = "FindNextButton";
-            this.FindNextButton.Size = new System.Drawing.Size(120, 47);
-            this.FindNextButton.TabIndex = 5;
-            this.FindNextButton.Text = "Найти по очереди";
-            this.FindNextButton.UseVisualStyleBackColor = true;
-            this.FindNextButton.Click += new System.EventHandler(this.FindNextButton_Click);
+            this.buttonFindAndPerformAllAction.Location = new System.Drawing.Point(8, 11);
+            this.buttonFindAndPerformAllAction.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonFindAndPerformAllAction.Name = "buttonFindAndPerformAllAction";
+            this.buttonFindAndPerformAllAction.Size = new System.Drawing.Size(188, 47);
+            this.buttonFindAndPerformAllAction.TabIndex = 5;
+            this.buttonFindAndPerformAllAction.Text = "Найти и выполнить все действия";
+            this.buttonFindAndPerformAllAction.UseVisualStyleBackColor = true;
+            this.buttonFindAndPerformAllAction.Click += new System.EventHandler(this.FindNextButton_Click);
             // 
             // TestButton
             // 
-            this.TestButton.Location = new System.Drawing.Point(11, 389);
+            this.TestButton.Location = new System.Drawing.Point(8, 504);
             this.TestButton.Margin = new System.Windows.Forms.Padding(2);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(75, 58);
@@ -185,7 +195,7 @@
             // 
             this.labelForStatus.AutoSize = true;
             this.labelForStatus.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelForStatus.Location = new System.Drawing.Point(138, 10);
+            this.labelForStatus.Location = new System.Drawing.Point(109, 11);
             this.labelForStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelForStatus.Name = "labelForStatus";
             this.labelForStatus.Size = new System.Drawing.Size(205, 22);
@@ -213,7 +223,7 @@
             this.panelForColorsForIgnor.Controls.Add(this.pictureBoxForIgnorColor);
             this.panelForColorsForIgnor.Controls.Add(this.buttonNextForColorsForIgnor);
             this.panelForColorsForIgnor.Controls.Add(this.labelForNameForIgnorColor);
-            this.panelForColorsForIgnor.Location = new System.Drawing.Point(520, 46);
+            this.panelForColorsForIgnor.Location = new System.Drawing.Point(490, 68);
             this.panelForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.panelForColorsForIgnor.Name = "panelForColorsForIgnor";
             this.panelForColorsForIgnor.Size = new System.Drawing.Size(340, 205);
@@ -267,7 +277,7 @@
             // checkBoxForColorsForIgnor
             // 
             this.checkBoxForColorsForIgnor.AutoSize = true;
-            this.checkBoxForColorsForIgnor.Location = new System.Drawing.Point(520, 22);
+            this.checkBoxForColorsForIgnor.Location = new System.Drawing.Point(490, 44);
             this.checkBoxForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxForColorsForIgnor.Name = "checkBoxForColorsForIgnor";
             this.checkBoxForColorsForIgnor.Size = new System.Drawing.Size(208, 17);
@@ -289,7 +299,7 @@
             this.panelForModelForSearch.Controls.Add(this.buttonAddModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.pictureBoxForModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.label2);
-            this.panelForModelForSearch.Location = new System.Drawing.Point(140, 46);
+            this.panelForModelForSearch.Location = new System.Drawing.Point(112, 207);
             this.panelForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.panelForModelForSearch.Name = "panelForModelForSearch";
             this.panelForModelForSearch.Size = new System.Drawing.Size(375, 205);
@@ -426,7 +436,7 @@
             // checkBoxForPlaceOfSearch
             // 
             this.checkBoxForPlaceOfSearch.AutoSize = true;
-            this.checkBoxForPlaceOfSearch.Location = new System.Drawing.Point(142, 257);
+            this.checkBoxForPlaceOfSearch.Location = new System.Drawing.Point(112, 45);
             this.checkBoxForPlaceOfSearch.Name = "checkBoxForPlaceOfSearch";
             this.checkBoxForPlaceOfSearch.Size = new System.Drawing.Size(167, 17);
             this.checkBoxForPlaceOfSearch.TabIndex = 22;
@@ -445,7 +455,7 @@
             this.panelForPlaceOfSearch.Controls.Add(this.textBoxYBegin);
             this.panelForPlaceOfSearch.Controls.Add(this.textBoxXEnd);
             this.panelForPlaceOfSearch.Controls.Add(this.textBoxYEnd);
-            this.panelForPlaceOfSearch.Location = new System.Drawing.Point(143, 280);
+            this.panelForPlaceOfSearch.Location = new System.Drawing.Point(112, 68);
             this.panelForPlaceOfSearch.Name = "panelForPlaceOfSearch";
             this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 112);
             this.panelForPlaceOfSearch.TabIndex = 23;
@@ -480,22 +490,130 @@
             this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
             this.checkBoxSelectActiveWindow.CheckedChanged += new System.EventHandler(this.CheckBoxSelectActiveWindow_CheckedChanged);
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Moccasin;
+            this.panel1.Controls.Add(this.FindButton);
+            this.panel1.Controls.Add(this.panelForPlaceOfSearch);
+            this.panel1.Controls.Add(this.panelForModelForSearch);
+            this.panel1.Controls.Add(this.checkBoxForPlaceOfSearch);
+            this.panel1.Controls.Add(this.labelForStatus);
+            this.panel1.Controls.Add(this.panelForColorsForIgnor);
+            this.panel1.Controls.Add(this.checkBoxForColorsForIgnor);
+            this.panel1.Location = new System.Drawing.Point(201, 81);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(861, 481);
+            this.panel1.TabIndex = 24;
+            // 
+            // buttonOpenListOfAction
+            // 
+            this.buttonOpenListOfAction.Location = new System.Drawing.Point(8, 439);
+            this.buttonOpenListOfAction.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonOpenListOfAction.Name = "buttonOpenListOfAction";
+            this.buttonOpenListOfAction.Size = new System.Drawing.Size(120, 39);
+            this.buttonOpenListOfAction.TabIndex = 25;
+            this.buttonOpenListOfAction.Text = "Открыть список действий";
+            this.buttonOpenListOfAction.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxForSelectAction
+            // 
+            this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.comboBoxForSelectAction.FormattingEnabled = true;
+            this.comboBoxForSelectAction.Location = new System.Drawing.Point(201, 12);
+            this.comboBoxForSelectAction.Name = "comboBoxForSelectAction";
+            this.comboBoxForSelectAction.Size = new System.Drawing.Size(861, 21);
+            this.comboBoxForSelectAction.TabIndex = 26;
+            this.comboBoxForSelectAction.Text = "Задать действие для выполнения";
+            // 
+            // buttonFindAndPerformThisAction
+            // 
+            this.buttonFindAndPerformThisAction.Location = new System.Drawing.Point(8, 67);
+            this.buttonFindAndPerformThisAction.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonFindAndPerformThisAction.Name = "buttonFindAndPerformThisAction";
+            this.buttonFindAndPerformThisAction.Size = new System.Drawing.Size(188, 47);
+            this.buttonFindAndPerformThisAction.TabIndex = 27;
+            this.buttonFindAndPerformThisAction.Text = "Найти и выполнить это действие";
+            this.buttonFindAndPerformThisAction.UseVisualStyleBackColor = true;
+            // 
+            // buttonPrevAction
+            // 
+            this.buttonPrevAction.Location = new System.Drawing.Point(11, 158);
+            this.buttonPrevAction.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonPrevAction.Name = "buttonPrevAction";
+            this.buttonPrevAction.Size = new System.Drawing.Size(89, 40);
+            this.buttonPrevAction.TabIndex = 29;
+            this.buttonPrevAction.Text = "Назад";
+            this.buttonPrevAction.UseVisualStyleBackColor = true;
+            // 
+            // buttonNextAction
+            // 
+            this.buttonNextAction.Location = new System.Drawing.Point(104, 158);
+            this.buttonNextAction.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonNextAction.Name = "buttonNextAction";
+            this.buttonNextAction.Size = new System.Drawing.Size(89, 40);
+            this.buttonNextAction.TabIndex = 28;
+            this.buttonNextAction.Text = "Вперед";
+            this.buttonNextAction.UseVisualStyleBackColor = true;
+            // 
+            // buttonAddAction
+            // 
+            this.buttonAddAction.Location = new System.Drawing.Point(12, 206);
+            this.buttonAddAction.Name = "buttonAddAction";
+            this.buttonAddAction.Size = new System.Drawing.Size(116, 41);
+            this.buttonAddAction.TabIndex = 30;
+            this.buttonAddAction.Text = "Добавить действие";
+            this.buttonAddAction.UseVisualStyleBackColor = true;
+            // 
+            // labelNumberOfSearchAndAction
+            // 
+            this.labelNumberOfSearchAndAction.AutoSize = true;
+            this.labelNumberOfSearchAndAction.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelNumberOfSearchAndAction.Location = new System.Drawing.Point(12, 136);
+            this.labelNumberOfSearchAndAction.Name = "labelNumberOfSearchAndAction";
+            this.labelNumberOfSearchAndAction.Size = new System.Drawing.Size(170, 20);
+            this.labelNumberOfSearchAndAction.TabIndex = 31;
+            this.labelNumberOfSearchAndAction.Text = "Номер действия: 0";
+            // 
+            // labelWaitAfterThisAction
+            // 
+            this.labelWaitAfterThisAction.AutoSize = true;
+            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(202, 40);
+            this.labelWaitAfterThisAction.Name = "labelWaitAfterThisAction";
+            this.labelWaitAfterThisAction.Size = new System.Drawing.Size(205, 13);
+            this.labelWaitAfterThisAction.TabIndex = 32;
+            this.labelWaitAfterThisAction.Text = "Подождать после этого действия(сек):";
+            // 
+            // numericUpDownWaitAfterThisAction
+            // 
+            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(201, 56);
+            this.numericUpDownWaitAfterThisAction.Name = "numericUpDownWaitAfterThisAction";
+            this.numericUpDownWaitAfterThisAction.Size = new System.Drawing.Size(203, 20);
+            this.numericUpDownWaitAfterThisAction.TabIndex = 26;
+            this.numericUpDownWaitAfterThisAction.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.PeachPuff;
-            this.ClientSize = new System.Drawing.Size(881, 504);
-            this.Controls.Add(this.panelForPlaceOfSearch);
-            this.Controls.Add(this.checkBoxForPlaceOfSearch);
-            this.Controls.Add(this.panelForModelForSearch);
-            this.Controls.Add(this.checkBoxForColorsForIgnor);
-            this.Controls.Add(this.panelForColorsForIgnor);
-            this.Controls.Add(this.labelForStatus);
+            this.BackColor = System.Drawing.Color.FloralWhite;
+            this.ClientSize = new System.Drawing.Size(1113, 589);
+            this.Controls.Add(this.numericUpDownWaitAfterThisAction);
+            this.Controls.Add(this.labelWaitAfterThisAction);
+            this.Controls.Add(this.labelNumberOfSearchAndAction);
+            this.Controls.Add(this.buttonAddAction);
+            this.Controls.Add(this.buttonPrevAction);
+            this.Controls.Add(this.buttonNextAction);
+            this.Controls.Add(this.buttonFindAndPerformThisAction);
+            this.Controls.Add(this.comboBoxForSelectAction);
+            this.Controls.Add(this.buttonOpenListOfAction);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.TestButton);
-            this.Controls.Add(this.FindNextButton);
-            this.Controls.Add(this.SaveImage);
-            this.Controls.Add(this.FindButton);
+            this.Controls.Add(this.buttonFindAndPerformAllAction);
+            this.Controls.Add(this.buttonSaveListOfAction);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MyLittleMonion";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -509,6 +627,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).EndInit();
             this.panelForPlaceOfSearch.ResumeLayout(false);
             this.panelForPlaceOfSearch.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -519,10 +640,10 @@
         private System.Windows.Forms.Button FindButton;
         private System.Windows.Forms.PictureBox pictureBoxForModelForSearch;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Button SaveImage;
+        private System.Windows.Forms.Button buttonSaveListOfAction;
         private System.Windows.Forms.Button buttonNextForColorsForIgnor;
         private System.Windows.Forms.Button buttonPreviousForColorsForIgnor;
-        private System.Windows.Forms.Button FindNextButton;
+        private System.Windows.Forms.Button buttonFindAndPerformAllAction;
         private System.Windows.Forms.Button TestButton;
         private System.Windows.Forms.Label labelForNameForIgnorColor;
         private System.Windows.Forms.Label label2;
@@ -553,6 +674,16 @@
         private System.Windows.Forms.CheckBox checkBoxCountOfThreads;
         private System.Windows.Forms.Label labelPercentageComplianceWithModel;
         private System.Windows.Forms.NumericUpDown numericUpDownPercentageComplianceWithModel;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button buttonOpenListOfAction;
+        private System.Windows.Forms.ComboBox comboBoxForSelectAction;
+        private System.Windows.Forms.Button buttonFindAndPerformThisAction;
+        private System.Windows.Forms.Button buttonPrevAction;
+        private System.Windows.Forms.Button buttonNextAction;
+        private System.Windows.Forms.Button buttonAddAction;
+        private System.Windows.Forms.Label labelNumberOfSearchAndAction;
+        private System.Windows.Forms.Label labelWaitAfterThisAction;
+        private System.Windows.Forms.NumericUpDown numericUpDownWaitAfterThisAction;
     }
 }
 

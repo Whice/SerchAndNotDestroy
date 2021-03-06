@@ -13,9 +13,17 @@ namespace MyLittleMinion
 {
     class ActionOfMinion
     {
+        /// <summary>
+        /// Задает и получает свойство местонахождения курсора. Используется для указания точки, к которой должны быть применены действия.
+        /// </summary>
+        public Point cursorPosition { get; set; }
 
+        public ActionOfMinion()
+        {
+            cursorPosition = new Point(0, 0);
+        }
 
-        public static void MouseClickLeftButton(Point cursorPosition)
+        public void MouseClickLeftButton()
         {
             mouse_event(MouseEvent.MOUSEEVENTF_LEFTDOWN,
             cursorPosition.X,
@@ -28,12 +36,41 @@ namespace MyLittleMinion
                         0,
                         0);
         }
-
-        public static void MouseDoubleClickLeftButton(Point cursorPosition)
+        public void MouseDownLeftButton()
         {
-            MouseClickLeftButton(cursorPosition);
+            mouse_event(MouseEvent.MOUSEEVENTF_LEFTDOWN,
+            cursorPosition.X,
+            cursorPosition.Y,
+            0,
+            0);
+        }
+        public void MouseUpLeftButton()
+        {
+            mouse_event(MouseEvent.MOUSEEVENTF_LEFTUP,
+                        cursorPosition.X,
+                        cursorPosition.Y,
+                        0,
+                        0);
+        }
+        public void MouseDoubleClickLeftButton()
+        {
+            MouseClickLeftButton();
             Thread.Sleep(10);
-            MouseClickLeftButton(cursorPosition);
+            MouseClickLeftButton();
+        }
+        public static void DragAndDropWithMouse(Point pointWhereToGet, Point pointWhereToDrop)
+        {
+            mouse_event(MouseEvent.MOUSEEVENTF_LEFTDOWN,
+           pointWhereToGet.X,
+           pointWhereToGet.Y,
+           0,
+           0);
+            Thread.Sleep(10);
+            mouse_event(MouseEvent.MOUSEEVENTF_LEFTUP,
+                        pointWhereToDrop.X,
+                        pointWhereToDrop.Y,
+                        0,
+                        0);
         }
 
         //Для кликов мышью
