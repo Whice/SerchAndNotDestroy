@@ -49,6 +49,8 @@
             this.buttonAddSingleColorForIgnor = new System.Windows.Forms.Button();
             this.checkBoxForColorsForIgnor = new System.Windows.Forms.CheckBox();
             this.panelForModelForSearch = new System.Windows.Forms.Panel();
+            this.labelPercentageComplianceWithModel = new System.Windows.Forms.Label();
+            this.numericUpDownPercentageComplianceWithModel = new System.Windows.Forms.NumericUpDown();
             this.textBoxCountOfThreads = new System.Windows.Forms.TextBox();
             this.checkBoxCountOfThreads = new System.Windows.Forms.CheckBox();
             this.checkBoxFirstFoundModelIsEnd = new System.Windows.Forms.CheckBox();
@@ -70,6 +72,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
             this.panelForModelForSearch.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).BeginInit();
             this.panelForPlaceOfSearch.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,7 +90,7 @@
             // pictureBoxForModelForSearch
             // 
             this.pictureBoxForModelForSearch.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(90, 120);
+            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(191, 141);
             this.pictureBoxForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxForModelForSearch.Name = "pictureBoxForModelForSearch";
             this.pictureBoxForModelForSearch.Size = new System.Drawing.Size(75, 41);
@@ -290,6 +293,8 @@
             // panelForModelForSearch
             // 
             this.panelForModelForSearch.BackColor = System.Drawing.Color.LightCoral;
+            this.panelForModelForSearch.Controls.Add(this.labelPercentageComplianceWithModel);
+            this.panelForModelForSearch.Controls.Add(this.numericUpDownPercentageComplianceWithModel);
             this.panelForModelForSearch.Controls.Add(this.textBoxCountOfThreads);
             this.panelForModelForSearch.Controls.Add(this.checkBoxCountOfThreads);
             this.panelForModelForSearch.Controls.Add(this.checkBoxFirstFoundModelIsEnd);
@@ -303,6 +308,29 @@
             this.panelForModelForSearch.Name = "panelForModelForSearch";
             this.panelForModelForSearch.Size = new System.Drawing.Size(375, 205);
             this.panelForModelForSearch.TabIndex = 16;
+            // 
+            // labelPercentageComplianceWithModel
+            // 
+            this.labelPercentageComplianceWithModel.AutoSize = true;
+            this.labelPercentageComplianceWithModel.Location = new System.Drawing.Point(9, 120);
+            this.labelPercentageComplianceWithModel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPercentageComplianceWithModel.Name = "labelPercentageComplianceWithModel";
+            this.labelPercentageComplianceWithModel.Size = new System.Drawing.Size(183, 13);
+            this.labelPercentageComplianceWithModel.TabIndex = 25;
+            this.labelPercentageComplianceWithModel.Text = "Процентное соответствие эталону";
+            // 
+            // numericUpDownPercentageComplianceWithModel
+            // 
+            this.numericUpDownPercentageComplianceWithModel.Location = new System.Drawing.Point(12, 141);
+            this.numericUpDownPercentageComplianceWithModel.Name = "numericUpDownPercentageComplianceWithModel";
+            this.numericUpDownPercentageComplianceWithModel.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownPercentageComplianceWithModel.TabIndex = 24;
+            this.numericUpDownPercentageComplianceWithModel.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownPercentageComplianceWithModel.ValueChanged += new System.EventHandler(this.NumericUpDownPercentageComplianceWithModel_ValueChanged);
             // 
             // textBoxCountOfThreads
             // 
@@ -494,6 +522,7 @@
             this.panelForColorsForIgnor.PerformLayout();
             this.panelForModelForSearch.ResumeLayout(false);
             this.panelForModelForSearch.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).EndInit();
             this.panelForPlaceOfSearch.ResumeLayout(false);
             this.panelForPlaceOfSearch.PerformLayout();
             this.ResumeLayout(false);
@@ -539,6 +568,8 @@
         private System.Windows.Forms.CheckBox checkBoxFirstFoundModelIsEnd;
         private System.Windows.Forms.TextBox textBoxCountOfThreads;
         private System.Windows.Forms.CheckBox checkBoxCountOfThreads;
+        private System.Windows.Forms.Label labelPercentageComplianceWithModel;
+        private System.Windows.Forms.NumericUpDown numericUpDownPercentageComplianceWithModel;
     }
 }
 

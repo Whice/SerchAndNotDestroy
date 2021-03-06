@@ -712,7 +712,7 @@ namespace SerchAndNotDestroy
                 try
                 {
                     image = new Bitmap(open_dialog.FileName);
-                    //вместо pictureBox1 укажите pictureBox, в который нужно загрузить изображение 
+                    //укажите pictureBox, в который нужно загрузить изображение 
                     this.pictureBoxForModelForSearch.Size = image.Size;
                     pictureBoxForModelForSearch.Image = image;
                     pictureBoxForModelForSearch.Invalidate();
@@ -780,6 +780,16 @@ namespace SerchAndNotDestroy
                     pictureForReturn.SetPixel(i, j, colorForFill);
             
             return pictureForReturn;
+        }
+
+        private void NumericUpDownPercentageComplianceWithModel_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDownPercentageComplianceWithModel.Value < 1)
+                numericUpDownPercentageComplianceWithModel.Value = 1;
+            if (numericUpDownPercentageComplianceWithModel.Value >100)
+                numericUpDownPercentageComplianceWithModel.Value = 100;
+
+            srPer.percentageComplianceWithModel = (byte)numericUpDownPercentageComplianceWithModel.Value;
         }
 
 

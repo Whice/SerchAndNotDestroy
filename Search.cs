@@ -48,6 +48,8 @@ namespace SerchAndNotDestroy
 
             isEnableFourThreadsPrivate = false;
 
+            this.percentageComplianceWithModelPivate = 100;
+
             CreateBitmapForEmptyModel();
         }
 
@@ -390,33 +392,90 @@ namespace SerchAndNotDestroy
 
         ///Выполнение поиска НАЧАЛО
 
+        private byte percentageComplianceWithModelPivate;
+        /// <summary>
+        /// Свойство процентного соответсвия эталону. Значение может быть от 1 до 100, где 100 полное соответсвие эталону(100%).
+        /// По умолчанию 100. Если неправильно задано значение, свойство будет установлено равным 100.
+        /// Из-за дополнительных рассчетов на пиксель может сильно упасть производительность и скорость поиска.
+        /// </summary>
+        public byte percentageComplianceWithModel
+        {
+            get { return this.percentageComplianceWithModelPivate; }
+            set
+            {
+                if (value < 1 || value > 100)
+                    this.percentageComplianceWithModel = 100;
+                else
+                    this.percentageComplianceWithModelPivate = value;
+            }
+        }
         private bool ComparisonUpLeftDiagonalOfmodelAndAreaForSearch(Point pointBeginModelOnSerachArea)
         {
             //Находится меньшая из сторон
-            int lesserSide = 
+            int lesserSide =
                 pictureModelForSearch.Height > pictureModelForSearch.Width ? pictureModelForSearch.Width : pictureModelForSearch.Height;
 
-            //Просматривается диагональ, любое несовпадение завершает проверку возвращая ложь
-            for (int i = 0; i < lesserSide; i++)
-                if (!CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, i),
+            //Если установлено полное соответствие эталону, используется алгоритм без подсчета для ускорения проверки.
+            if (percentageComplianceWithModelPivate == 100)
+            {
+                //Просматривается диагональ, любое несовпадение завершает проверку возвращая ложь
+                for (int i = 0; i < lesserSide; i++)
+                    if (!CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, i),
                     pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
-                    return false;
+                            return false;
 
-            return true;
+                return true;
+            }
+            else
+            {
+              
+                //Счетчик для учета процентного соответствия эталону
+                int counterPercentageCompliance = 0;
+                //Просматривается диагональ, любое несовпадение завершает проверку возвращая ложь
+                for (int i = 0; i < lesserSide; i++)
+                    if (CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, i),
+                        pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
+                        counterPercentageCompliance++;
+
+                //Положительный рензультат выдается, если счетчик насчитал достаточную сумму, которая не меньше, чем указаное процентное соотношение
+                if ((counterPercentageCompliance * 100) / lesserSide < percentageComplianceWithModelPivate)
+                    return false;
+                else
+                    return true;
+            }
         }
 
         private bool ComparisonOfmodelAndAreaForSearch(Point pointBeginModelOnSerachArea)
         {
-            //Просматривается вся площадь, любое несовпадение завершает проверку возвращая ложь
-            for (int i = 0; i < pictureModelForSearch.Width; i++)
-                for (int j = 0; j < pictureModelForSearch.Height; j++)
-                {
-                    if (!CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, j),
+            //Если установлено полное соответствие эталону, используется алгоритм без подсчета для ускорения проверки.
+            if (percentageComplianceWithModelPivate == 100)
+            {
+                //Просматривается вся площадь, любое несовпадение завершает проверку возвращая ложь
+                for (int i = 0; i < pictureModelForSearch.Width; i++)
+                    for (int j = 0; j < pictureModelForSearch.Height; j++)
+                        if (!CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, j),
                         pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
-                        return false;
-                }
+                                return false;
 
-            return true;
+                return true;
+            }
+            else
+            {
+                //Счетчик для учета процентного соответствия эталону
+                int counterPercentageCompliance = 0;
+                //Просматривается вся площадь, любое несовпадение завершает проверку возвращая ложь
+                for (int i = 0; i < pictureModelForSearch.Width; i++)
+                    for (int j = 0; j < pictureModelForSearch.Height; j++)
+                        if (CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, j),
+                            pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
+                            counterPercentageCompliance++;
+
+                //Положительный рензультат выдается, если счетчик насчитал достаточную сумму, которая не меньше, чем указаное процентное соотношение
+                if ((counterPercentageCompliance * 100) / (pictureModelForSearch.Width * pictureModelForSearch.Height) < percentageComplianceWithModelPivate)
+                    return false;
+                else
+                    return true;
+            }
         }
 
         /// <summary>
@@ -528,7 +587,8 @@ namespace SerchAndNotDestroy
 
 
 
-        ///Выполнение поиска с использованием четырех потоков НАЧАЛО
+        ///Выполнение поиска с использованием потоков НАЧАЛО
+        ///Надо делать условие, при котором много поточный поиск не будет выполняться, если эталон слишком большой для такого количества потоков
         private bool isEnableFourThreadsPrivate;
         public bool isEnableFourThreads { get { return this.isEnableFourThreadsPrivate; } }
         
@@ -827,7 +887,7 @@ namespace SerchAndNotDestroy
 
             return false;
         }
-        ///Выполнение поиска с использованием четырех потоков КОНЕЦ
+        ///Выполнение поиска с использованием потоков КОНЕЦ
 
 
 
@@ -963,6 +1023,7 @@ namespace SerchAndNotDestroy
 
             cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
             cloneThisSearch.pointerOnActiveWindow = this.pointerOnActiveWindow;
+            cloneThisSearch.percentageComplianceWithModelPivate = this.percentageComplianceWithModelPivate;
 
             return cloneThisSearch;
         }
@@ -1022,3 +1083,6 @@ namespace SerchAndNotDestroy
         }
     }
 }
+
+//Мысли:
+//Можно сделать фукнцию создания из нескольких похожих эталонов один, в котором будут устранены места, которые меняются, из-за которых при поиске 100% соответствия он будет неудачным.
