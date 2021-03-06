@@ -118,7 +118,7 @@ namespace SerchAndNotDestroy
                 bool isAddColor = true;
                 foreach(Color color in this.listOfIgnorColors)
                 {
-                    if (CheckColorPixelInPoint(color, newColorForIgnor))
+                    if (CheckForEqualityOfTwoColorsByRGB(color, newColorForIgnor))
                         isAddColor = false;
                 }
                 if (isAddColor)
@@ -196,7 +196,7 @@ namespace SerchAndNotDestroy
             {
                 foreach(Color ignorColors in this.listOfIgnorColors)
                 {
-                    if(CheckColorPixelInPoint(ignorColors, colorForTest))
+                    if(CheckForEqualityOfTwoColorsByRGB(ignorColors, colorForTest))
                     {
                         return true;
                     }
@@ -229,7 +229,7 @@ namespace SerchAndNotDestroy
 
             for (int i = 0; i < bitmapForCheck.Width; i++)
                 for (int j = 0; j < bitmapForCheck.Height; j++)
-                    if (CheckColorPixelInPoint(colorForCheck, bitmapForCheck.GetPixel(i, j)))
+                    if (CheckForEqualityOfTwoColorsByRGB(colorForCheck, bitmapForCheck.GetPixel(i, j)))
                         return true;
 
             return false;
@@ -420,7 +420,7 @@ namespace SerchAndNotDestroy
             {
                 //Просматривается диагональ, любое несовпадение завершает проверку возвращая ложь
                 for (int i = 0; i < lesserSide; i++)
-                    if (!CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, i),
+                    if (!CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, i),
                     pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
                             return false;
 
@@ -431,9 +431,9 @@ namespace SerchAndNotDestroy
               
                 //Счетчик для учета процентного соответствия эталону
                 int counterPercentageCompliance = 0;
-                //Просматривается диагональ, любое несовпадение завершает проверку возвращая ложь
+                //Просматривается диагональ
                 for (int i = 0; i < lesserSide; i++)
-                    if (CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, i),
+                    if (CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, i),
                         pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
                         counterPercentageCompliance++;
 
@@ -453,7 +453,7 @@ namespace SerchAndNotDestroy
                 //Просматривается вся площадь, любое несовпадение завершает проверку возвращая ложь
                 for (int i = 0; i < pictureModelForSearch.Width; i++)
                     for (int j = 0; j < pictureModelForSearch.Height; j++)
-                        if (!CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, j),
+                        if (!CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, j),
                         pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
                                 return false;
 
@@ -463,10 +463,10 @@ namespace SerchAndNotDestroy
             {
                 //Счетчик для учета процентного соответствия эталону
                 int counterPercentageCompliance = 0;
-                //Просматривается вся площадь, любое несовпадение завершает проверку возвращая ложь
+                //Просматривается вся площадь
                 for (int i = 0; i < pictureModelForSearch.Width; i++)
                     for (int j = 0; j < pictureModelForSearch.Height; j++)
-                        if (CheckColorPixelInPoint(pictureModelForSearch.GetPixel(i, j),
+                        if (CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, j),
                             pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
                             counterPercentageCompliance++;
 
@@ -533,7 +533,7 @@ namespace SerchAndNotDestroy
                 {
                     if(!IsColorForIgnor(pictureSearchArea.GetPixel(i, j)))//Если цвет не игнорируется
                     {
-                        if(CheckColorPixelInPoint(pictureSearchArea.GetPixel(i, j), 
+                        if(CheckForEqualityOfTwoColorsByRGB(pictureSearchArea.GetPixel(i, j), 
                             pictureModelForSearch.GetPixel(pixelOfModelForSearch.X, pixelOfModelForSearch.Y)))
                         {//Если пиксели совпали, надо сравнить диагонали
                             if(ComparisonUpLeftDiagonalOfmodelAndAreaForSearch(new Point(i- pixelOfModelForSearch.X, j- pixelOfModelForSearch.Y)))
@@ -588,11 +588,21 @@ namespace SerchAndNotDestroy
 
 
         ///Выполнение поиска с использованием потоков НАЧАЛО
-        ///Надо делать условие, при котором много поточный поиск не будет выполняться, если эталон слишком большой для такого количества потоков
+
+        /// <summary>
+        /// Хранит информацию о том, идет ли выполнение многопоточного поиска
+        /// </summary>
+        /// <param name="listFoundPointsIn"></param>
         private bool isEnableFourThreadsPrivate;
+        /// <summary>
+        /// Предоставляет информацию о том, идет ли выполнение многопоточного поиска
+        /// </summary>
         public bool isEnableFourThreads { get { return this.isEnableFourThreadsPrivate; } }
         
-        private delegate void iterSearchModelInAreaDelegate();
+        /// <summary>
+        /// Сигнатура делегата для суммирования и погружения методов в потоки
+        /// </summary>
+        private delegate void IterSearchModelInAreaDelegate();
         /// <summary>
         /// Выполняет обычный поиск, но делит область поиска на четыре части, поиск в каждой части выполняется в своем отдельном потоке.
         /// Вполне может работать медленней, чем последовательный поиск в случае поиска первой попавшейся точки(true).
@@ -601,13 +611,26 @@ namespace SerchAndNotDestroy
         /// </summary>
         public bool SearchModelInAreaInFourThreads(bool stopSearchingAfterFirstPointFound)
         {
+            //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
+            //Поэтому в случае слишком большого рамера ширины или высоты эталона стоит выполнять последовательный поиск.
+            if ((this.pictureSearchArea.Width / 2 < pictureModelForSearch.Width) ||
+                (this.pictureSearchArea.Height / 2 < pictureModelForSearch.Height))
+            {
+                return SearchModelInArea(stopSearchingAfterFirstPointFound);
+            }
+
+            //Здесь начинается параллельный расчет
+            this.isEnableFourThreadsPrivate = true;
+
             //Если игнорируемых цветов нет в эталоне, то их надо исключить из спика игнорируемых, 
             //т.к. они в любом случае будут проигнорированы из-за отсутсвия в эталоне.
             //Если этого не сделать, то они будут проверяться в пустую, что может замедлить 
             //выполнение: в лучшем случае скорость останется такой же.
             RemoveIgnorColorsThatAreNotInModel();
+
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
+
             //Для краткости чтения половина ширины и высоты области поиска вычисляются сразу
             int halfWidthPSA = (int)(this.pictureSearchArea.Width * 0.5);
             int halfHeightPSA = (int)(this.pictureSearchArea.Height * 0.5);
@@ -616,11 +639,13 @@ namespace SerchAndNotDestroy
             Search[] fourSearchsForThreadPrivate = new Search[4];
             Thread[] fourThread = new Thread[4];
 
+
+
             //В первый поток отправляется первая четверть
             fourSearchsForThreadPrivate[0] = this.Clone();
 
             //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
-            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject1 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject1 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X, this.locationOfPlaceForSearchPrivate.Y,
                     //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
@@ -628,7 +653,6 @@ namespace SerchAndNotDestroy
                     )));
             iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
             iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
-
 
             fourThread[0] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject1));
             fourThread[0].Start();
@@ -638,7 +662,7 @@ namespace SerchAndNotDestroy
             //Во второй поток отправляется вторая четверть
             fourSearchsForThreadPrivate[1] = this.Clone();
 
-            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject2 = (() => fourSearchsForThreadPrivate[1].SetPlaceForSearching(
+            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject2 = (() => fourSearchsForThreadPrivate[1].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X,
                     this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
@@ -656,7 +680,7 @@ namespace SerchAndNotDestroy
             //В третий поток отправляется третья четверть 
             fourSearchsForThreadPrivate[2] = this.Clone();
 
-            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[2].SetPlaceForSearching(
+            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[2].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
                     this.locationOfPlaceForSearchPrivate.Y,
@@ -671,11 +695,10 @@ namespace SerchAndNotDestroy
 
 
 
-
             //В четвертый поток отправляется четвертая четверть
             fourSearchsForThreadPrivate[3] = this.Clone();
 
-            iterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[3].SetPlaceForSearching(
+            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[3].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
                     this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
@@ -689,8 +712,7 @@ namespace SerchAndNotDestroy
             fourThread[3].Start();
 
 
-            this.isEnableFourThreadsPrivate = true;
-
+            //Ожидание заершения всех потоков
             for (int i = 0; i < 4; i++)
                 fourThread[i].Join();
 
@@ -705,7 +727,7 @@ namespace SerchAndNotDestroy
                     foreach (Point newPointForList in fourSearchsForThreadPrivate[i].foundPoints)
                     {
                         //Если такого элемента еще нет, то происходит добавление
-                        if (!CheckPointInMassive(listFoundPointsInFourThread, newPointForList))
+                        if (!CheckPointInList(listFoundPointsInFourThread, newPointForList))
                         {
                             //Сортировка при добавлении не нужна, т.к. поиск происходит по строкам каждого столбца. Добавление четвертей происходит в таком же порядке.
                             //Т.е. сперва врехняя левая, потом нижняя лева, потом верхняя парвая, и потом нижняя правая
@@ -723,10 +745,8 @@ namespace SerchAndNotDestroy
                 }
             }
             
-
-            //Освободить память надо
-            fourSearchsForThreadPrivate = null;
-            fourThread = null;
+            //Здесь параллельный расчет считается законченым
+            this.isEnableFourThreadsPrivate = false;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
             if (listFoundPointsInFourThread == null)
@@ -734,12 +754,23 @@ namespace SerchAndNotDestroy
                 return false;
             }
 
+            //Записать список точек в массив, отсортировать и вернуть истину
             this.foundPoints = listFoundPointsInFourThread.ToArray();
             SortAfterEndSearching();
             return true;
         }
         public bool SearchModelInAreaInMultyThreads(bool stopSearchingAfterFirstPointFound, int countOfThreads)
         {
+            //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
+            //Поэтому в случае слишком большого рамера ширины эталона стоит выполнять последовательный поиск.
+            if (this.pictureSearchArea.Width / countOfThreads < pictureModelForSearch.Width)
+            {
+                return SearchModelInArea(stopSearchingAfterFirstPointFound);
+            }
+
+            //Здесь начинается параллельный расчет
+            this.isEnableFourThreadsPrivate = true;
+
             //Если игнорируемых цветов нет в эталоне, то их надо исключить из спика игнорируемых, 
             //т.к. они в любом случае будут проигнорированы из-за отсутсвия в эталоне.
             //Если этого не сделать, то они будут проверяться в пустую, что может замедлить 
@@ -747,6 +778,7 @@ namespace SerchAndNotDestroy
             RemoveIgnorColorsThatAreNotInModel();
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
+            //У каждого нового потока будет совй сриншот, незачем передавать туда что-то из нынешнего эукземпляра. Однако его размеры понадобятся.
             Size thispictureSearchArea = new Size(this.pictureSearchArea.Width, this.pictureSearchArea.Height);
             this.pictureSearchArea = null;
 
@@ -755,67 +787,44 @@ namespace SerchAndNotDestroy
 
             //Инициализация потоков и будущих клонов этого экземпляра для этих потоков
             Search[] muchSearchsForThreadPrivate = new Search[countOfThreads];
-            Thread[] muchThreads = new Thread[countOfThreads];
             System.Threading.Tasks.Task[] muchTasks = new Task[countOfThreads];
-            iterSearchModelInAreaDelegate[] iterSearchModelInAreaDelegateObject = new iterSearchModelInAreaDelegate[countOfThreads];
 
-            
+            //Создание клонов нынешнего экземпдяра
             for (int i = 0; i < countOfThreads; i++)
             {
                 muchSearchsForThreadPrivate[i] = this.Clone();
             }
 
 
-            //Попробую с таксками
+            //Передача всех данных в функцию и клонирование клонов, потому что если сразу запускать потоки в цикле,
+            //то выскакивает исключение об обращении к одной и той же памяти из разных потоков несомтря на то,
+            //что в каждом потоке разные экземляры класса.
             for (int numOfThread = 0; numOfThread < countOfThreads - 1; numOfThread++)//В последней части надо не брать нахлест, т.к. это самый конец
             {
-                muchSearchsForThreadPrivate[numOfThread] = TaskFunctionThrad(ref muchTasks[numOfThread], muchSearchsForThreadPrivate[numOfThread].Clone(),
+                muchSearchsForThreadPrivate[numOfThread] = TaskFunctionThread(ref muchTasks[numOfThread], muchSearchsForThreadPrivate[numOfThread].Clone(),
                     numOfThread, partWidthPSA, thispictureSearchArea.Height, stopSearchingAfterFirstPointFound);
             }
-               /* for (int numOfThread = 0; numOfThread < countOfThreads - 1; numOfThread++)//В последней части надо не брать нахлест, т.к. это самый конец
-            { //Задать для этого потока координаты и размер новой области, соответсвующие его части
-                fourSearchsForThreadPrivate[numOfThread].SetPlaceForSearching(
-                    new Rectangle(
-                        this.locationOfPlaceForSearchPrivate.X + partWidthPSA * numOfThread,//Перемещение начала с номером потока
-                        this.locationOfPlaceForSearchPrivate.Y,
-                        //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                        partWidthPSA + this.pictureModelForSearch.Width,
-                        thispictureSearchArea.Height
-                        ));
-                //fourSearchsForThreadPrivate[numOfThread].CreateScreenShot();
-            }
-            for (int numOfThread = 0; numOfThread < countOfThreads - 1; numOfThread++)//В последней части надо не брать нахлест, т.к. это самый конец
-            {
-                iterSearchModelInAreaDelegateObject[numOfThread] = (() => fourSearchsForThreadPrivate[numOfThread].CreateScreenShot());
-                iterSearchModelInAreaDelegateObject[numOfThread] +=  (() => fourSearchsForThreadPrivate[numOfThread].SearchModelInArea(stopSearchingAfterFirstPointFound));
-
-                fourThread[numOfThread] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject[numOfThread]));
-                fourThread[numOfThread].Start();
-            }*/
 
 
 
             //Последняя часть, без нахлеста
-            iterSearchModelInAreaDelegateObject[countOfThreads - 1] = (() => muchSearchsForThreadPrivate[countOfThreads - 1].SetPlaceForSearching(
-                    new Rectangle(
-                        this.locationOfPlaceForSearchPrivate.X + partWidthPSA * (countOfThreads-1),//Перемещение на последнюю не тронутую часть ширины
-                        this.locationOfPlaceForSearchPrivate.Y,
-                        //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                        thispictureSearchArea.Width - (partWidthPSA * (countOfThreads - 1)),//Последняя не тронутая часть ширины
-                        thispictureSearchArea.Height
-                        )));
-            iterSearchModelInAreaDelegateObject[countOfThreads - 1] += (() => muchSearchsForThreadPrivate[countOfThreads - 1].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject[countOfThreads - 1] += (() => muchSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            muchTasks[countOfThreads - 1] = Task.Run(() =>
+            {
+                muchSearchsForThreadPrivate[countOfThreads - 1].SetPlaceForSearching(
+                        new Rectangle(
+                            this.locationOfPlaceForSearchPrivate.X + partWidthPSA * (countOfThreads - 1),//Перемещение на последнюю не тронутую часть ширины
+                            this.locationOfPlaceForSearchPrivate.Y,
+                            //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                            thispictureSearchArea.Width - (partWidthPSA * (countOfThreads - 1)),//Последняя не тронутая часть ширины
+                            thispictureSearchArea.Height
+                            ));
+                muchSearchsForThreadPrivate[countOfThreads - 1].CreateScreenShot();
+                muchSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea(stopSearchingAfterFirstPointFound);
+            });
 
-            muchThreads[countOfThreads - 1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject[countOfThreads - 1]));
-            muchThreads[countOfThreads - 1].Start();
-            muchThreads[countOfThreads-1].Join();
-
-
-            this.isEnableFourThreadsPrivate = true;
-
-            for (int i = 0; i < countOfThreads-1; i++)
-                muchTasks[i].Wait();//fourThread[i].Join();
+            //Ожидание завершения выполнения всех потоков
+            for (int i = 0; i < countOfThreads; i++)
+                muchTasks[i].Wait();
 
             //Объединение всех найденых точек
             List<Point> listFoundPointsInFourThread = null;//Создается новый список дл простоты добавления
@@ -828,7 +837,7 @@ namespace SerchAndNotDestroy
                     foreach (Point newPointForList in muchSearchsForThreadPrivate[i].foundPoints)
                     {
                         //Если такого элемента еще нет, то происходит добавление
-                        if (!CheckPointInMassive(listFoundPointsInFourThread, newPointForList))
+                        if (!CheckPointInList(listFoundPointsInFourThread, newPointForList))
                         {
                             //Сортировка при добавлении не нужна, т.к. поиск происходит по строкам каждого столбца. Добавление частей происходит в таком же порядке.
                             //Т.е. сперва левые, потом правые
@@ -846,10 +855,8 @@ namespace SerchAndNotDestroy
                 }
             }
 
-            //Освободить память надо
-            muchSearchsForThreadPrivate = null;
-            muchThreads = null;
-            //iterSearchModelInAreaDelegateObject = null;
+            //Здесь параллельный расчет считается законченым
+            this.isEnableFourThreadsPrivate = false;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
             if (listFoundPointsInFourThread == null)
@@ -857,15 +864,29 @@ namespace SerchAndNotDestroy
                 return false;
             }
 
+            //Записать список точек в массив, отсортировать и вернуть истину
             this.foundPoints = listFoundPointsInFourThread.ToArray();
             SortAfterEndSearching();
             return true;
         }
-        Search TaskFunctionThrad(ref Task taskNum, Search srPerClone, int numOfThread, int partWidthPSA, int thispictureSearchAreaHeight,  bool stopSearchingAfterFirstPointFound)
+        /// <summary>
+        /// Метод для всех данных и клонов, потому что если сразу запускать потоки в цикле,
+        /// то выскакивает исключение об обращении к одной и той же памяти из разных потоков несомтря на то,
+        /// что в каждом потоке разные экземляры класса.
+        /// Принимает ссылку на задачу, клон экземпляра класса поиска и дополнительные параметра для расчета области поиска.
+        /// </summary>
+        /// <param name="taskNum"></param>
+        /// <param name="searchExemplarClone"></param>
+        /// <param name="numOfThread"></param>
+        /// <param name="partWidthPSA"></param>
+        /// <param name="thispictureSearchAreaHeight"></param>
+        /// <param name="stopSearchingAfterFirstPointFound"></param>
+        /// <returns></returns>
+        Search TaskFunctionThread(ref Task taskNum, Search searchExemplarClone, int numOfThread, int partWidthPSA, int thispictureSearchAreaHeight,  bool stopSearchingAfterFirstPointFound)
         {
             taskNum = Task.Run(() =>
             {
-                srPerClone.SetPlaceForSearching(
+                searchExemplarClone.SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X + partWidthPSA * numOfThread,//Перемещение начала с номером потока
                     this.locationOfPlaceForSearchPrivate.Y,
@@ -873,13 +894,18 @@ namespace SerchAndNotDestroy
                     partWidthPSA + this.pictureModelForSearch.Width,
                     thispictureSearchAreaHeight
                     ));
-                srPerClone.CreateScreenShot();
-                srPerClone.SearchModelInArea(stopSearchingAfterFirstPointFound);
+                searchExemplarClone.CreateScreenShot();
+                searchExemplarClone.SearchModelInArea(stopSearchingAfterFirstPointFound);
             });
-            return srPerClone;
+            return searchExemplarClone;
         }
-
-        private bool CheckPointInMassive(List<Point> massiveOfPoints, Point pointForCheck)
+        /// <summary>
+        /// Проверяет в списке наличие точки. Возвращает true, если точка там есть.
+        /// </summary>
+        /// <param name="massiveOfPoints"></param>
+        /// <param name="pointForCheck"></param>
+        /// <returns></returns>
+        private bool CheckPointInList(List<Point> massiveOfPoints, Point pointForCheck)
         {
             foreach(Point pointInMassive in massiveOfPoints)
                 if(pointForCheck.X == pointInMassive.X && pointForCheck.Y == pointInMassive.Y)
@@ -887,6 +913,7 @@ namespace SerchAndNotDestroy
 
             return false;
         }
+
         ///Выполнение поиска с использованием потоков КОНЕЦ
 
 
@@ -935,6 +962,10 @@ namespace SerchAndNotDestroy
         }
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
         public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
+        /// <summary>
+        /// Сорздание скришота и запоминание его в pictureSearchArea. Ширина и высота скришота соответствует ширине и высоте параметра pictureSearchArea.
+        /// Точка отсчета соотвествует точке отсчета запомненой экземляром. По умочанию равна 0,0. Узнать значение можно через свойство locationOfPlaceForSearch.
+        /// </summary>
         public void CreateScreenShot()
         {
             using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))
@@ -977,12 +1008,12 @@ namespace SerchAndNotDestroy
                 }
         }
         /// <summary>
-        /// сравнивает два цвета только по свойствам R, G и B
+        /// Сравнивает два цвета только по свойствам R, G и B
         /// </summary>
         /// <param name="firstColor"></param>
         /// <param name="secondColor"></param>
         /// <returns></returns>
-        public static bool CheckColorPixelInPoint(Color firstColor, Color secondColor)
+        public static bool CheckForEqualityOfTwoColorsByRGB(Color firstColor, Color secondColor)
         {
 
             if (firstColor.R == secondColor.R)
@@ -997,6 +1028,10 @@ namespace SerchAndNotDestroy
             }
             return false;
         }
+        /// <summary>
+        /// Создает клон нынешнего экземпляра.
+        /// </summary>
+        /// <returns></returns>
         public Search Clone()
         {
             Search cloneThisSearch = new Search();
@@ -1027,13 +1062,15 @@ namespace SerchAndNotDestroy
 
             return cloneThisSearch;
         }
+        /// <summary>
+        /// Создает скриншот всего экрана. Сохраняя его в pictureSearchArea.
+        /// </summary>
         public void ScreenshotFullMonitor()
         {
             //Получаю размер экрана в пикселях.
             Size resolutionOfFullScreen = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Size;
-            //Оригинальное разрешение почему-то всегда масштабируется и становиться 0.8 от оригинала.
-            //Это потому что в винде у меня стоит мастаирование всего на 125%. Если это убрать и оставить 100%, все будет ок.
-            //Потому возвращаю его назад
+
+            //Оригинальное разрешение может масштабироваться системой. Потому с помощью метода getScalingFactor координаты приводятся к оригинальным
             this.locationOfPlaceForSearchPrivate = new Point(0, 0);
             this.pictureSearchArea = new Bitmap(
                 (int)(resolutionOfFullScreen.Width * getScalingFactor()),
@@ -1071,6 +1108,14 @@ namespace SerchAndNotDestroy
 
             return ScreenScalingFactor; // 1.25 = 125%
         }
+        /// <summary>
+        /// Вырезает маленькую картинку заданного размера из большой картинки начиная с указаной точки.
+        /// </summary>
+        /// <param name="locationStartOfLargePicture"></param>
+        /// <param name="largePicture"></param>
+        /// <param name="widthSmallPicture"></param>
+        /// <param name="heightSmallPicture"></param>
+        /// <returns></returns>
         private static Bitmap CutSmallPictureFromLargePicture(Point locationStartOfLargePicture, Bitmap largePicture, int widthSmallPicture, int heightSmallPicture)
         {
             Bitmap smallPicture = new Bitmap(widthSmallPicture, heightSmallPicture, PixelFormat.Format32bppArgb);
