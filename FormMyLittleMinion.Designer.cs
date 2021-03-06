@@ -517,13 +517,13 @@
             // 
             // comboBoxForSelectAction
             // 
-            this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.comboBoxForSelectAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxForSelectAction.FormattingEnabled = true;
             this.comboBoxForSelectAction.Location = new System.Drawing.Point(201, 12);
             this.comboBoxForSelectAction.Name = "comboBoxForSelectAction";
             this.comboBoxForSelectAction.Size = new System.Drawing.Size(861, 21);
             this.comboBoxForSelectAction.TabIndex = 26;
-            this.comboBoxForSelectAction.Text = "Задать действие для выполнения";
             // 
             // buttonFindAndPerformThisAction
             // 

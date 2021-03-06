@@ -31,6 +31,15 @@ namespace MyLittleMinion
         MemoryMindOfMyLittleMinion TestMemoryMindOfMyLittleMinion;
         int numberOfCaptureInMemory;
 
+        /// <summary>
+        /// Список действий.(Вообще список списка, но пока только тут только один список.)
+        /// </summary>
+        List<ListOfActionsOfMinion> exemplarsOfLAM = new List<ListOfActionsOfMinion>();
+        /// <summary>
+        /// Номер списка действий в общем списке. Пока что все время 0, т.к. список действий один.
+        /// </summary>
+        int numberLOEOLAM = 0;
+
         public MyLittleMonion()
         {
             InitializeComponent();
@@ -38,12 +47,17 @@ namespace MyLittleMinion
             TestMemoryMindOfMyLittleMinion.nameOfCellOfMemory = "TestNaborImage";
             numberOfCaptureInMemory = 0;
 
+
+            exemplarsOfLAM.Add(new ListOfActionsOfMinion());
+            exemplarsOfLAM[numberLOEOLAM].listOfSearching = new 
             srPer = new Search();
             pictureBoxForModelForSearch.Image = (Image)srPer.pictureModelForSearch;
             pictureBoxForModelForSearch.Size = srPer.pictureModelForSearch.Size;
+
+            FillVariantsOfActionsForComboBoxForSelectAction();
         }
 
-
+        
 
         delegate bool srPerSearchModelInArea();
         private void FindButton_Click(object sender, EventArgs e)
@@ -337,6 +351,13 @@ namespace MyLittleMinion
             srPer.percentageComplianceWithModel = (byte)numericUpDownPercentageComplianceWithModel.Value;
         }
 
+        private void FillVariantsOfActionsForComboBoxForSelectAction()
+        {
+            comboBoxForSelectAction.Items.Add("Щелчек левой кнопкой");
+            comboBoxForSelectAction.SelectedIndex = 0;
+            comboBoxForSelectAction.Items.Add("Двойной щелчек левой кнопкой");
+
+        }
 
 
         //Вспомогательные методы КОНЕЦ

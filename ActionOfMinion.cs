@@ -17,10 +17,15 @@ namespace MyLittleMinion
         /// Задает и получает свойство местонахождения курсора. Используется для указания точки, к которой должны быть применены действия.
         /// </summary>
         public Point cursorPosition { get; set; }
+        /// <summary>
+        /// Хранит номер(id) действия, которое надо выполнить.
+        /// </summary>
+        public ushort numberOfAction { get; set; }
 
         public ActionOfMinion()
         {
             cursorPosition = new Point(0, 0);
+            numberOfAction = 0;
         }
 
         public void MouseClickLeftButton()
@@ -35,6 +40,12 @@ namespace MyLittleMinion
                         cursorPosition.Y,
                         0,
                         0);
+        }
+        public void MouseDoubleClickLeftButton()
+        {
+            MouseClickLeftButton();
+            Thread.Sleep(10);
+            MouseClickLeftButton();
         }
         public void MouseDownLeftButton()
         {
@@ -51,12 +62,6 @@ namespace MyLittleMinion
                         cursorPosition.Y,
                         0,
                         0);
-        }
-        public void MouseDoubleClickLeftButton()
-        {
-            MouseClickLeftButton();
-            Thread.Sleep(10);
-            MouseClickLeftButton();
         }
         public static void DragAndDropWithMouse(Point pointWhereToGet, Point pointWhereToDrop)
         {
