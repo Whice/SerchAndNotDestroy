@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SerchAndNotDestroy
+namespace MyLittleMinion
 {
     //Класс пленки для выбора области.
     //Не смог реализовать нормальную передачу данных после выбора области

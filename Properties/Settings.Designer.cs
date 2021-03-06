@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SerchAndNotDestroy.Properties
+namespace MyLittleMinion.Properties
 {
 
 

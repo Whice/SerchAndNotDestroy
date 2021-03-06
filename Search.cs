@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Drawing.Imaging;
 
-namespace SerchAndNotDestroy
+namespace MyLittleMinion
 {
     /// <summary>
     /// Это класс поиска.

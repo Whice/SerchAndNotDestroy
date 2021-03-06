@@ -14,7 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace SerchAndNotDestroy
+namespace MyLittleMinion
 {
     public partial class MyLittleMonion : Form
     {

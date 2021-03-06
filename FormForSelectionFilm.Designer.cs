@@ -1,4 +1,4 @@
-﻿namespace SerchAndNotDestroy
+﻿namespace MyLittleMinion
 {
     partial class FormForSelectionFilm
     {
