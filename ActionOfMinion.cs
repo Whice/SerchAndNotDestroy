@@ -19,16 +19,27 @@ namespace MyLittleMinion
         public Point cursorPosition { get; set; }
         /// <summary>
         /// Хранит номер(id) действия, которое надо выполнить.
+        /// 0 - Click LBM, 1 - double click LBM.
         /// </summary>
         public ushort numberOfAction { get; set; }
 
         public ActionOfMinion()
         {
-            cursorPosition = new Point(0, 0);
-            numberOfAction = 0;
+            this.cursorPosition = new Point(0, 0);
+            this.numberOfAction = 0;
         }
 
-        public void MouseClickLeftButton()
+        /// <summary>
+        /// Выполняет действие заданного ноемра.
+        /// </summary>
+        public void RealizeAction()
+        {
+            if (this.numberOfAction == 0)
+                MouseClickLeftButton();
+            else if (this.numberOfAction == 1)
+                MouseDoubleClickLeftButton();
+        }
+        private void MouseClickLeftButton()
         {
             mouse_event(MouseEvent.MOUSEEVENTF_LEFTDOWN,
             cursorPosition.X,
@@ -41,13 +52,13 @@ namespace MyLittleMinion
                         0,
                         0);
         }
-        public void MouseDoubleClickLeftButton()
+        private void MouseDoubleClickLeftButton()
         {
             MouseClickLeftButton();
             Thread.Sleep(10);
             MouseClickLeftButton();
         }
-        public void MouseDownLeftButton()
+        private void MouseDownLeftButton()
         {
             mouse_event(MouseEvent.MOUSEEVENTF_LEFTDOWN,
             cursorPosition.X,
@@ -55,7 +66,7 @@ namespace MyLittleMinion
             0,
             0);
         }
-        public void MouseUpLeftButton()
+        private void MouseUpLeftButton()
         {
             mouse_event(MouseEvent.MOUSEEVENTF_LEFTUP,
                         cursorPosition.X,
@@ -63,7 +74,7 @@ namespace MyLittleMinion
                         0,
                         0);
         }
-        public static void DragAndDropWithMouse(Point pointWhereToGet, Point pointWhereToDrop)
+        private static void DragAndDropWithMouse(Point pointWhereToGet, Point pointWhereToDrop)
         {
             mouse_event(MouseEvent.MOUSEEVENTF_LEFTDOWN,
            pointWhereToGet.X,

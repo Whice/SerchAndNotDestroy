@@ -66,7 +66,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panelConfigurationOfSearch = new System.Windows.Forms.Panel();
             this.buttonOpenListOfAction = new System.Windows.Forms.Button();
             this.comboBoxForSelectAction = new System.Windows.Forms.ComboBox();
             this.buttonFindAndPerformThisAction = new System.Windows.Forms.Button();
@@ -76,14 +76,26 @@
             this.labelNumberOfSearchAndAction = new System.Windows.Forms.Label();
             this.labelWaitAfterThisAction = new System.Windows.Forms.Label();
             this.numericUpDownWaitAfterThisAction = new System.Windows.Forms.NumericUpDown();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelNameOfLisActions = new System.Windows.Forms.Label();
+            this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
             this.panelForModelForSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).BeginInit();
             this.panelForPlaceOfSearch.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.panelConfigurationOfSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // FindButton
@@ -151,7 +163,7 @@
             // 
             // buttonFindAndPerformAllAction
             // 
-            this.buttonFindAndPerformAllAction.Location = new System.Drawing.Point(8, 11);
+            this.buttonFindAndPerformAllAction.Location = new System.Drawing.Point(5, 36);
             this.buttonFindAndPerformAllAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonFindAndPerformAllAction.Name = "buttonFindAndPerformAllAction";
             this.buttonFindAndPerformAllAction.Size = new System.Drawing.Size(188, 47);
@@ -490,20 +502,20 @@
             this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
             this.checkBoxSelectActiveWindow.CheckedChanged += new System.EventHandler(this.CheckBoxSelectActiveWindow_CheckedChanged);
             // 
-            // panel1
+            // panelConfigurationOfSearch
             // 
-            this.panel1.BackColor = System.Drawing.Color.Moccasin;
-            this.panel1.Controls.Add(this.FindButton);
-            this.panel1.Controls.Add(this.panelForPlaceOfSearch);
-            this.panel1.Controls.Add(this.panelForModelForSearch);
-            this.panel1.Controls.Add(this.checkBoxForPlaceOfSearch);
-            this.panel1.Controls.Add(this.labelForStatus);
-            this.panel1.Controls.Add(this.panelForColorsForIgnor);
-            this.panel1.Controls.Add(this.checkBoxForColorsForIgnor);
-            this.panel1.Location = new System.Drawing.Point(201, 81);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(861, 481);
-            this.panel1.TabIndex = 24;
+            this.panelConfigurationOfSearch.BackColor = System.Drawing.Color.Moccasin;
+            this.panelConfigurationOfSearch.Controls.Add(this.FindButton);
+            this.panelConfigurationOfSearch.Controls.Add(this.panelForPlaceOfSearch);
+            this.panelConfigurationOfSearch.Controls.Add(this.panelForModelForSearch);
+            this.panelConfigurationOfSearch.Controls.Add(this.checkBoxForPlaceOfSearch);
+            this.panelConfigurationOfSearch.Controls.Add(this.labelForStatus);
+            this.panelConfigurationOfSearch.Controls.Add(this.panelForColorsForIgnor);
+            this.panelConfigurationOfSearch.Controls.Add(this.checkBoxForColorsForIgnor);
+            this.panelConfigurationOfSearch.Location = new System.Drawing.Point(198, 106);
+            this.panelConfigurationOfSearch.Name = "panelConfigurationOfSearch";
+            this.panelConfigurationOfSearch.Size = new System.Drawing.Size(861, 481);
+            this.panelConfigurationOfSearch.TabIndex = 24;
             // 
             // buttonOpenListOfAction
             // 
@@ -520,14 +532,14 @@
             this.comboBoxForSelectAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxForSelectAction.FormattingEnabled = true;
-            this.comboBoxForSelectAction.Location = new System.Drawing.Point(201, 12);
+            this.comboBoxForSelectAction.Location = new System.Drawing.Point(198, 37);
             this.comboBoxForSelectAction.Name = "comboBoxForSelectAction";
             this.comboBoxForSelectAction.Size = new System.Drawing.Size(861, 21);
             this.comboBoxForSelectAction.TabIndex = 26;
             // 
             // buttonFindAndPerformThisAction
             // 
-            this.buttonFindAndPerformThisAction.Location = new System.Drawing.Point(8, 67);
+            this.buttonFindAndPerformThisAction.Location = new System.Drawing.Point(5, 92);
             this.buttonFindAndPerformThisAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonFindAndPerformThisAction.Name = "buttonFindAndPerformThisAction";
             this.buttonFindAndPerformThisAction.Size = new System.Drawing.Size(188, 47);
@@ -537,7 +549,7 @@
             // 
             // buttonPrevAction
             // 
-            this.buttonPrevAction.Location = new System.Drawing.Point(11, 158);
+            this.buttonPrevAction.Location = new System.Drawing.Point(11, 170);
             this.buttonPrevAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonPrevAction.Name = "buttonPrevAction";
             this.buttonPrevAction.Size = new System.Drawing.Size(89, 40);
@@ -547,7 +559,7 @@
             // 
             // buttonNextAction
             // 
-            this.buttonNextAction.Location = new System.Drawing.Point(104, 158);
+            this.buttonNextAction.Location = new System.Drawing.Point(104, 170);
             this.buttonNextAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonNextAction.Name = "buttonNextAction";
             this.buttonNextAction.Size = new System.Drawing.Size(89, 40);
@@ -557,7 +569,7 @@
             // 
             // buttonAddAction
             // 
-            this.buttonAddAction.Location = new System.Drawing.Point(12, 206);
+            this.buttonAddAction.Location = new System.Drawing.Point(12, 218);
             this.buttonAddAction.Name = "buttonAddAction";
             this.buttonAddAction.Size = new System.Drawing.Size(116, 41);
             this.buttonAddAction.TabIndex = 30;
@@ -568,7 +580,7 @@
             // 
             this.labelNumberOfSearchAndAction.AutoSize = true;
             this.labelNumberOfSearchAndAction.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelNumberOfSearchAndAction.Location = new System.Drawing.Point(12, 136);
+            this.labelNumberOfSearchAndAction.Location = new System.Drawing.Point(12, 148);
             this.labelNumberOfSearchAndAction.Name = "labelNumberOfSearchAndAction";
             this.labelNumberOfSearchAndAction.Size = new System.Drawing.Size(170, 20);
             this.labelNumberOfSearchAndAction.TabIndex = 31;
@@ -577,7 +589,7 @@
             // labelWaitAfterThisAction
             // 
             this.labelWaitAfterThisAction.AutoSize = true;
-            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(202, 40);
+            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(199, 65);
             this.labelWaitAfterThisAction.Name = "labelWaitAfterThisAction";
             this.labelWaitAfterThisAction.Size = new System.Drawing.Size(205, 13);
             this.labelWaitAfterThisAction.TabIndex = 32;
@@ -585,7 +597,7 @@
             // 
             // numericUpDownWaitAfterThisAction
             // 
-            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(201, 56);
+            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(198, 81);
             this.numericUpDownWaitAfterThisAction.Name = "numericUpDownWaitAfterThisAction";
             this.numericUpDownWaitAfterThisAction.Size = new System.Drawing.Size(203, 20);
             this.numericUpDownWaitAfterThisAction.TabIndex = 26;
@@ -595,12 +607,100 @@
             0,
             0});
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.settingToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1113, 24);
+            this.menuStrip1.TabIndex = 34;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.fileToolStripMenuItem.Text = "Файл";
+            // 
+            // settingToolStripMenuItem
+            // 
+            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
+            this.settingToolStripMenuItem.Text = "Настройки";
+            this.settingToolStripMenuItem.Click += new System.EventHandler(this.SettingToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
+            this.aboutToolStripMenuItem.Text = "О программе";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.saveToolStripMenuItem.Text = "Сохранить";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.saveAsToolStripMenuItem.Text = "Сохранить как...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.openToolStripMenuItem.Text = "Открыть";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.exitToolStripMenuItem.Text = "Выйти. Уходи вон, неблагодарный!";
+            // 
+            // labelNameOfLisActions
+            // 
+            this.labelNameOfLisActions.AutoSize = true;
+            this.labelNameOfLisActions.Location = new System.Drawing.Point(5, 351);
+            this.labelNameOfLisActions.Name = "labelNameOfLisActions";
+            this.labelNameOfLisActions.Size = new System.Drawing.Size(166, 13);
+            this.labelNameOfLisActions.TabIndex = 25;
+            this.labelNameOfLisActions.Text = "Название последовательности";
+            // 
+            // textBoxNameOfLisActions
+            // 
+            this.textBoxNameOfLisActions.Location = new System.Drawing.Point(9, 367);
+            this.textBoxNameOfLisActions.Name = "textBoxNameOfLisActions";
+            this.textBoxNameOfLisActions.Size = new System.Drawing.Size(74, 20);
+            this.textBoxNameOfLisActions.TabIndex = 24;
+            this.textBoxNameOfLisActions.Text = "0";
+            // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(1113, 589);
+            this.Controls.Add(this.labelNameOfLisActions);
+            this.Controls.Add(this.textBoxNameOfLisActions);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.numericUpDownWaitAfterThisAction);
             this.Controls.Add(this.labelWaitAfterThisAction);
             this.Controls.Add(this.labelNumberOfSearchAndAction);
@@ -610,14 +710,15 @@
             this.Controls.Add(this.buttonFindAndPerformThisAction);
             this.Controls.Add(this.comboBoxForSelectAction);
             this.Controls.Add(this.buttonOpenListOfAction);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panelConfigurationOfSearch);
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.buttonFindAndPerformAllAction);
             this.Controls.Add(this.buttonSaveListOfAction);
+            this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MyLittleMonion";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.Text = "Мой маленький помощник";
+            this.Text = " ";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).EndInit();
             this.panelForColorsForIgnor.ResumeLayout(false);
@@ -627,9 +728,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).EndInit();
             this.panelForPlaceOfSearch.ResumeLayout(false);
             this.panelForPlaceOfSearch.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panelConfigurationOfSearch.ResumeLayout(false);
+            this.panelConfigurationOfSearch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -674,7 +777,7 @@
         private System.Windows.Forms.CheckBox checkBoxCountOfThreads;
         private System.Windows.Forms.Label labelPercentageComplianceWithModel;
         private System.Windows.Forms.NumericUpDown numericUpDownPercentageComplianceWithModel;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelConfigurationOfSearch;
         private System.Windows.Forms.Button buttonOpenListOfAction;
         private System.Windows.Forms.ComboBox comboBoxForSelectAction;
         private System.Windows.Forms.Button buttonFindAndPerformThisAction;
@@ -684,6 +787,17 @@
         private System.Windows.Forms.Label labelNumberOfSearchAndAction;
         private System.Windows.Forms.Label labelWaitAfterThisAction;
         private System.Windows.Forms.NumericUpDown numericUpDownWaitAfterThisAction;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.Label labelNameOfLisActions;
+        private System.Windows.Forms.TextBox textBoxNameOfLisActions;
     }
 }
 

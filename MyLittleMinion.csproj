@@ -48,6 +48,12 @@
   <ItemGroup>
     <Compile Include="ActionOfMinion.cs" />
     <Compile Include="AdditionalFunctions.cs" />
+    <Compile Include="DialogWindowWithTextBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DialogWindowWithTextBox.Designer.cs">
+      <DependentUpon>DialogWindowWithTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMyLittleMinion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -65,6 +71,9 @@
     <Compile Include="FormForSelectionFilm.Designer.cs">
       <DependentUpon>FormForSelectionFilm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DialogWindowWithTextBox.resx">
+      <DependentUpon>DialogWindowWithTextBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMyLittleMinion.resx">
       <DependentUpon>FormMyLittleMinion.cs</DependentUpon>
     </EmbeddedResource>

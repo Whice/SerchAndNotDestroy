@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MyLittleMinion
 {
@@ -22,4 +24,27 @@ namespace MyLittleMinion
         }
 
     }
+
+    [Serializable()]
+    class SettingOfMinion
+    {
+        public void SetSettingDefault()
+        {
+            GetFullPathOfExeMinion();
+            this.pathForSaveOfList = this.fullPathOfExeOfMinion;
+        }
+        public void GetFullPathOfExeMinion()
+        {
+            //Узнаю полный адрес exe файла.
+            this.fullPathOfExeOfMinion = Path.GetFullPath("e");
+            this.fullPathOfExeOfMinion = this.fullPathOfExeOfMinion.Remove(this.fullPathOfExeOfMinion.Length - 1);
+        }
+
+        public string fullPathOfExeOfMinion { get; set; }
+        public string pathForSaveOfList { get; set; }
+    }
+
+
+
+
 }

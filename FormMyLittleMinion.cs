@@ -27,9 +27,11 @@ namespace MyLittleMinion
         }
 
         
-        const string FileName = @"C:/Users/Forni/source/repos/ReadForDisplayPixel/SavedMemoryMindOfMyLittleMinion.bin";
+        const string fullAdressOfFileName = @"D:/Documents/My little minion saves/SavedMemoryMindOfMyLittleMinion.bin";
         MemoryMindOfMyLittleMinion TestMemoryMindOfMyLittleMinion;
         int numberOfCaptureInMemory;
+        SettingOfMinion settingOfMinion;
+        DialogWindowForSetting dialogWindowForSetting;
 
         /// <summary>
         /// Список действий.(Вообще список списка, но пока только тут только один список.)
@@ -39,17 +41,19 @@ namespace MyLittleMinion
         /// Номер списка действий в общем списке. Пока что все время 0, т.к. список действий один.
         /// </summary>
         int numberLOEOLAM = 0;
-
+       
         public MyLittleMonion()
         {
             InitializeComponent();
             TestMemoryMindOfMyLittleMinion = new MemoryMindOfMyLittleMinion();
             TestMemoryMindOfMyLittleMinion.nameOfCellOfMemory = "TestNaborImage";
             numberOfCaptureInMemory = 0;
+            settingOfMinion = new SettingOfMinion();
+            settingOfMinion.pathForSaveOfList = fullAdressOfFileName;
 
 
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
-            //exemplarsOfLAM[numberLOEOLAM].listOfSearching = new 
+            exemplarsOfLAM[numberLOEOLAM].listOfSearching.Add(new Search());
             srPer = new Search();
             pictureBoxForModelForSearch.Image = (Image)srPer.pictureModelForSearch;
             pictureBoxForModelForSearch.Size = srPer.pictureModelForSearch.Size;
@@ -150,10 +154,12 @@ namespace MyLittleMinion
         Search srPer;
         private void TestButton_Click(object sender, EventArgs e)
         {
-            Thread.Sleep(2000);
+            
+            MessageBox.Show(Convert.ToString(comboBoxForSelectAction.SelectedIndex));
+            /*Thread.Sleep(2000);
             ActionOfMinion aMinion = new ActionOfMinion();
             aMinion.cursorPosition = Cursor.Position;
-                aMinion.MouseDoubleClickLeftButton();
+                aMinion.MouseDoubleClickLeftButton();*/
         }
 
 
@@ -303,11 +309,15 @@ namespace MyLittleMinion
             {
                 panelForModelForSearch.Width = 350;
                 panelForModelForSearch.Height = 200;
+                panelConfigurationOfSearch.Width = 850;
+                panelConfigurationOfSearch.Height = 450;
             }
             else
             {
                 panelForModelForSearch.Width = 8000;
                 panelForModelForSearch.Height = 4000;
+                panelConfigurationOfSearch.Width = 8500;
+                panelConfigurationOfSearch.Height = 4500;
             }
         }
 
@@ -356,6 +366,26 @@ namespace MyLittleMinion
             comboBoxForSelectAction.Items.Add("Щелчек левой кнопкой");
             comboBoxForSelectAction.SelectedIndex = 0;
             comboBoxForSelectAction.Items.Add("Двойной щелчек левой кнопкой");
+
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Помощник - хороший мальчик!");
+        }
+
+        private void SettingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dialogWindowForSetting = new DialogWindowForSetting(settingOfMinion);
+            dialogWindowForSetting.Show();
+        }
+
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
         }
 
