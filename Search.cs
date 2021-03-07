@@ -34,23 +34,28 @@ namespace MyLittleMinion
         /// </summary>
         public Search()
         {
-            pictureSearchArea = null;
-            pictureModelForSearch = null;
-            foundPoints = null;
+            this.pictureSearchArea = null;
+            this.pictureModelForSearch = null;
+            this.foundPoints = null;
 
-            locationOfPlaceForSearchPrivate = new Point();
-            isCreateScreenWindowPrivate = false;
-            pointerOnActiveWindow = default(IntPtr);
+            this.UsePlaceForSearch = false;
+            this.locationOfPlaceForSearchPrivate = new Point();
+            this.UseActiveWindow = false;
+            this.isCreateScreenWindowPrivate = false;
+            this.pointerOnActiveWindow = default(IntPtr);
 
-            listOfIgnorColors = null;
-            numberIgnorColorInListPrivate = 0;
-            isIgnorColorsPrivate = false;
+            this.UseIgnorColors = false;
+            this.listOfIgnorColors = null;
+            this.numberIgnorColorInListPrivate = 0;
+            this.isIgnorColorsPrivate = false;
 
-            isEnableFourThreadsPrivate = false;
+            this.isEnableFourThreadsPrivate = false;
 
             this.percentageComplianceWithModelPivate = 100;
+            this.stopSearchingAfterFirstPointFound = true;
 
-            CreateBitmapForEmptyModel();
+            this.SetPlaceForSearchForFullMonitor();
+            this.CreateBitmapForEmptyModel();
         }
 
 
@@ -58,6 +63,10 @@ namespace MyLittleMinion
 
         ///цвета, которые надо игнорировать НАЧАЛО
 
+        /// <summary>
+        /// Определяет будут ли использоваться игнорируемые цвета.
+        /// </summary>
+        public bool UseIgnorColors { get; set; }
         /// <summary>
         /// Внутреннее поле для хранения сведений о наличии игнорируемых цветов.
         /// </summary>
@@ -265,6 +274,10 @@ namespace MyLittleMinion
         ///Область, в которой выполняется поиск НАЧАЛО
 
         /// <summary>
+        /// Определяет будет ли использоваться область, в которой выполняется поиск.
+        /// </summary>
+        public bool UsePlaceForSearch { get; set; }
+        /// <summary>
         /// Внутреннее поле для хранения расположения прямоугольника области, где выполняется поиск.
         /// </summary>
         private Point locationOfPlaceForSearchPrivate;
@@ -307,6 +320,20 @@ namespace MyLittleMinion
         {
             SetPlaceForSearching(new Point(leftLine, topLine), new Point(rightLine, bottomLine));
         }
+        /// <summary>
+        /// Устанавливает размер области поиска равный размеру всего экарана.
+        /// </summary>
+        public void SetPlaceForSearchForFullMonitor()
+        {
+            //Получаю размер экрана в пикселях.
+            Size resolutionOfFullScreen = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Size;
+
+            //Оригинальное разрешение может масштабироваться системой. Потому с помощью метода getScalingFactor координаты приводятся к оригинальным
+            this.locationOfPlaceForSearchPrivate = new Point(0, 0);
+            this.pictureSearchArea = new Bitmap(
+                (int)(resolutionOfFullScreen.Width * getScalingFactor()),
+                (int)(resolutionOfFullScreen.Height * getScalingFactor()));
+        }
 
         ///Область, в которой выполняется поиск КОНЕЦ
 
@@ -315,6 +342,10 @@ namespace MyLittleMinion
 
         ///Скриншот активного окна НАЧАЛО
 
+        /// <summary>
+        /// Определяет будет ли использоваться активное окно как область, в которой выполняется поиск.
+        /// </summary>
+        public bool UseActiveWindow { get; set; }
         /// <summary>
         /// Хранит внутренее поле дающего информацию о том, был сделан скриншот активного окна.
         /// </summary>
@@ -395,6 +426,10 @@ namespace MyLittleMinion
 
         ///Выполнение поиска НАЧАЛО
 
+        /// <summary>
+        /// Определяет выполнятеся ли поиск до первого найденого элемента.
+        /// </summary>
+        public bool stopSearchingAfterFirstPointFound { get; set; }
         private byte percentageComplianceWithModelPivate;
         /// <summary>
         /// Свойство процентного соответсвия эталону. Значение может быть от 1 до 100, где 100 полное соответсвие эталону(100%).
@@ -483,11 +518,11 @@ namespace MyLittleMinion
 
         /// <summary>
         /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра. 
-        /// Если принимает true, то ищет только до первой попавшейся точки.
+        /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
         /// </summary>
         /// <param name="stopSearchingAfterFirstPointFound"></param>
         /// <returns></returns>
-        public bool SearchModelInArea(bool stopSearchingAfterFirstPointFound)
+        public bool SearchModelInArea()
         {
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
@@ -550,7 +585,7 @@ namespace MyLittleMinion
                                         i - pixelOfModelForSearch.X + this.locationOfPlaceForSearchPrivate.X,
                                         j - pixelOfModelForSearch.Y + this.locationOfPlaceForSearchPrivate.Y));
 
-                                    if (stopSearchingAfterFirstPointFound)
+                                    if (this.stopSearchingAfterFirstPointFound)
                                     {
                                         ListToMassiveOfFoundPoints(listFoundPoints);
                                         return true;
@@ -591,6 +626,12 @@ namespace MyLittleMinion
 
 
         ///Выполнение поиска с использованием потоков НАЧАЛО
+        
+        /// <summary>
+        /// Использование многопоточности во время поиска. 0 - Четыре потока для четвертей по углам. 1 или больше, число становиться количеством потоков: область поиска делиться потоками на столбцы.
+        /// </summary>
+        public int multyThreadSearch { get; set; }
+
 
         /// <summary>
         /// Хранит информацию о том, идет ли выполнение многопоточного поиска
@@ -612,14 +653,14 @@ namespace MyLittleMinion
         /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра. 
         /// Если принимает true, то ищет только до первой попавшейся точки.
         /// </summary>
-        public bool SearchModelInAreaInFourThreads(bool stopSearchingAfterFirstPointFound)
+        public bool SearchModelInAreaInFourThreads()
         {
             //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
             //Поэтому в случае слишком большого рамера ширины или высоты эталона стоит выполнять последовательный поиск.
             if ((this.pictureSearchArea.Width / 2 < pictureModelForSearch.Width) ||
                 (this.pictureSearchArea.Height / 2 < pictureModelForSearch.Height))
             {
-                return SearchModelInArea(stopSearchingAfterFirstPointFound);
+                return SearchModelInArea();
             }
 
             //Здесь начинается параллельный расчет
@@ -655,7 +696,7 @@ namespace MyLittleMinion
                     halfWidthPSA + this.pictureModelForSearch.Width, halfHeightPSA + this.pictureModelForSearch.Height
                     )));
             iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea());
 
             fourThread[0] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject1));
             fourThread[0].Start();
@@ -673,7 +714,7 @@ namespace MyLittleMinion
                     this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                     )));
             iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].SearchModelInArea());
 
             fourThread[1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject2));
             fourThread[1].Start();
@@ -691,7 +732,7 @@ namespace MyLittleMinion
                     halfHeightPSA + this.pictureModelForSearch.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                     )));
             iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].SearchModelInArea());
 
             fourThread[2] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject3));
             fourThread[2].Start();
@@ -709,7 +750,7 @@ namespace MyLittleMinion
                     this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                     )));
             iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].SearchModelInArea(stopSearchingAfterFirstPointFound));
+            iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].SearchModelInArea());
 
             fourThread[3] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject4));
             fourThread[3].Start();
@@ -762,13 +803,13 @@ namespace MyLittleMinion
             SortAfterEndSearching();
             return true;
         }
-        public bool SearchModelInAreaInMultyThreads(bool stopSearchingAfterFirstPointFound, int countOfThreads)
+        public bool SearchModelInAreaInMultyThreads(int countOfThreads)
         {
             //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
             //Поэтому в случае слишком большого рамера ширины эталона стоит выполнять последовательный поиск.
             if (this.pictureSearchArea.Width / countOfThreads < pictureModelForSearch.Width)
             {
-                return SearchModelInArea(stopSearchingAfterFirstPointFound);
+                return SearchModelInArea();
             }
 
             //Здесь начинается параллельный расчет
@@ -805,7 +846,7 @@ namespace MyLittleMinion
             for (int numOfThread = 0; numOfThread < countOfThreads - 1; numOfThread++)//В последней части надо не брать нахлест, т.к. это самый конец
             {
                 muchSearchsForThreadPrivate[numOfThread] = TaskFunctionThread(ref muchTasks[numOfThread], muchSearchsForThreadPrivate[numOfThread].Clone(),
-                    numOfThread, partWidthPSA, thispictureSearchArea.Height, stopSearchingAfterFirstPointFound);
+                    numOfThread, partWidthPSA, thispictureSearchArea.Height);
             }
 
 
@@ -822,7 +863,7 @@ namespace MyLittleMinion
                             thispictureSearchArea.Height
                             ));
                 muchSearchsForThreadPrivate[countOfThreads - 1].CreateScreenShot();
-                muchSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea(stopSearchingAfterFirstPointFound);
+                muchSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea();
             });
 
             //Ожидание завершения выполнения всех потоков
@@ -885,7 +926,7 @@ namespace MyLittleMinion
         /// <param name="thispictureSearchAreaHeight"></param>
         /// <param name="stopSearchingAfterFirstPointFound"></param>
         /// <returns></returns>
-        Search TaskFunctionThread(ref Task taskNum, Search searchExemplarClone, int numOfThread, int partWidthPSA, int thispictureSearchAreaHeight,  bool stopSearchingAfterFirstPointFound)
+        Search TaskFunctionThread(ref Task taskNum, Search searchExemplarClone, int numOfThread, int partWidthPSA, int thispictureSearchAreaHeight)
         {
             taskNum = Task.Run(() =>
             {
@@ -898,7 +939,7 @@ namespace MyLittleMinion
                     thispictureSearchAreaHeight
                     ));
                 searchExemplarClone.CreateScreenShot();
-                searchExemplarClone.SearchModelInArea(stopSearchingAfterFirstPointFound);
+                searchExemplarClone.SearchModelInArea();
             });
             return searchExemplarClone;
         }
@@ -1041,6 +1082,7 @@ namespace MyLittleMinion
             cloneThisSearch.foundPoints = this.foundPoints;
             cloneThisSearch.isEnableFourThreadsPrivate = this.isEnableFourThreadsPrivate;
             cloneThisSearch.isIgnorColorsPrivate = this.isIgnorColorsPrivate;
+            cloneThisSearch.UseIgnorColors = this.UseIgnorColors;
 
             if (this.listOfIgnorColors != null)
             {
@@ -1050,6 +1092,8 @@ namespace MyLittleMinion
             else
                 cloneThisSearch.listOfIgnorColors = null;
 
+            cloneThisSearch.UseActiveWindow = this.UseActiveWindow;
+            cloneThisSearch.UsePlaceForSearch = this.UsePlaceForSearch;
             cloneThisSearch.locationOfPlaceForSearchPrivate = this.locationOfPlaceForSearchPrivate;
             cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
             cloneThisSearch.pictureModelForSearch = (Bitmap)this.pictureModelForSearch.Clone();
@@ -1062,23 +1106,9 @@ namespace MyLittleMinion
             cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
             cloneThisSearch.pointerOnActiveWindow = this.pointerOnActiveWindow;
             cloneThisSearch.percentageComplianceWithModelPivate = this.percentageComplianceWithModelPivate;
+            cloneThisSearch.stopSearchingAfterFirstPointFound = this.stopSearchingAfterFirstPointFound;
 
             return cloneThisSearch;
-        }
-        /// <summary>
-        /// Создает скриншот всего экрана. Сохраняя его в pictureSearchArea.
-        /// </summary>
-        public void ScreenshotFullMonitor()
-        {
-            //Получаю размер экрана в пикселях.
-            Size resolutionOfFullScreen = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Size;
-
-            //Оригинальное разрешение может масштабироваться системой. Потому с помощью метода getScalingFactor координаты приводятся к оригинальным
-            this.locationOfPlaceForSearchPrivate = new Point(0, 0);
-            this.pictureSearchArea = new Bitmap(
-                (int)(resolutionOfFullScreen.Width * getScalingFactor()),
-                (int)(resolutionOfFullScreen.Height * getScalingFactor()));
-            CreateScreenShot();
         }
         /// <summary>
         /// Делает null (самую большую по логике) картинку, где хзраниться скришот экрана или его области.

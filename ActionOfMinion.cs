@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Forms;
 
 namespace MyLittleMinion
 {
@@ -22,11 +23,12 @@ namespace MyLittleMinion
         /// 0 - Click LBM, 1 - double click LBM.
         /// </summary>
         public ushort numberOfAction { get; set; }
-
+        public int timeOfWaitingAfterAction { get; set; }
         public ActionOfMinion()
         {
             this.cursorPosition = new Point(0, 0);
             this.numberOfAction = 0;
+            this.timeOfWaitingAfterAction = 1;
         }
 
         /// <summary>
@@ -38,6 +40,8 @@ namespace MyLittleMinion
                 MouseClickLeftButton();
             else if (this.numberOfAction == 1)
                 MouseDoubleClickLeftButton();
+            else if (this.numberOfAction == 2)
+                PasteFromBuffer();
         }
         private void MouseClickLeftButton()
         {
@@ -57,6 +61,10 @@ namespace MyLittleMinion
             MouseClickLeftButton();
             Thread.Sleep(10);
             MouseClickLeftButton();
+        }
+        private void PasteFromBuffer()
+        {
+            SendKeys.Send("^v");
         }
         private void MouseDownLeftButton()
         {

@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
+
 namespace MyLittleMinion
 {
     public partial class MyLittleMonion : Form
@@ -41,7 +42,16 @@ namespace MyLittleMinion
         /// Номер списка действий в общем списке. Пока что все время 0, т.к. список действий один.
         /// </summary>
         int numberLOEOLAM = 0;
-       
+
+        /// <summary>
+        /// Локальная переменная ссылка на класс поиска для взаимодействия с интерфесом. По сути укороченыое имя, псевдоним.
+        /// </summary>
+        Search exemplarOfSearch;
+        /// <summary>
+        /// Локальная переменная ссылка на класс действия помощника для взаимодействия с интерфесом. По сути укороченыое имя, псевдоним.
+        /// </summary>
+        ActionOfMinion exemplarOfActionOfMinion;
+
         public MyLittleMonion()
         {
             InitializeComponent();
@@ -53,10 +63,11 @@ namespace MyLittleMinion
 
 
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
-            exemplarsOfLAM[numberLOEOLAM].listOfSearching.Add(new Search());
-            srPer = new Search();
-            pictureBoxForModelForSearch.Image = (Image)srPer.pictureModelForSearch;
-            pictureBoxForModelForSearch.Size = srPer.pictureModelForSearch.Size;
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+
+            pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
+            pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
 
             FillVariantsOfActionsForComboBoxForSelectAction();
         }
@@ -66,36 +77,32 @@ namespace MyLittleMinion
         delegate bool srPerSearchModelInArea();
         private void FindButton_Click(object sender, EventArgs e)
         {
+            SearchingModelOnScreen();
+        }
+
+
+        
+        void SearchingModelOnScreen()
+        {
             pictureBoxForModelForSearch.Visible = false;
             DateTime testTimeOfSearch = DateTime.Now;
-            srPer.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
             labelForStatus.Text = "Выполняется поиск...";
 
-            if(checkBoxForPlaceOfSearch.Checked)
-            {
-                if(checkBoxSelectActiveWindow.Checked)
-                    srPer.SetActiveWindowForPlaceForSearching();
-                else
-                    srPer.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text), Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
-                srPer.CreateScreenShot();
-            }
-            else
-            {
-                srPer.ScreenshotFullMonitor();
-            }
+            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            exemplarOfSearch.CreateScreenShot();
 
             srPerSearchModelInArea srPerSearchModelInArea1;
-            if(checkBoxCountOfThreads.Checked)
-                srPerSearchModelInArea1 = (() => srPer.SearchModelInAreaInMultyThreads(checkBoxFirstFoundModelIsEnd.Checked, Convert.ToInt32(textBoxCountOfThreads.Text)));
+            if (checkBoxCountOfThreads.Checked)
+                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInAreaInMultyThreads(Convert.ToInt32(textBoxCountOfThreads.Text)));
             else if (checkBoxParallelSearch.Checked)
-                srPerSearchModelInArea1 = (() => srPer.SearchModelInAreaInFourThreads(checkBoxFirstFoundModelIsEnd.Checked));
+                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInAreaInFourThreads());
             else
-                srPerSearchModelInArea1 = (() => srPer.SearchModelInArea(checkBoxFirstFoundModelIsEnd.Checked));
+                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInArea());
 
             if (srPerSearchModelInArea1())
-            { 
-                    //MessageBox.Show("Нашел!");
-                Cursor.Position = srPer.foundPoints[0];
+            {
+                //MessageBox.Show("Нашел!");
+                Cursor.Position = exemplarOfSearch.foundPoints[0];
                 //MouseClickLeftButton(RememberCursorPoisition);
                 labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
             }
@@ -117,45 +124,18 @@ namespace MyLittleMinion
             }
         }
 
-        private void FindNextButton_Click(object sender, EventArgs e)
-        {
-            timer1.Enabled = true;
-        }
+        
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            /*if (srPer.isEnableFourThreads)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (srPer.fourSearchsForThreadPrivate[i].foundPoints!=null)
-                    {
-                        srPer.AbortAllThreadForSearch();
-                        srPer.foundPoints = srPer.fourSearchsForThreadPrivate[i].foundPoints;
-
-                        pictureBox2.Image = (Image)srPer.pictureSearchArea;
-                        pictureBox2.Width = srPer.pictureSearchArea.Width;
-                        pictureBox2.Height = srPer.pictureSearchArea.Height;
-
-                        break;
-                    }
-                }
-            }*/
             labelMousePosiotonView.Text = "Mouse position: " + Convert.ToString(Cursor.Position.X) + "; " + Convert.ToString(Cursor.Position.Y) + ";";
-            while (numberOfCaptureInMemory< TestMemoryMindOfMyLittleMinion.captureInMemory.Count)
-            {
-
-            }
         }
 
-        
-        
-
-        Search srPer;
         private void TestButton_Click(object sender, EventArgs e)
         {
-            
-            MessageBox.Show(Convert.ToString(comboBoxForSelectAction.SelectedIndex));
+            Thread.Sleep(3000);
+            IamBorn();
+            // MessageBox.Show(Convert.ToString(comboBoxForSelectAction.SelectedIndex));
             /*Thread.Sleep(2000);
             ActionOfMinion aMinion = new ActionOfMinion();
             aMinion.cursorPosition = Cursor.Position;
@@ -175,17 +155,17 @@ namespace MyLittleMinion
         }
         private void Next_Click(object sender, EventArgs e)
         {
-            srPer.numberIgnorColorInList++;
+            exemplarOfSearch.numberIgnorColorInList++;
             pictureBoxForIgnorColor.Image = AdditionalFunctions.FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
-                srPer.ShowIgnorColor());
-            labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
+                exemplarOfSearch.ShowIgnorColor());
+            labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(exemplarOfSearch.numberIgnorColorInList + 1);
         }
         private void Prev_Click(object sender, EventArgs e)
         {
-            srPer.numberIgnorColorInList--;
+            exemplarOfSearch.numberIgnorColorInList--;
             pictureBoxForIgnorColor.Image = AdditionalFunctions.FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
-                srPer.ShowIgnorColor());
-            labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
+                exemplarOfSearch.ShowIgnorColor());
+            labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(exemplarOfSearch.numberIgnorColorInList + 1);
         }
         private void ButtonAddSingleColorForIgnor_Click(object sender, EventArgs e)
         {
@@ -198,7 +178,7 @@ namespace MyLittleMinion
                 waitTask.Wait();
             }
 
-            srPer.AddIgnorColorInPoint(new Point((int)(Cursor.Position.X * Search.getScalingFactor()), (int)(Cursor.Position.Y * Search.getScalingFactor())));
+            exemplarOfSearch.AddIgnorColorInPoint(new Point((int)(Cursor.Position.X * Search.getScalingFactor()), (int)(Cursor.Position.Y * Search.getScalingFactor())));
             buttonAddSingleColorForIgnor.Text = savedText;
 
             UpdateContentPanelOfColorsForIgnor();
@@ -218,7 +198,7 @@ namespace MyLittleMinion
                 {
                     image = new Bitmap(open_dialog.FileName);
                     //вместо pictureBox1 укажите pictureBox, в который нужно загрузить изображение 
-                    srPer.AddIgnorColorsInPicture(image);
+                    exemplarOfSearch.AddIgnorColorsInPicture(image);
                     DisableButtonsForEmptyList(true);
                     pictureBoxForIgnorColor.Visible = true;
                     UpdateContentPanelOfColorsForIgnor();
@@ -233,16 +213,16 @@ namespace MyLittleMinion
         private void ButtonForDeleteSelectedColor_Click(object sender, EventArgs e)
         {
             
-            if (srPer.ShowIgnorColor().A == 0)
+            if (exemplarOfSearch.ShowIgnorColor().A == 0)
             {
                 DisableButtonsForEmptyList(false);
                 labelForNumberOfIgnorColor.Text = "Нет цветов";
             }
             else
             {
-                srPer.RemoveIgnorColor();
+                exemplarOfSearch.RemoveIgnorColor();
                 UpdateContentPanelOfColorsForIgnor();
-                if (srPer.ShowIgnorColor().A == 0)
+                if (exemplarOfSearch.ShowIgnorColor().A == 0)
                 {
                     DisableButtonsForEmptyList(false);
                     labelForNumberOfIgnorColor.Text = "Нет цветов";
@@ -259,7 +239,7 @@ namespace MyLittleMinion
         }
         void UpdateContentPanelOfColorsForIgnor()
         {
-            if (srPer.ShowIgnorColor().A == 0)
+            if (exemplarOfSearch.ShowIgnorColor().A == 0)
             {
                 DisableButtonsForEmptyList(false);
                 labelForNumberOfIgnorColor.Text = "Нет цветов";
@@ -267,9 +247,9 @@ namespace MyLittleMinion
             else
             {
                 pictureBoxForIgnorColor.Image = AdditionalFunctions.FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
-                    srPer.ShowIgnorColor());
+                    exemplarOfSearch.ShowIgnorColor());
 
-                labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(srPer.numberIgnorColorInList + 1);
+                labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(exemplarOfSearch.numberIgnorColorInList + 1);
             }
         }
 
@@ -289,8 +269,9 @@ namespace MyLittleMinion
                     image = new Bitmap(open_dialog.FileName);
                     //укажите pictureBox, в который нужно загрузить изображение 
                     this.pictureBoxForModelForSearch.Size = image.Size;
-                    pictureBoxForModelForSearch.Image = image;
-                    pictureBoxForModelForSearch.Invalidate();
+                    this.pictureBoxForModelForSearch.Image = image;
+                    exemplarOfSearch.pictureModelForSearch = (Bitmap)image;
+                    this.pictureBoxForModelForSearch.Invalidate();
                 }
                 catch
                 {
@@ -358,7 +339,7 @@ namespace MyLittleMinion
             if (numericUpDownPercentageComplianceWithModel.Value >100)
                 numericUpDownPercentageComplianceWithModel.Value = 100;
 
-            srPer.percentageComplianceWithModel = (byte)numericUpDownPercentageComplianceWithModel.Value;
+            exemplarOfSearch.percentageComplianceWithModel = (byte)numericUpDownPercentageComplianceWithModel.Value;
         }
 
         private void FillVariantsOfActionsForComboBoxForSelectAction()
@@ -366,6 +347,7 @@ namespace MyLittleMinion
             comboBoxForSelectAction.Items.Add("Щелчек левой кнопкой");
             comboBoxForSelectAction.SelectedIndex = 0;
             comboBoxForSelectAction.Items.Add("Двойной щелчек левой кнопкой");
+            comboBoxForSelectAction.Items.Add("Вставить из буфера");
 
         }
 
@@ -389,6 +371,128 @@ namespace MyLittleMinion
 
         }
 
+        void FillUINewDataFromListSearchAndAction()
+        {
+            textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions;
+
+            comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
+            numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterAction;
+
+            if (exemplarOfSearch.multyThreadSearch == 0)
+                checkBoxParallelSearch.Checked = true;
+            else if (exemplarOfSearch.multyThreadSearch > 0)
+            {
+                checkBoxCountOfThreads.Checked = true;
+                textBoxCountOfThreads.Text = Convert.ToString(exemplarOfSearch.multyThreadSearch);
+            }
+            else
+                checkBoxParallelSearch.Checked = false;
+
+            checkBoxFirstFoundModelIsEnd.Checked = exemplarOfSearch.stopSearchingAfterFirstPointFound;
+            numericUpDownPercentageComplianceWithModel.Value = exemplarOfSearch.percentageComplianceWithModel;
+            pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
+
+            checkBoxForPlaceOfSearch.Checked = exemplarOfSearch.UsePlaceForSearch;
+            checkBoxSelectActiveWindow.Checked = exemplarOfSearch.UseActiveWindow;
+            textBoxXBegin.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().X);
+            textBoxYBegin.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y);
+            textBoxXEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().X + exemplarOfSearch.pictureSearchArea.Width);
+            textBoxYEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y + exemplarOfSearch.pictureSearchArea.Height);
+
+            checkBoxForColorsForIgnor.Checked = exemplarOfSearch.UseIgnorColors;
+        }
+        void FillExemplarsOfListOfSearchAndActionDataFromForm()
+        {
+            exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
+
+            exemplarOfActionOfMinion.numberOfAction = (ushort)comboBoxForSelectAction.SelectedIndex;
+            exemplarOfActionOfMinion.timeOfWaitingAfterAction = (int)numericUpDownWaitAfterThisAction.Value;
+
+            exemplarOfSearch.multyThreadSearch = -1;
+            if(checkBoxParallelSearch.Checked)
+                exemplarOfSearch.multyThreadSearch = 0;
+            if (checkBoxCountOfThreads.Checked)
+                exemplarOfSearch.multyThreadSearch = Convert.ToInt32(textBoxCountOfThreads.Text);
+
+            exemplarOfSearch.percentageComplianceWithModel = Convert.ToByte(numericUpDownPercentageComplianceWithModel.Value);
+            exemplarOfSearch.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
+            exemplarOfSearch.stopSearchingAfterFirstPointFound = checkBoxFirstFoundModelIsEnd.Checked;
+
+            exemplarOfSearch.UsePlaceForSearch = checkBoxForPlaceOfSearch.Checked;
+            exemplarOfSearch.UseActiveWindow = checkBoxSelectActiveWindow.Checked;
+            if (checkBoxForPlaceOfSearch.Checked)
+            {
+                if (checkBoxSelectActiveWindow.Checked)
+                    exemplarOfSearch.SetActiveWindowForPlaceForSearching();
+                else
+                    exemplarOfSearch.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text),
+                        Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
+            }
+            else
+            {
+                exemplarOfSearch.SetPlaceForSearchForFullMonitor();
+            }
+
+            exemplarOfSearch.UseIgnorColors = checkBoxForColorsForIgnor.Checked;
+        }
+
+        private void ButtonAddAction_Click(object sender, EventArgs e)
+        {
+            exemplarsOfLAM[numberLOEOLAM].Add(new Search(), new ActionOfMinion());
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+            FillUINewDataFromListSearchAndAction();
+        }
+
+        private void ButtonPrevAction_Click(object sender, EventArgs e)
+        {
+            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList--;
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+            FillUINewDataFromListSearchAndAction();
+
+            labelNumberOfSearchAndAction.Text = Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+        }
+
+        private void ButtonNextAction_Click(object sender, EventArgs e)
+        {
+            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+            FillUINewDataFromListSearchAndAction();
+
+            labelNumberOfSearchAndAction.Text = Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+        }
+
+        private void ButtonFindAndPerformThisAction_Click(object sender, EventArgs e)
+        {
+            FindAndPerformThisAction();
+        }
+        private void FindNextButton_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfActionsOfMinion(); i++)
+            {
+                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList = i;
+                FillUINewDataFromListSearchAndAction();
+                FindAndPerformThisAction();
+            }
+        }
+
+        void FindAndPerformThisAction()
+        {
+            IamBorn();
+            SearchingModelOnScreen();
+            exemplarOfActionOfMinion.RealizeAction();
+            Thread.Sleep(Convert.ToInt32(numericUpDownWaitAfterThisAction.Value));
+        }
+
+        void IamBorn()
+        {
+            Clipboard.SetDataObject("Я родился!");
+            IDataObject iData = Clipboard.GetDataObject();
+        }
 
         //Вспомогательные методы КОНЕЦ
 

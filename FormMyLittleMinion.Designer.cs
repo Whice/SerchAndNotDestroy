@@ -76,15 +76,14 @@
             this.labelNumberOfSearchAndAction = new System.Windows.Forms.Label();
             this.labelWaitAfterThisAction = new System.Windows.Forms.Label();
             this.numericUpDownWaitAfterThisAction = new System.Windows.Forms.NumericUpDown();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
@@ -426,7 +425,7 @@
             this.textBoxXEnd.Name = "textBoxXEnd";
             this.textBoxXEnd.Size = new System.Drawing.Size(74, 20);
             this.textBoxXEnd.TabIndex = 19;
-            this.textBoxXEnd.Text = "0";
+            this.textBoxXEnd.Text = "1920";
             // 
             // textBoxYEnd
             // 
@@ -434,7 +433,7 @@
             this.textBoxYEnd.Name = "textBoxYEnd";
             this.textBoxYEnd.Size = new System.Drawing.Size(73, 20);
             this.textBoxYEnd.TabIndex = 20;
-            this.textBoxYEnd.Text = "0";
+            this.textBoxYEnd.Text = "1080";
             // 
             // labelMousePosiotonView
             // 
@@ -514,7 +513,7 @@
             this.panelConfigurationOfSearch.Controls.Add(this.checkBoxForColorsForIgnor);
             this.panelConfigurationOfSearch.Location = new System.Drawing.Point(198, 106);
             this.panelConfigurationOfSearch.Name = "panelConfigurationOfSearch";
-            this.panelConfigurationOfSearch.Size = new System.Drawing.Size(861, 481);
+            this.panelConfigurationOfSearch.Size = new System.Drawing.Size(861, 456);
             this.panelConfigurationOfSearch.TabIndex = 24;
             // 
             // buttonOpenListOfAction
@@ -546,6 +545,7 @@
             this.buttonFindAndPerformThisAction.TabIndex = 27;
             this.buttonFindAndPerformThisAction.Text = "Найти и выполнить это действие";
             this.buttonFindAndPerformThisAction.UseVisualStyleBackColor = true;
+            this.buttonFindAndPerformThisAction.Click += new System.EventHandler(this.ButtonFindAndPerformThisAction_Click);
             // 
             // buttonPrevAction
             // 
@@ -556,6 +556,7 @@
             this.buttonPrevAction.TabIndex = 29;
             this.buttonPrevAction.Text = "Назад";
             this.buttonPrevAction.UseVisualStyleBackColor = true;
+            this.buttonPrevAction.Click += new System.EventHandler(this.ButtonPrevAction_Click);
             // 
             // buttonNextAction
             // 
@@ -566,6 +567,7 @@
             this.buttonNextAction.TabIndex = 28;
             this.buttonNextAction.Text = "Вперед";
             this.buttonNextAction.UseVisualStyleBackColor = true;
+            this.buttonNextAction.Click += new System.EventHandler(this.ButtonNextAction_Click);
             // 
             // buttonAddAction
             // 
@@ -575,6 +577,7 @@
             this.buttonAddAction.TabIndex = 30;
             this.buttonAddAction.Text = "Добавить действие";
             this.buttonAddAction.UseVisualStyleBackColor = true;
+            this.buttonAddAction.Click += new System.EventHandler(this.ButtonAddAction_Click);
             // 
             // labelNumberOfSearchAndAction
             // 
@@ -607,11 +610,6 @@
             0,
             0});
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -634,20 +632,6 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.fileToolStripMenuItem.Text = "Файл";
-            // 
-            // settingToolStripMenuItem
-            // 
-            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
-            this.settingToolStripMenuItem.Text = "Настройки";
-            this.settingToolStripMenuItem.Click += new System.EventHandler(this.SettingToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
-            this.aboutToolStripMenuItem.Text = "О программе";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
@@ -675,6 +659,20 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
             this.exitToolStripMenuItem.Text = "Выйти. Уходи вон, неблагодарный!";
             // 
+            // settingToolStripMenuItem
+            // 
+            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
+            this.settingToolStripMenuItem.Text = "Настройки";
+            this.settingToolStripMenuItem.Click += new System.EventHandler(this.SettingToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
+            this.aboutToolStripMenuItem.Text = "О программе";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
+            // 
             // labelNameOfLisActions
             // 
             this.labelNameOfLisActions.AutoSize = true;
@@ -688,7 +686,7 @@
             // 
             this.textBoxNameOfLisActions.Location = new System.Drawing.Point(9, 367);
             this.textBoxNameOfLisActions.Name = "textBoxNameOfLisActions";
-            this.textBoxNameOfLisActions.Size = new System.Drawing.Size(74, 20);
+            this.textBoxNameOfLisActions.Size = new System.Drawing.Size(162, 20);
             this.textBoxNameOfLisActions.TabIndex = 24;
             this.textBoxNameOfLisActions.Text = "0";
             // 
@@ -697,7 +695,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
-            this.ClientSize = new System.Drawing.Size(1113, 589);
+            this.ClientSize = new System.Drawing.Size(1113, 574);
             this.Controls.Add(this.labelNameOfLisActions);
             this.Controls.Add(this.textBoxNameOfLisActions);
             this.Controls.Add(this.menuStrip1);
@@ -787,7 +785,6 @@
         private System.Windows.Forms.Label labelNumberOfSearchAndAction;
         private System.Windows.Forms.Label labelWaitAfterThisAction;
         private System.Windows.Forms.NumericUpDown numericUpDownWaitAfterThisAction;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
