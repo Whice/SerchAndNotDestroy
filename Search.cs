@@ -286,9 +286,7 @@ namespace MyLittleMinion
         /// </summary>
         public Point GetLocationOfPlaceForSearch()
         {
-                if (this.isCreateScreenWindowPrivate)
-                    return this.locationOfPlaceForSearchPrivate;
-                return new Point(0, 0);
+            return this.locationOfPlaceForSearchPrivate;
         }
         /// <summary>
         /// Задает значение расположения и размеров прямоугольника области, где выполняется поиск.

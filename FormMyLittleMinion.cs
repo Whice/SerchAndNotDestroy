@@ -63,8 +63,7 @@ namespace MyLittleMinion
 
 
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
-            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
-            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+            FillUINewDataFromListSearchAndAction();
 
             pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
             pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
@@ -88,7 +87,7 @@ namespace MyLittleMinion
             DateTime testTimeOfSearch = DateTime.Now;
             labelForStatus.Text = "Выполняется поиск...";
 
-            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
             exemplarOfSearch.CreateScreenShot();
 
             srPerSearchModelInArea srPerSearchModelInArea1;
@@ -170,9 +169,9 @@ namespace MyLittleMinion
         private void ButtonAddSingleColorForIgnor_Click(object sender, EventArgs e)
         {
             string savedText = buttonAddSingleColorForIgnor.Text;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < (int)numericUpDownCountSecondForAddIgnorColor.Value; i++)
             {
-                buttonAddSingleColorForIgnor.Text = "Наведите курсор на цвет \nдо истечения времени: " + Convert.ToString(5 - i);
+                buttonAddSingleColorForIgnor.Text = "Наведите курсор на цвет \nдо истечения времени: " + Convert.ToString((int)numericUpDownCountSecondForAddIgnorColor.Value - i);
 
                 Task waitTask = Task.Run(() => { Thread.Sleep(1000); });
                 waitTask.Wait();
@@ -258,25 +257,33 @@ namespace MyLittleMinion
         //Панель для действий с эталоном НАЧАЛО
         private void ButtonAddModelForSearch_Click(object sender, EventArgs e)
         {
-            Bitmap image; //Bitmap для открываемого изображения
 
-            OpenFileDialog open_dialog = new OpenFileDialog(); //создание диалогового окна для выбора файла
-            open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
-            if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
-            {
-                try
+            using (OpenFileDialog open_dialog = new OpenFileDialog())
+            {//создание диалогового окна для выбора файла
+                open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
+                if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
                 {
-                    image = new Bitmap(open_dialog.FileName);
-                    //укажите pictureBox, в который нужно загрузить изображение 
-                    this.pictureBoxForModelForSearch.Size = image.Size;
-                    this.pictureBoxForModelForSearch.Image = image;
-                    exemplarOfSearch.pictureModelForSearch = (Bitmap)image;
-                    this.pictureBoxForModelForSearch.Invalidate();
-                }
-                catch
-                {
-                    DialogResult rezult = MessageBox.Show("Невозможно открыть выбранный файл",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        Bitmap image;
+
+                        using (FileStream stream = new FileStream(open_dialog.FileName, FileMode.Open))
+                        {
+                            image = (Bitmap)Image.FromStream(stream);
+                        }
+                        //укажите pictureBox, в который нужно загрузить изображение 
+                        this.pictureBoxForModelForSearch.Size = image.Size;
+                        this.pictureBoxForModelForSearch.Image = (Bitmap)image.Clone();
+                        exemplarOfSearch.pictureModelForSearch = (Bitmap)image.Clone();
+                        image = null;
+                        GC.Collect();
+                        this.pictureBoxForModelForSearch.Invalidate();
+                    }
+                    catch
+                    {
+                        DialogResult rezult = MessageBox.Show("Невозможно открыть выбранный файл",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -321,6 +328,8 @@ namespace MyLittleMinion
             textBoxXEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
             textBoxYBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
             textBoxYEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            FillUINewDataFromListSearchAndAction();
         }
 
         private void CheckBoxForPlaceOfSearch_CheckedChanged(object sender, EventArgs e)
@@ -373,9 +382,14 @@ namespace MyLittleMinion
 
         void FillUINewDataFromListSearchAndAction()
         {
+
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+
             textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions;
 
-            comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
+            if(comboBoxForSelectAction.SelectedIndex>=0)//призагрузке формы имеет значение -1 и отказывается принимать другие. В работе уже все нормально.
+                comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
             numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterAction;
 
             if (exemplarOfSearch.multyThreadSearch == 0)
@@ -391,6 +405,7 @@ namespace MyLittleMinion
             checkBoxFirstFoundModelIsEnd.Checked = exemplarOfSearch.stopSearchingAfterFirstPointFound;
             numericUpDownPercentageComplianceWithModel.Value = exemplarOfSearch.percentageComplianceWithModel;
             pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
+            pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
 
             checkBoxForPlaceOfSearch.Checked = exemplarOfSearch.UsePlaceForSearch;
             checkBoxSelectActiveWindow.Checked = exemplarOfSearch.UseActiveWindow;
@@ -400,8 +415,9 @@ namespace MyLittleMinion
             textBoxYEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y + exemplarOfSearch.pictureSearchArea.Height);
 
             checkBoxForColorsForIgnor.Checked = exemplarOfSearch.UseIgnorColors;
+            UpdateContentPanelOfColorsForIgnor();
         }
-        void FillExemplarsOfListOfSearchAndActionDataFromForm()
+        void FillExemplarsOfListOfSearchAndActionDataFromUI()
         {
             exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
 
@@ -439,7 +455,7 @@ namespace MyLittleMinion
         private void ButtonAddAction_Click(object sender, EventArgs e)
         {
 
-            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
             exemplarsOfLAM[numberLOEOLAM].Add(new Search(), new ActionOfMinion());
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
             exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
@@ -451,7 +467,7 @@ namespace MyLittleMinion
 
         private void ButtonPrevAction_Click(object sender, EventArgs e)
         {
-            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
             if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList >0)
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList--;
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
@@ -463,7 +479,7 @@ namespace MyLittleMinion
 
         private void ButtonNextAction_Click(object sender, EventArgs e)
         {
-            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
             if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion()-1)
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
@@ -505,10 +521,15 @@ namespace MyLittleMinion
             IDataObject iData = Clipboard.GetDataObject();
         }
 
+        /// <summary>
+        /// Создает новый экземпляр поиска и действия применяя конфигурацию нынешнего.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonCloneThisAction_Click(object sender, EventArgs e)
         {
 
-            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
             exemplarsOfLAM[numberLOEOLAM].Add(exemplarOfSearch.Clone(), exemplarOfActionOfMinion.Clone());
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
             exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
@@ -516,6 +537,18 @@ namespace MyLittleMinion
 
             labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
         }
+
+        /// <summary>
+        /// Обновляет данные в конфигарации при перемещении окна.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MyLittleMonion_Move(object sender, EventArgs e)
+        {
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            FillUINewDataFromListSearchAndAction();
+        }
+
 
         //Вспомогательные методы КОНЕЦ
 

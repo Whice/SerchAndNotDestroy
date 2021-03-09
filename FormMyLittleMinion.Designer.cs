@@ -87,6 +87,8 @@
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisAction = new System.Windows.Forms.Button();
+            this.labelCountSecondForAddIgnorColor = new System.Windows.Forms.Label();
+            this.numericUpDownCountSecondForAddIgnorColor = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -96,6 +98,7 @@
             this.panelConfigurationOfSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).BeginInit();
             this.SuspendLayout();
             // 
             // FindButton
@@ -188,7 +191,7 @@
             // labelForNameForIgnorColor
             // 
             this.labelForNameForIgnorColor.AutoSize = true;
-            this.labelForNameForIgnorColor.Location = new System.Drawing.Point(8, 10);
+            this.labelForNameForIgnorColor.Location = new System.Drawing.Point(-1, 7);
             this.labelForNameForIgnorColor.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelForNameForIgnorColor.Name = "labelForNameForIgnorColor";
             this.labelForNameForIgnorColor.Size = new System.Drawing.Size(142, 13);
@@ -229,6 +232,8 @@
             // panelForColorsForIgnor
             // 
             this.panelForColorsForIgnor.BackColor = System.Drawing.Color.DarkSalmon;
+            this.panelForColorsForIgnor.Controls.Add(this.numericUpDownCountSecondForAddIgnorColor);
+            this.panelForColorsForIgnor.Controls.Add(this.labelCountSecondForAddIgnorColor);
             this.panelForColorsForIgnor.Controls.Add(this.labelForNumberOfIgnorColor);
             this.panelForColorsForIgnor.Controls.Add(this.buttonForDeleteSelectedColor);
             this.panelForColorsForIgnor.Controls.Add(this.buttonAddManyColorsForIgnor);
@@ -257,7 +262,7 @@
             // buttonForDeleteSelectedColor
             // 
             this.buttonForDeleteSelectedColor.Enabled = false;
-            this.buttonForDeleteSelectedColor.Location = new System.Drawing.Point(132, 116);
+            this.buttonForDeleteSelectedColor.Location = new System.Drawing.Point(131, 128);
             this.buttonForDeleteSelectedColor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonForDeleteSelectedColor.Name = "buttonForDeleteSelectedColor";
             this.buttonForDeleteSelectedColor.Size = new System.Drawing.Size(194, 45);
@@ -268,7 +273,7 @@
             // 
             // buttonAddManyColorsForIgnor
             // 
-            this.buttonAddManyColorsForIgnor.Location = new System.Drawing.Point(132, 72);
+            this.buttonAddManyColorsForIgnor.Location = new System.Drawing.Point(131, 84);
             this.buttonAddManyColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddManyColorsForIgnor.Name = "buttonAddManyColorsForIgnor";
             this.buttonAddManyColorsForIgnor.Size = new System.Drawing.Size(194, 41);
@@ -279,7 +284,7 @@
             // 
             // buttonAddSingleColorForIgnor
             // 
-            this.buttonAddSingleColorForIgnor.Location = new System.Drawing.Point(132, 27);
+            this.buttonAddSingleColorForIgnor.Location = new System.Drawing.Point(131, 39);
             this.buttonAddSingleColorForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddSingleColorForIgnor.Name = "buttonAddSingleColorForIgnor";
             this.buttonAddSingleColorForIgnor.Size = new System.Drawing.Size(194, 41);
@@ -704,6 +709,33 @@
             this.buttonCloneThisAction.UseVisualStyleBackColor = true;
             this.buttonCloneThisAction.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
             // 
+            // labelCountSecondForAddIgnorColor
+            // 
+            this.labelCountSecondForAddIgnorColor.AutoSize = true;
+            this.labelCountSecondForAddIgnorColor.Location = new System.Drawing.Point(153, 16);
+            this.labelCountSecondForAddIgnorColor.Name = "labelCountSecondForAddIgnorColor";
+            this.labelCountSecondForAddIgnorColor.Size = new System.Drawing.Size(121, 13);
+            this.labelCountSecondForAddIgnorColor.TabIndex = 19;
+            this.labelCountSecondForAddIgnorColor.Text = "Секунд до добавления";
+            // 
+            // numericUpDownCountSecondForAddIgnorColor
+            // 
+            this.numericUpDownCountSecondForAddIgnorColor.Location = new System.Drawing.Point(280, 14);
+            this.numericUpDownCountSecondForAddIgnorColor.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDownCountSecondForAddIgnorColor.Name = "numericUpDownCountSecondForAddIgnorColor";
+            this.numericUpDownCountSecondForAddIgnorColor.Size = new System.Drawing.Size(45, 20);
+            this.numericUpDownCountSecondForAddIgnorColor.TabIndex = 20;
+            this.numericUpDownCountSecondForAddIgnorColor.UseWaitCursor = true;
+            this.numericUpDownCountSecondForAddIgnorColor.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -732,6 +764,7 @@
             this.Name = "MyLittleMonion";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = " ";
+            this.Move += new System.EventHandler(this.MyLittleMonion_Move);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).EndInit();
             this.panelForColorsForIgnor.ResumeLayout(false);
@@ -746,6 +779,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -811,6 +845,8 @@
         private System.Windows.Forms.Label labelNameOfLisActions;
         private System.Windows.Forms.TextBox textBoxNameOfLisActions;
         private System.Windows.Forms.Button buttonCloneThisAction;
+        private System.Windows.Forms.NumericUpDown numericUpDownCountSecondForAddIgnorColor;
+        private System.Windows.Forms.Label labelCountSecondForAddIgnorColor;
     }
 }
 
