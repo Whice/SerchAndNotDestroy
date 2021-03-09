@@ -438,32 +438,39 @@ namespace MyLittleMinion
 
         private void ButtonAddAction_Click(object sender, EventArgs e)
         {
+
+            FillExemplarsOfListOfSearchAndActionDataFromForm();
             exemplarsOfLAM[numberLOEOLAM].Add(new Search(), new ActionOfMinion());
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
             exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
             FillUINewDataFromListSearchAndAction();
+
+
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
         }
 
         private void ButtonPrevAction_Click(object sender, EventArgs e)
         {
             FillExemplarsOfListOfSearchAndActionDataFromForm();
-            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList--;
+            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList >0)
+                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList--;
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
             exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
             FillUINewDataFromListSearchAndAction();
 
-            labelNumberOfSearchAndAction.Text = Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
         }
 
         private void ButtonNextAction_Click(object sender, EventArgs e)
         {
             FillExemplarsOfListOfSearchAndActionDataFromForm();
-            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
+            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion()-1)
+                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
             exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
             FillUINewDataFromListSearchAndAction();
 
-            labelNumberOfSearchAndAction.Text = Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
         }
 
         private void ButtonFindAndPerformThisAction_Click(object sender, EventArgs e)
@@ -472,11 +479,15 @@ namespace MyLittleMinion
         }
         private void FindNextButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfActionsOfMinion(); i++)
+            for (int i = 0; i < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion(); i++)
             {
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList = i;
                 FillUINewDataFromListSearchAndAction();
                 FindAndPerformThisAction();
+
+                //Каждый пятый раз запускаю очистку памяти, чтобы не кушать много.
+                if(i%5==0)
+                    GC.Collect();
             }
         }
 
@@ -492,6 +503,18 @@ namespace MyLittleMinion
         {
             Clipboard.SetDataObject("Я родился!");
             IDataObject iData = Clipboard.GetDataObject();
+        }
+
+        private void ButtonCloneThisAction_Click(object sender, EventArgs e)
+        {
+
+            FillExemplarsOfListOfSearchAndActionDataFromForm();
+            exemplarsOfLAM[numberLOEOLAM].Add(exemplarOfSearch.Clone(), exemplarOfActionOfMinion.Clone());
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+            FillUINewDataFromListSearchAndAction();
+
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
         }
 
         //Вспомогательные методы КОНЕЦ

@@ -32,6 +32,21 @@ namespace MyLittleMinion
         }
 
         /// <summary>
+        /// Создает и возвращает копию этого экземпляра класса.
+        /// </summary>
+        /// <returns></returns>
+        public ActionOfMinion Clone()
+        {
+            ActionOfMinion cloneOfActionOfMinion = new ActionOfMinion();
+
+            cloneOfActionOfMinion.cursorPosition = this.cursorPosition ;
+            cloneOfActionOfMinion.numberOfAction = this.numberOfAction;
+            cloneOfActionOfMinion.timeOfWaitingAfterAction = this.timeOfWaitingAfterAction;
+
+            return cloneOfActionOfMinion;
+        }
+
+        /// <summary>
         /// Выполняет действие заданного ноемра.
         /// </summary>
         public void RealizeAction()

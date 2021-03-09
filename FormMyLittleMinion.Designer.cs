@@ -86,6 +86,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
+            this.buttonCloneThisAction = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -127,6 +128,7 @@
             // 
             // buttonSaveListOfAction
             // 
+            this.buttonSaveListOfAction.Enabled = false;
             this.buttonSaveListOfAction.Location = new System.Drawing.Point(8, 395);
             this.buttonSaveListOfAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonSaveListOfAction.Name = "buttonSaveListOfAction";
@@ -173,6 +175,7 @@
             // 
             // TestButton
             // 
+            this.TestButton.Enabled = false;
             this.TestButton.Location = new System.Drawing.Point(8, 504);
             this.TestButton.Margin = new System.Windows.Forms.Padding(2);
             this.TestButton.Name = "TestButton";
@@ -518,6 +521,7 @@
             // 
             // buttonOpenListOfAction
             // 
+            this.buttonOpenListOfAction.Enabled = false;
             this.buttonOpenListOfAction.Location = new System.Drawing.Point(8, 439);
             this.buttonOpenListOfAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonOpenListOfAction.Name = "buttonOpenListOfAction";
@@ -549,7 +553,7 @@
             // 
             // buttonPrevAction
             // 
-            this.buttonPrevAction.Location = new System.Drawing.Point(11, 170);
+            this.buttonPrevAction.Location = new System.Drawing.Point(5, 170);
             this.buttonPrevAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonPrevAction.Name = "buttonPrevAction";
             this.buttonPrevAction.Size = new System.Drawing.Size(89, 40);
@@ -560,7 +564,7 @@
             // 
             // buttonNextAction
             // 
-            this.buttonNextAction.Location = new System.Drawing.Point(104, 170);
+            this.buttonNextAction.Location = new System.Drawing.Point(98, 170);
             this.buttonNextAction.Margin = new System.Windows.Forms.Padding(2);
             this.buttonNextAction.Name = "buttonNextAction";
             this.buttonNextAction.Size = new System.Drawing.Size(89, 40);
@@ -571,9 +575,9 @@
             // 
             // buttonAddAction
             // 
-            this.buttonAddAction.Location = new System.Drawing.Point(12, 218);
+            this.buttonAddAction.Location = new System.Drawing.Point(5, 232);
             this.buttonAddAction.Name = "buttonAddAction";
-            this.buttonAddAction.Size = new System.Drawing.Size(116, 41);
+            this.buttonAddAction.Size = new System.Drawing.Size(89, 41);
             this.buttonAddAction.TabIndex = 30;
             this.buttonAddAction.Text = "Добавить действие";
             this.buttonAddAction.UseVisualStyleBackColor = true;
@@ -688,7 +692,17 @@
             this.textBoxNameOfLisActions.Name = "textBoxNameOfLisActions";
             this.textBoxNameOfLisActions.Size = new System.Drawing.Size(162, 20);
             this.textBoxNameOfLisActions.TabIndex = 24;
-            this.textBoxNameOfLisActions.Text = "0";
+            this.textBoxNameOfLisActions.Text = "Default list search and action.";
+            // 
+            // buttonCloneThisAction
+            // 
+            this.buttonCloneThisAction.Location = new System.Drawing.Point(100, 231);
+            this.buttonCloneThisAction.Name = "buttonCloneThisAction";
+            this.buttonCloneThisAction.Size = new System.Drawing.Size(89, 41);
+            this.buttonCloneThisAction.TabIndex = 35;
+            this.buttonCloneThisAction.Text = "Клонровать действие";
+            this.buttonCloneThisAction.UseVisualStyleBackColor = true;
+            this.buttonCloneThisAction.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
             // 
             // MyLittleMonion
             // 
@@ -696,6 +710,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(1113, 574);
+            this.Controls.Add(this.buttonCloneThisAction);
             this.Controls.Add(this.labelNameOfLisActions);
             this.Controls.Add(this.textBoxNameOfLisActions);
             this.Controls.Add(this.menuStrip1);
@@ -795,6 +810,7 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Label labelNameOfLisActions;
         private System.Windows.Forms.TextBox textBoxNameOfLisActions;
+        private System.Windows.Forms.Button buttonCloneThisAction;
     }
 }
 

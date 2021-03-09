@@ -40,9 +40,11 @@ namespace MyLittleMinion
             this.listOfSearching.Add(SearchingForAdding);
             this.listOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
             this.numberSearchAndActionInList = this.listOfSearching.Count - 1;
+                if(listOfSearching.Count<1)
             this.nameOfListOfSearchingAndActions = "Default list search and action.";
+
         }
-        public int GetSizeOfListOfActionsOfMinion()
+        public int GetSizeOfListOfSearchAndActionsOfMinion()
         {
             return this.listOfSearching.Count;
         }
