@@ -707,7 +707,6 @@ namespace MyLittleMinion
                                     listFoundPoints.Add(new Point(
                                         i - pixelOfModelForSearch.X + this.locationOfPlaceForSearchPrivate.X,
                                         j - pixelOfModelForSearch.Y + this.locationOfPlaceForSearchPrivate.Y));
-                                    System.Windows.Forms.MessageBox.Show(Convert.ToString(listFoundPoints[0]));
                                     if (this.stopSearchingAfterFirstPointFound)
                                     {
                                         ListToMassiveOfFoundPoints(listFoundPoints);

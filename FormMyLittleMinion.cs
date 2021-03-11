@@ -470,7 +470,6 @@ namespace MyLittleMinion
                 exemplarOfSearch.multyThreadSearch = Convert.ToInt32(textBoxCountOfThreads.Text);
 
             exemplarOfSearch.percentageComplianceWithModel = Convert.ToByte(numericUpDownPercentageComplianceWithModel.Value);
-            //exemplarOfSearch.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
             exemplarOfSearch.stopSearchingAfterFirstPointFound = checkBoxFirstFoundModelIsEnd.Checked;
 
             exemplarOfSearch.UsePlaceForSearch = checkBoxForPlaceOfSearch.Checked;
