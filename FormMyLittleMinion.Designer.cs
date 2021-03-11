@@ -42,12 +42,16 @@
             this.labelForStatus = new System.Windows.Forms.Label();
             this.pictureBoxForIgnorColor = new System.Windows.Forms.PictureBox();
             this.panelForColorsForIgnor = new System.Windows.Forms.Panel();
+            this.numericUpDownCountSecondForAddIgnorColor = new System.Windows.Forms.NumericUpDown();
+            this.labelCountSecondForAddIgnorColor = new System.Windows.Forms.Label();
             this.labelForNumberOfIgnorColor = new System.Windows.Forms.Label();
             this.buttonForDeleteSelectedColor = new System.Windows.Forms.Button();
             this.buttonAddManyColorsForIgnor = new System.Windows.Forms.Button();
             this.buttonAddSingleColorForIgnor = new System.Windows.Forms.Button();
             this.checkBoxForColorsForIgnor = new System.Windows.Forms.CheckBox();
             this.panelForModelForSearch = new System.Windows.Forms.Panel();
+            this.checkBoxShowNotCorrectModel = new System.Windows.Forms.CheckBox();
+            this.buttonCorrectModelForSearch = new System.Windows.Forms.Button();
             this.labelPercentageComplianceWithModel = new System.Windows.Forms.Label();
             this.numericUpDownPercentageComplianceWithModel = new System.Windows.Forms.NumericUpDown();
             this.textBoxCountOfThreads = new System.Windows.Forms.TextBox();
@@ -87,18 +91,18 @@
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisAction = new System.Windows.Forms.Button();
-            this.labelCountSecondForAddIgnorColor = new System.Windows.Forms.Label();
-            this.numericUpDownCountSecondForAddIgnorColor = new System.Windows.Forms.NumericUpDown();
+            this.pictureBoxForCorrectModelForSearch = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).BeginInit();
             this.panelForModelForSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).BeginInit();
             this.panelForPlaceOfSearch.SuspendLayout();
             this.panelConfigurationOfSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForCorrectModelForSearch)).BeginInit();
             this.SuspendLayout();
             // 
             // FindButton
@@ -115,12 +119,13 @@
             // pictureBoxForModelForSearch
             // 
             this.pictureBoxForModelForSearch.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(191, 141);
+            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(191, 151);
             this.pictureBoxForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxForModelForSearch.Name = "pictureBoxForModelForSearch";
             this.pictureBoxForModelForSearch.Size = new System.Drawing.Size(75, 41);
             this.pictureBoxForModelForSearch.TabIndex = 1;
             this.pictureBoxForModelForSearch.TabStop = false;
+            this.pictureBoxForModelForSearch.Visible = false;
             this.pictureBoxForModelForSearch.Click += new System.EventHandler(this.PictureBoxForModelForSearch_Click);
             // 
             // timer1
@@ -249,6 +254,33 @@
             this.panelForColorsForIgnor.TabIndex = 14;
             this.panelForColorsForIgnor.Visible = false;
             // 
+            // numericUpDownCountSecondForAddIgnorColor
+            // 
+            this.numericUpDownCountSecondForAddIgnorColor.Location = new System.Drawing.Point(280, 14);
+            this.numericUpDownCountSecondForAddIgnorColor.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDownCountSecondForAddIgnorColor.Name = "numericUpDownCountSecondForAddIgnorColor";
+            this.numericUpDownCountSecondForAddIgnorColor.Size = new System.Drawing.Size(45, 20);
+            this.numericUpDownCountSecondForAddIgnorColor.TabIndex = 20;
+            this.numericUpDownCountSecondForAddIgnorColor.UseWaitCursor = true;
+            this.numericUpDownCountSecondForAddIgnorColor.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // labelCountSecondForAddIgnorColor
+            // 
+            this.labelCountSecondForAddIgnorColor.AutoSize = true;
+            this.labelCountSecondForAddIgnorColor.Location = new System.Drawing.Point(153, 16);
+            this.labelCountSecondForAddIgnorColor.Name = "labelCountSecondForAddIgnorColor";
+            this.labelCountSecondForAddIgnorColor.Size = new System.Drawing.Size(121, 13);
+            this.labelCountSecondForAddIgnorColor.TabIndex = 19;
+            this.labelCountSecondForAddIgnorColor.Text = "Секунд до добавления";
+            // 
             // labelForNumberOfIgnorColor
             // 
             this.labelForNumberOfIgnorColor.AutoSize = true;
@@ -308,6 +340,9 @@
             // panelForModelForSearch
             // 
             this.panelForModelForSearch.BackColor = System.Drawing.Color.LightCoral;
+            this.panelForModelForSearch.Controls.Add(this.pictureBoxForCorrectModelForSearch);
+            this.panelForModelForSearch.Controls.Add(this.checkBoxShowNotCorrectModel);
+            this.panelForModelForSearch.Controls.Add(this.buttonCorrectModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.labelPercentageComplianceWithModel);
             this.panelForModelForSearch.Controls.Add(this.numericUpDownPercentageComplianceWithModel);
             this.panelForModelForSearch.Controls.Add(this.textBoxCountOfThreads);
@@ -321,13 +356,35 @@
             this.panelForModelForSearch.Location = new System.Drawing.Point(112, 207);
             this.panelForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.panelForModelForSearch.Name = "panelForModelForSearch";
-            this.panelForModelForSearch.Size = new System.Drawing.Size(375, 205);
+            this.panelForModelForSearch.Size = new System.Drawing.Size(375, 235);
             this.panelForModelForSearch.TabIndex = 16;
+            // 
+            // checkBoxShowNotCorrectModel
+            // 
+            this.checkBoxShowNotCorrectModel.AutoSize = true;
+            this.checkBoxShowNotCorrectModel.Location = new System.Drawing.Point(137, 126);
+            this.checkBoxShowNotCorrectModel.Name = "checkBoxShowNotCorrectModel";
+            this.checkBoxShowNotCorrectModel.Size = new System.Drawing.Size(234, 17);
+            this.checkBoxShowNotCorrectModel.TabIndex = 27;
+            this.checkBoxShowNotCorrectModel.Text = "Показать не скорректированный эталон";
+            this.checkBoxShowNotCorrectModel.UseVisualStyleBackColor = true;
+            this.checkBoxShowNotCorrectModel.CheckedChanged += new System.EventHandler(this.CheckBoxShowCorrectModel_CheckedChanged);
+            // 
+            // buttonCorrectModelForSearch
+            // 
+            this.buttonCorrectModelForSearch.Location = new System.Drawing.Point(11, 113);
+            this.buttonCorrectModelForSearch.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonCorrectModelForSearch.Name = "buttonCorrectModelForSearch";
+            this.buttonCorrectModelForSearch.Size = new System.Drawing.Size(120, 41);
+            this.buttonCorrectModelForSearch.TabIndex = 26;
+            this.buttonCorrectModelForSearch.Text = "Скорректировать эталон";
+            this.buttonCorrectModelForSearch.UseVisualStyleBackColor = true;
+            this.buttonCorrectModelForSearch.Click += new System.EventHandler(this.ButtonCorrectModelForSearch_Click);
             // 
             // labelPercentageComplianceWithModel
             // 
             this.labelPercentageComplianceWithModel.AutoSize = true;
-            this.labelPercentageComplianceWithModel.Location = new System.Drawing.Point(9, 120);
+            this.labelPercentageComplianceWithModel.Location = new System.Drawing.Point(9, 156);
             this.labelPercentageComplianceWithModel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelPercentageComplianceWithModel.Name = "labelPercentageComplianceWithModel";
             this.labelPercentageComplianceWithModel.Size = new System.Drawing.Size(183, 13);
@@ -336,7 +393,7 @@
             // 
             // numericUpDownPercentageComplianceWithModel
             // 
-            this.numericUpDownPercentageComplianceWithModel.Location = new System.Drawing.Point(12, 141);
+            this.numericUpDownPercentageComplianceWithModel.Location = new System.Drawing.Point(11, 172);
             this.numericUpDownPercentageComplianceWithModel.Name = "numericUpDownPercentageComplianceWithModel";
             this.numericUpDownPercentageComplianceWithModel.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownPercentageComplianceWithModel.TabIndex = 24;
@@ -405,7 +462,7 @@
             this.buttonAddModelForSearch.Location = new System.Drawing.Point(11, 68);
             this.buttonAddModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddModelForSearch.Name = "buttonAddModelForSearch";
-            this.buttonAddModelForSearch.Size = new System.Drawing.Size(72, 41);
+            this.buttonAddModelForSearch.Size = new System.Drawing.Size(120, 41);
             this.buttonAddModelForSearch.TabIndex = 9;
             this.buttonAddModelForSearch.Text = "Изменить эталон";
             this.buttonAddModelForSearch.UseVisualStyleBackColor = true;
@@ -709,32 +766,15 @@
             this.buttonCloneThisAction.UseVisualStyleBackColor = true;
             this.buttonCloneThisAction.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
             // 
-            // labelCountSecondForAddIgnorColor
+            // pictureBoxForCorrectModelForSearch
             // 
-            this.labelCountSecondForAddIgnorColor.AutoSize = true;
-            this.labelCountSecondForAddIgnorColor.Location = new System.Drawing.Point(153, 16);
-            this.labelCountSecondForAddIgnorColor.Name = "labelCountSecondForAddIgnorColor";
-            this.labelCountSecondForAddIgnorColor.Size = new System.Drawing.Size(121, 13);
-            this.labelCountSecondForAddIgnorColor.TabIndex = 19;
-            this.labelCountSecondForAddIgnorColor.Text = "Секунд до добавления";
-            // 
-            // numericUpDownCountSecondForAddIgnorColor
-            // 
-            this.numericUpDownCountSecondForAddIgnorColor.Location = new System.Drawing.Point(280, 14);
-            this.numericUpDownCountSecondForAddIgnorColor.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.numericUpDownCountSecondForAddIgnorColor.Name = "numericUpDownCountSecondForAddIgnorColor";
-            this.numericUpDownCountSecondForAddIgnorColor.Size = new System.Drawing.Size(45, 20);
-            this.numericUpDownCountSecondForAddIgnorColor.TabIndex = 20;
-            this.numericUpDownCountSecondForAddIgnorColor.UseWaitCursor = true;
-            this.numericUpDownCountSecondForAddIgnorColor.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
+            this.pictureBoxForCorrectModelForSearch.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.pictureBoxForCorrectModelForSearch.Location = new System.Drawing.Point(270, 151);
+            this.pictureBoxForCorrectModelForSearch.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxForCorrectModelForSearch.Name = "pictureBoxForCorrectModelForSearch";
+            this.pictureBoxForCorrectModelForSearch.Size = new System.Drawing.Size(75, 41);
+            this.pictureBoxForCorrectModelForSearch.TabIndex = 28;
+            this.pictureBoxForCorrectModelForSearch.TabStop = false;
             // 
             // MyLittleMonion
             // 
@@ -769,6 +809,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).EndInit();
             this.panelForColorsForIgnor.ResumeLayout(false);
             this.panelForColorsForIgnor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).EndInit();
             this.panelForModelForSearch.ResumeLayout(false);
             this.panelForModelForSearch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).EndInit();
@@ -779,7 +820,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForCorrectModelForSearch)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -847,6 +888,9 @@
         private System.Windows.Forms.Button buttonCloneThisAction;
         private System.Windows.Forms.NumericUpDown numericUpDownCountSecondForAddIgnorColor;
         private System.Windows.Forms.Label labelCountSecondForAddIgnorColor;
+        private System.Windows.Forms.Button buttonCorrectModelForSearch;
+        private System.Windows.Forms.CheckBox checkBoxShowNotCorrectModel;
+        private System.Windows.Forms.PictureBox pictureBoxForCorrectModelForSearch;
     }
 }
 

@@ -65,8 +65,8 @@ namespace MyLittleMinion
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
             FillUINewDataFromListSearchAndAction();
 
-            pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
-            pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
+
+            this.pictureBoxForCorrectModelForSearch.Location = this.pictureBoxForModelForSearch.Location;
 
             FillVariantsOfActionsForComboBoxForSelectAction();
         }
@@ -84,6 +84,7 @@ namespace MyLittleMinion
         void SearchingModelOnScreen()
         {
             pictureBoxForModelForSearch.Visible = false;
+            pictureBoxForCorrectModelForSearch.Visible = false;
             DateTime testTimeOfSearch = DateTime.Now;
             labelForStatus.Text = "Выполняется поиск...";
 
@@ -110,9 +111,11 @@ namespace MyLittleMinion
                 labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
                 MessageBox.Show("No!");
             }
-            pictureBoxForModelForSearch.Visible = true;
+            //Оставляю чекбокс как есть, но зато там выясняется, какой пикчербокс сделать видимым, а какой нет.
+            checkBoxShowNotCorrectModel.Checked = !checkBoxShowNotCorrectModel.Checked;
+            checkBoxShowNotCorrectModel.Checked = !checkBoxShowNotCorrectModel.Checked;
         }
-        
+
 
         private void SaveImage_Click(object sender, EventArgs e)
         {
@@ -272,8 +275,6 @@ namespace MyLittleMinion
                             image = (Bitmap)Image.FromStream(stream);
                         }
                         //укажите pictureBox, в который нужно загрузить изображение 
-                        this.pictureBoxForModelForSearch.Size = image.Size;
-                        this.pictureBoxForModelForSearch.Image = (Bitmap)image.Clone();
                         exemplarOfSearch.pictureModelForSearch = (Bitmap)image.Clone();
                         image = null;
                         GC.Collect();
@@ -286,6 +287,42 @@ namespace MyLittleMinion
                     }
                 }
             }
+            FillUINewDataFromListSearchAndAction();
+        }
+        private void ButtonCorrectModelForSearch_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog open_dialog = new OpenFileDialog())
+            {//создание диалогового окна для выбора файла
+                open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
+                if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
+                {
+                    try
+                    {
+                        Bitmap image;
+
+                        using (FileStream stream = new FileStream(open_dialog.FileName, FileMode.Open))
+                        {
+                            image = (Bitmap)Image.FromStream(stream);
+                        }
+                        //укажите pictureBox, в который нужно загрузить изображение 
+                        exemplarOfSearch.CorrectionModel((Bitmap)image.Clone());
+                        image = null;
+                        GC.Collect();
+                        this.pictureBoxForModelForSearch.Invalidate();
+                    }
+                    catch
+                    {
+                        DialogResult rezult = MessageBox.Show("Невозможно открыть выбранный файл",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            FillUINewDataFromListSearchAndAction();
+        }
+        private void CheckBoxShowCorrectModel_CheckedChanged(object sender, EventArgs e)
+        {
+            this.pictureBoxForCorrectModelForSearch.Visible = !checkBoxShowNotCorrectModel.Checked;
+            this.pictureBoxForModelForSearch.Visible = !this.pictureBoxForCorrectModelForSearch.Visible;
         }
         private void PictureBoxForModelForSearch_Click(object sender, EventArgs e)
         {
@@ -406,6 +443,8 @@ namespace MyLittleMinion
             numericUpDownPercentageComplianceWithModel.Value = exemplarOfSearch.percentageComplianceWithModel;
             pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
             pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
+            pictureBoxForCorrectModelForSearch.Image = (Image)exemplarOfSearch.correctModel;
+            pictureBoxForCorrectModelForSearch.Size = exemplarOfSearch.correctModel.Size;
 
             checkBoxForPlaceOfSearch.Checked = exemplarOfSearch.UsePlaceForSearch;
             checkBoxSelectActiveWindow.Checked = exemplarOfSearch.UseActiveWindow;
@@ -431,7 +470,7 @@ namespace MyLittleMinion
                 exemplarOfSearch.multyThreadSearch = Convert.ToInt32(textBoxCountOfThreads.Text);
 
             exemplarOfSearch.percentageComplianceWithModel = Convert.ToByte(numericUpDownPercentageComplianceWithModel.Value);
-            exemplarOfSearch.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
+            //exemplarOfSearch.pictureModelForSearch = (Bitmap)pictureBoxForModelForSearch.Image;
             exemplarOfSearch.stopSearchingAfterFirstPointFound = checkBoxFirstFoundModelIsEnd.Checked;
 
             exemplarOfSearch.UsePlaceForSearch = checkBoxForPlaceOfSearch.Checked;
@@ -548,6 +587,10 @@ namespace MyLittleMinion
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             FillUINewDataFromListSearchAndAction();
         }
+
+        
+
+
 
 
         //Вспомогательные методы КОНЕЦ

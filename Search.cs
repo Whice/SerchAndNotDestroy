@@ -19,12 +19,8 @@ namespace MyLittleMinion
         /// <summary>
         /// Bitmap для хранения области, в которой осуществляется поиск эталона. По умолчанию null.
         /// </summary>
-        public Bitmap pictureSearchArea;
-        /// <summary>
-        /// Bitmap для хранения эталона, поиск местонахождения которого выполняется.
-        /// По умолчанию храниться картинка размером 50х50: две красные диагонали на белом фоне.
-        /// </summary>
-        public Bitmap pictureModelForSearch;
+        public Bitmap pictureSearchArea { get; set; }
+        
         /// <summary>
         /// Массив точек, которые были найдены во время поиска. По умолчанию null.
         /// </summary>
@@ -35,7 +31,8 @@ namespace MyLittleMinion
         public Search()
         {
             this.pictureSearchArea = null;
-            this.pictureModelForSearch = null;
+            this.pictureModelForSearchPrivate = null;
+            this.correctModelPrivate = null;
             this.foundPoints = null;
 
             this.UsePlaceForSearch = false;
@@ -58,6 +55,112 @@ namespace MyLittleMinion
             this.CreateBitmapForEmptyModel();
         }
 
+
+        ///Уточнение образа эталона для более точного поиска НАЧАЛО
+
+        
+        Bitmap pictureModelForSearchPrivate;
+        Bitmap correctModelPrivate;
+        public Bitmap correctModel { get { return this.correctModelPrivate; } }
+        /// <summary>
+        /// Bitmap для хранения эталона, поиск местонахождения которого выполняется.
+        /// По умолчанию храниться картинка размером 50х50: две красные диагонали на белом фоне.
+        /// </summary>
+        public Bitmap pictureModelForSearch
+        {
+            get
+            {
+                return this.pictureModelForSearchPrivate;
+            }
+            set
+            {
+                this.pictureModelForSearchPrivate = value;
+                this.correctModelPrivate = value;
+            }
+        }
+        public void CorrectionModel(Bitmap newImageForCorrectModel)
+        {
+            List<Color> listColorsnewImageForCorrectModel = new List<Color>();
+            List<Color> listColorscorrectModel = new List<Color>();
+            Task threadForBitmapInListColors1 = Task.Run(() => { listColorsnewImageForCorrectModel = BreakOnColors(newImageForCorrectModel); });
+            Task threadForBitmapInListColors2 = Task.Run(() => { listColorscorrectModel = BreakOnColors(this.correctModelPrivate); });
+            threadForBitmapInListColors1.Wait();
+            threadForBitmapInListColors2.Wait();
+            List<Color> mergedList = MergerTwoListAmountOfColor(listColorscorrectModel, listColorsnewImageForCorrectModel);
+
+            Bitmap newImageForChangeColors = new Bitmap(this.correctModelPrivate.Width, this.correctModelPrivate.Height);
+            for (int i = 0; i < this.correctModelPrivate.Width; i++)
+                for (int j = 0; j < this.correctModelPrivate.Height; j++)
+                {
+
+                    if (!ListColorsHaveColor(mergedList, this.correctModelPrivate.GetPixel(i, j)))
+                    {
+                        System.Drawing.Color newAddColor = System.Drawing.Color.FromArgb(0,
+                            this.correctModelPrivate.GetPixel(i, j).R, this.correctModelPrivate.GetPixel(i, j).G, this.correctModelPrivate.GetPixel(i, j).B);
+                        newImageForChangeColors.SetPixel(i, j, newAddColor);
+                    }
+                    else
+                    {
+                        newImageForChangeColors.SetPixel(i, j, this.correctModelPrivate.GetPixel(i, j));
+                    }
+                }
+
+            this.correctModelPrivate = newImageForChangeColors;
+        }
+        private List<Color> BreakOnColors(Bitmap picture)
+        {
+            List<Color> colorsList = new List<Color>();
+            for (int i = 0; i < picture.Width; i++)
+                for (int j = 0; j < picture.Height; j++)
+                    if (!ListColorsHaveColor(colorsList, picture.GetPixel(i, j)) && picture.GetPixel(i, j).A != 0)
+                        colorsList.Add(picture.GetPixel(i, j));
+
+            return colorsList;
+        }
+        private List<Color> MergerTwoListAmountOfColor(List<Color> colorsList1, List<Color> colorsList2)
+        {
+            List<Color> mergedColorsList = new List<Color>();
+            for (int i = 0; i < colorsList1.Count; i++)
+            {
+                if (ListColorsHaveColor(colorsList2, colorsList1[i]))
+                {
+                    mergedColorsList.Add(colorsList1[i]);
+                }
+            }
+
+            return mergedColorsList;
+        }
+        private bool ListColorsHaveColor(List<Color> colorList, System.Drawing.Color colorForCheck)
+        {
+            foreach (var color in colorList)
+                if(CheckForEqualityOfTwoColorsByRGB(color, colorForCheck))
+                    return true;
+
+            return false;
+        }
+        /// <summary>
+        /// Заполняет эталон небольшой картинкой, которая означает, что он пуст.
+        /// Две красные дигонали на белом фоне. Размер картинки 50х50.
+        /// </summary>
+        private void CreateBitmapForEmptyModel()
+        {
+            this.pictureModelForSearchPrivate = new Bitmap(50, 50);
+            for (int i = 0; i < this.pictureModelForSearchPrivate.Width; i++)
+                for (int j = 0; j < this.pictureModelForSearchPrivate.Height; j++)
+                {
+                    if (i == j || i == (this.pictureModelForSearchPrivate.Height - j - 1))
+                    {
+                        this.pictureModelForSearchPrivate.SetPixel(i, j, Color.FromArgb(255, 0, 0));
+                    }
+                    else
+                    {
+                        this.pictureModelForSearchPrivate.SetPixel(i, j, Color.FromArgb(255, 255, 255));
+                    }
+                }
+            this.pictureModelForSearch = this.pictureModelForSearchPrivate;
+        }
+
+        ///Уточнение образа эталона для более точного поиска КОНЕЦ
 
 
 
@@ -226,7 +329,8 @@ namespace MyLittleMinion
                 return Color.FromArgb(0, 255, 255, 255);
         }
         /// <summary>
-        /// Проверяет наличие цвета в Bitmap. Не учитывает альфа-канал. Сравнивает только свойства R, G и B.
+        /// Проверяет наличие цвета в Bitmap. Сравнивает только свойства R, G и B.
+        ///  Учитывает альфа-канал: прозрачный цвет(А=0) считается отсутствующим, сравнение с ним всегда false.
         /// </summary>
         /// <param name="colorForCheck"></param>
         /// <param name="bitmapForCheck"></param>
@@ -238,7 +342,8 @@ namespace MyLittleMinion
 
             for (int i = 0; i < bitmapForCheck.Width; i++)
                 for (int j = 0; j < bitmapForCheck.Height; j++)
-                    if (CheckForEqualityOfTwoColorsByRGB(colorForCheck, bitmapForCheck.GetPixel(i, j)))
+                    if (CheckForEqualityOfTwoColorsByRGB(colorForCheck, bitmapForCheck.GetPixel(i, j))//Если эти пиксели по RGB равны, то есть.
+                        && bitmapForCheck.GetPixel(i, j).A!=0)//Но даже если по RGB равны, а цвет прозрачный, то счиать, что искомого цвета нет.
                         return true;
 
             return false;
@@ -254,7 +359,7 @@ namespace MyLittleMinion
             {
                 foreach (Color ignorColor in this.listOfIgnorColors)
                 {
-                    if (CheckColorIsInBitmap(ignorColor, this.pictureModelForSearch))
+                    if (CheckColorIsInBitmap(ignorColor, this.pictureModelForSearchPrivate))
                     {
                         newIgnorColorList.Add(ignorColor);
                     }
@@ -449,14 +554,14 @@ namespace MyLittleMinion
         {
             //Находится меньшая из сторон
             int lesserSide =
-                pictureModelForSearch.Height > pictureModelForSearch.Width ? pictureModelForSearch.Width : pictureModelForSearch.Height;
+                correctModelPrivate.Height > correctModelPrivate.Width ? correctModelPrivate.Width : correctModelPrivate.Height;
 
             //Если установлено полное соответствие эталону, используется алгоритм без подсчета для ускорения проверки.
             if (percentageComplianceWithModelPivate == 100)
             {
                 //Просматривается диагональ, любое несовпадение завершает проверку возвращая ложь
                 for (int i = 0; i < lesserSide; i++)
-                    if (!CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, i),
+                    if (!CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, i),
                     pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
                             return false;
 
@@ -469,7 +574,7 @@ namespace MyLittleMinion
                 int counterPercentageCompliance = 0;
                 //Просматривается диагональ
                 for (int i = 0; i < lesserSide; i++)
-                    if (CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, i),
+                    if (CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, i),
                         pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
                         counterPercentageCompliance++;
 
@@ -481,17 +586,17 @@ namespace MyLittleMinion
             }
         }
 
-        private bool ComparisonOfmodelAndAreaForSearch(Point pointBeginModelOnSerachArea)
+        private bool ComparisonOfModelAndAreaForSearch(Point pointBeginModelOnSerachArea)
         {
             //Если установлено полное соответствие эталону, используется алгоритм без подсчета для ускорения проверки.
             if (percentageComplianceWithModelPivate == 100)
             {
                 //Просматривается вся площадь, любое несовпадение завершает проверку возвращая ложь
-                for (int i = 0; i < pictureModelForSearch.Width; i++)
-                    for (int j = 0; j < pictureModelForSearch.Height; j++)
-                        if (!CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, j),
+                for (int i = 0; i < correctModelPrivate.Width; i++)
+                    for (int j = 0; j < correctModelPrivate.Height; j++)
+                        if (!CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, j),//Если цвета не совпадают, то можно смело выходить
                         pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
-                                return false;
+                            return false;
 
                 return true;
             }
@@ -500,14 +605,14 @@ namespace MyLittleMinion
                 //Счетчик для учета процентного соответствия эталону
                 int counterPercentageCompliance = 0;
                 //Просматривается вся площадь
-                for (int i = 0; i < pictureModelForSearch.Width; i++)
-                    for (int j = 0; j < pictureModelForSearch.Height; j++)
-                        if (CheckForEqualityOfTwoColorsByRGB(pictureModelForSearch.GetPixel(i, j),
+                for (int i = 0; i < correctModelPrivate.Width; i++)
+                    for (int j = 0; j < correctModelPrivate.Height; j++)
+                        if (CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, j),
                             pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
                             counterPercentageCompliance++;
 
                 //Положительный рензультат выдается, если счетчик насчитал достаточную сумму, которая не меньше, чем указаное процентное соотношение
-                if ((counterPercentageCompliance * 100) / (pictureModelForSearch.Width * pictureModelForSearch.Height) < percentageComplianceWithModelPivate)
+                if ((counterPercentageCompliance * 100) / (correctModelPrivate.Width * correctModelPrivate.Height) < percentageComplianceWithModelPivate)
                     return false;
                 else
                     return true;
@@ -536,15 +641,34 @@ namespace MyLittleMinion
             //Определить по какому пикселю будет идти поиск. Искать по игнорируемому цвету нельзя.
             Point pixelOfModelForSearch = new Point();
             if (listOfIgnorColors == null)//Если нет игнорируемых цветов
-                pixelOfModelForSearch = new Point(0, 0);
+            {
+
+                bool isFindPictureModelForSearch = false;
+                for (int i = 0; i < correctModelPrivate.Width; i++)
+                {
+                    for (int j = 0; j < correctModelPrivate.Height; j++)
+                    {
+                        if (correctModelPrivate.GetPixel(i, j).A!=0)//Если не прозрачный, т.к. прозрачные надо игнорировать
+                        {
+                            isFindPictureModelForSearch = true;
+                            pixelOfModelForSearch = new Point(i, j);
+                        }
+
+                        if (isFindPictureModelForSearch)//Нашел цвет, который не надо игнорить? Беги дальше!
+                            break;
+                    }
+                    if (isFindPictureModelForSearch)//Нашел цвет, который не надо игнорить? Беги дальше!
+                        break;
+                }
+            }
             else
             {
                 bool isFindPictureModelForSearch = false;
-                for (int i = 0; i < pictureModelForSearch.Width; i++)
+                for (int i = 0; i < correctModelPrivate.Width; i++)
                 {
-                    for (int j = 0; j < pictureModelForSearch.Height; j++)
+                    for (int j = 0; j < correctModelPrivate.Height; j++)
                     {
-                        if (!IsColorForIgnor(pictureModelForSearch.GetPixel(i, j)))
+                        if (!IsColorForIgnor(correctModelPrivate.GetPixel(i, j)))
                         {
                             isFindPictureModelForSearch = true;
                             pixelOfModelForSearch = new Point(i, j);
@@ -563,26 +687,27 @@ namespace MyLittleMinion
             //Впрочем, этот пискель может быть и началом.
             //Так же это учитывается и снизу, и справа
             for(int i= pixelOfModelForSearch.X;
-                i<(pictureSearchArea.Width-pictureModelForSearch.Width+pixelOfModelForSearch.X); i++)
+                i<(pictureSearchArea.Width- correctModelPrivate.Width+pixelOfModelForSearch.X); i++)
                 for(int j = pixelOfModelForSearch.Y;
-                    j < (pictureSearchArea.Height - pictureModelForSearch.Height + pixelOfModelForSearch.Y); j++)
+                    j < (pictureSearchArea.Height - correctModelPrivate.Height + pixelOfModelForSearch.Y); j++)
                 {
                     if(!IsColorForIgnor(pictureSearchArea.GetPixel(i, j)))//Если цвет не игнорируется
                     {
-                        if(CheckForEqualityOfTwoColorsByRGB(pictureSearchArea.GetPixel(i, j), 
-                            pictureModelForSearch.GetPixel(pixelOfModelForSearch.X, pixelOfModelForSearch.Y)))
+                        if(CheckForEqualityOfTwoColorsByRGB(pictureSearchArea.GetPixel(i, j),
+                            correctModelPrivate.GetPixel(pixelOfModelForSearch.X, pixelOfModelForSearch.Y)))
                         {//Если пиксели совпали, надо сравнить диагонали
                             if(ComparisonUpLeftDiagonalOfmodelAndAreaForSearch(new Point(i- pixelOfModelForSearch.X, j- pixelOfModelForSearch.Y)))
                             {//A если совпали и они, то полностью площадь эталона
-                                if (ComparisonOfmodelAndAreaForSearch(new Point(i - pixelOfModelForSearch.X, j - pixelOfModelForSearch.Y)))
+
+                                if (ComparisonOfModelAndAreaForSearch(new Point(i - pixelOfModelForSearch.X, j - pixelOfModelForSearch.Y)))
                                 {
                                     if (listFoundPoints == null)
                                         listFoundPoints = new List<Point>();
-
+                                    
                                     listFoundPoints.Add(new Point(
                                         i - pixelOfModelForSearch.X + this.locationOfPlaceForSearchPrivate.X,
                                         j - pixelOfModelForSearch.Y + this.locationOfPlaceForSearchPrivate.Y));
-
+                                    System.Windows.Forms.MessageBox.Show(Convert.ToString(listFoundPoints[0]));
                                     if (this.stopSearchingAfterFirstPointFound)
                                     {
                                         ListToMassiveOfFoundPoints(listFoundPoints);
@@ -655,8 +780,8 @@ namespace MyLittleMinion
         {
             //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
             //Поэтому в случае слишком большого рамера ширины или высоты эталона стоит выполнять последовательный поиск.
-            if ((this.pictureSearchArea.Width / 2 < pictureModelForSearch.Width) ||
-                (this.pictureSearchArea.Height / 2 < pictureModelForSearch.Height))
+            if ((this.pictureSearchArea.Width / 2 < correctModelPrivate.Width) ||
+                (this.pictureSearchArea.Height / 2 < correctModelPrivate.Height))
             {
                 return SearchModelInArea();
             }
@@ -691,7 +816,7 @@ namespace MyLittleMinion
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X, this.locationOfPlaceForSearchPrivate.Y,
                     //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                    halfWidthPSA + this.pictureModelForSearch.Width, halfHeightPSA + this.pictureModelForSearch.Height
+                    halfWidthPSA + this.correctModelPrivate.Width, halfHeightPSA + this.correctModelPrivate.Height
                     )));
             iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
             iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea());
@@ -708,7 +833,7 @@ namespace MyLittleMinion
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X,
                     this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
-                    halfWidthPSA + this.pictureModelForSearch.Width,//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                    halfWidthPSA + this.correctModelPrivate.Width,//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                     this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                     )));
             iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].CreateScreenShot());
@@ -727,7 +852,7 @@ namespace MyLittleMinion
                     this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
                     this.locationOfPlaceForSearchPrivate.Y,
                     this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
-                    halfHeightPSA + this.pictureModelForSearch.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
+                    halfHeightPSA + this.correctModelPrivate.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                     )));
             iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].CreateScreenShot());
             iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].SearchModelInArea());
@@ -805,7 +930,7 @@ namespace MyLittleMinion
         {
             //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
             //Поэтому в случае слишком большого рамера ширины эталона стоит выполнять последовательный поиск.
-            if (this.pictureSearchArea.Width / countOfThreads < pictureModelForSearch.Width)
+            if (this.pictureSearchArea.Width / countOfThreads < correctModelPrivate.Width)
             {
                 return SearchModelInArea();
             }
@@ -933,7 +1058,7 @@ namespace MyLittleMinion
                     this.locationOfPlaceForSearchPrivate.X + partWidthPSA * numOfThread,//Перемещение начала с номером потока
                     this.locationOfPlaceForSearchPrivate.Y,
                     //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                    partWidthPSA + this.pictureModelForSearch.Width,
+                    partWidthPSA + this.correctModelPrivate.Width,
                     thispictureSearchAreaHeight
                     ));
                 searchExemplarClone.CreateScreenShot();
@@ -1029,35 +1154,18 @@ namespace MyLittleMinion
                 }
             }
         }
+        
         /// <summary>
-        /// Заполняет эталон небольшой картинкой, которая означает, что он пуст.
-        /// Две красные дигонали на белом фоне. Размер картинки 50х50.
-        /// </summary>
-        private void CreateBitmapForEmptyModel()
-        {
-            this.pictureModelForSearch = new Bitmap(50, 50);
-            for(int i=0; i< this.pictureModelForSearch.Width; i++)
-                for(int j=0; j<this.pictureModelForSearch.Height; j++)
-                {
-                    if(i==j || i==(this.pictureModelForSearch.Height-j-1))
-                    {
-                        this.pictureModelForSearch.SetPixel(i, j, Color.FromArgb(255, 0, 0));
-                    }
-                    else
-                    {
-                        this.pictureModelForSearch.SetPixel(i, j, Color.FromArgb(255, 255, 255));
-                    }
-                }
-        }
-        /// <summary>
-        /// Сравнивает два цвета только по свойствам R, G и B
+        /// Сравнивает два цвета только по свойствам R, G и B.
+        /// Если свойство афльфа-канала одно из цветов равено 0, то цвета считаются одинаковыми.
         /// </summary>
         /// <param name="firstColor"></param>
         /// <param name="secondColor"></param>
         /// <returns></returns>
         public static bool CheckForEqualityOfTwoColorsByRGB(Color firstColor, Color secondColor)
         {
-
+            if (firstColor.A == 0 || secondColor.A == 0)
+                return true;
             if (firstColor.R == secondColor.R)
             {
                 if (firstColor.G == secondColor.G)
@@ -1094,7 +1202,8 @@ namespace MyLittleMinion
             cloneThisSearch.UsePlaceForSearch = this.UsePlaceForSearch;
             cloneThisSearch.locationOfPlaceForSearchPrivate = this.locationOfPlaceForSearchPrivate;
             cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
-            cloneThisSearch.pictureModelForSearch = (Bitmap)this.pictureModelForSearch.Clone();
+            cloneThisSearch.pictureModelForSearchPrivate = (Bitmap)this.pictureModelForSearchPrivate.Clone();
+            cloneThisSearch.correctModelPrivate = (Bitmap)this.correctModelPrivate.Clone();
 
             if (this.pictureSearchArea != null)
                 cloneThisSearch.pictureSearchArea = (Bitmap)this.pictureSearchArea.Clone();
