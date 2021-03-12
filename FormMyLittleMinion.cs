@@ -65,8 +65,8 @@ namespace MyLittleMinion
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
             FillUINewDataFromListSearchAndAction();
 
+            SetImageModelConfig();
 
-            this.pictureBoxForCorrectModelForSearch.Location = this.pictureBoxForModelForSearch.Location;
 
             FillVariantsOfActionsForComboBoxForSelectAction();
         }
@@ -84,7 +84,6 @@ namespace MyLittleMinion
         void SearchingModelOnScreen()
         {
             pictureBoxForModelForSearch.Visible = false;
-            pictureBoxForCorrectModelForSearch.Visible = false;
             DateTime testTimeOfSearch = DateTime.Now;
             labelForStatus.Text = "Выполняется поиск...";
 
@@ -111,9 +110,7 @@ namespace MyLittleMinion
                 labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
                 MessageBox.Show("No!");
             }
-            //Оставляю чекбокс как есть, но зато там выясняется, какой пикчербокс сделать видимым, а какой нет.
-            checkBoxShowNotCorrectModel.Checked = !checkBoxShowNotCorrectModel.Checked;
-            checkBoxShowNotCorrectModel.Checked = !checkBoxShowNotCorrectModel.Checked;
+            pictureBoxForModelForSearch.Visible = true;
         }
 
 
@@ -135,8 +132,6 @@ namespace MyLittleMinion
 
         private void TestButton_Click(object sender, EventArgs e)
         {
-            Thread.Sleep(3000);
-            IamBorn();
             // MessageBox.Show(Convert.ToString(comboBoxForSelectAction.SelectedIndex));
             /*Thread.Sleep(2000);
             ActionOfMinion aMinion = new ActionOfMinion();
@@ -270,11 +265,15 @@ namespace MyLittleMinion
                     {
                         Bitmap image;
 
+                        //копирование битмапа в стриме позволяет создать полностью независимую копию битмапа
+                        MemoryStream ms = new MemoryStream();
                         using (FileStream stream = new FileStream(open_dialog.FileName, FileMode.Open))
                         {
-                            image = (Bitmap)Image.FromStream(stream);
+                            stream.CopyTo(ms);
+                            image = (Bitmap)Bitmap.FromStream(ms);
                         }
                         //укажите pictureBox, в который нужно загрузить изображение 
+                        
                         exemplarOfSearch.pictureModelForSearch = (Bitmap)image.Clone();
                         image = null;
                         GC.Collect();
@@ -287,7 +286,7 @@ namespace MyLittleMinion
                     }
                 }
             }
-            FillUINewDataFromListSearchAndAction();
+            SetImageModelConfig();
         }
         private void ButtonCorrectModelForSearch_Click(object sender, EventArgs e)
         {
@@ -300,9 +299,12 @@ namespace MyLittleMinion
                     {
                         Bitmap image;
 
+                        //копирование битмапа в стриме позволяет создать полностью независимую копию битмапа
+                        MemoryStream ms = new MemoryStream();
                         using (FileStream stream = new FileStream(open_dialog.FileName, FileMode.Open))
                         {
-                            image = (Bitmap)Image.FromStream(stream);
+                            stream.CopyTo(ms);
+                            image = (Bitmap)Bitmap.FromStream(ms);
                         }
                         //укажите pictureBox, в который нужно загрузить изображение 
                         exemplarOfSearch.CorrectionModel((Bitmap)image.Clone());
@@ -317,16 +319,90 @@ namespace MyLittleMinion
                     }
                 }
             }
-            FillUINewDataFromListSearchAndAction();
+            SetImageModelConfig();
         }
         private void CheckBoxShowCorrectModel_CheckedChanged(object sender, EventArgs e)
         {
-            this.pictureBoxForCorrectModelForSearch.Visible = !checkBoxShowNotCorrectModel.Checked;
-            this.pictureBoxForModelForSearch.Visible = !this.pictureBoxForCorrectModelForSearch.Visible;
+            SetImageModelConfig();
         }
         private void PictureBoxForModelForSearch_Click(object sender, EventArgs e)
         {
-            //Тут можно написать код, который будет указвать куда надо нажать на найденом эталоне.
+            //Поиск местположения pictureBox в глобальных координатах.
+            //Сперва смотрю всех его родительских окон до формы, а потом и координаты самой формы добавляю. Точнее наоброт.
+            Point locationPBForModel = new Point(this.Location.X+ pictureBoxForModelForSearch.Location.X, this.Location.Y + pictureBoxForModelForSearch.Location.Y);
+            Control pbParent = pictureBoxForModelForSearch.Parent;
+            while(pbParent != this)
+            {
+                locationPBForModel = new Point(locationPBForModel.X + pbParent.Location.X, locationPBForModel.Y + pbParent.Location.Y);
+                pbParent = pbParent.Parent;
+            }
+
+            //Для точности, почему-то сбивается локация нажатия
+            Point correctionPoint = new Point(-8, -31);
+            //Прицел в эталоне: разница между положениями курсора и началом pictureBox.
+            this.exemplarOfSearch.aimModel = new Point(
+                Cursor.Position.X - locationPBForModel.X + correctionPoint.X,
+                Cursor.Position.Y - locationPBForModel.Y + correctionPoint.Y
+                );
+            SetImageModelConfig();
+        }
+
+
+        /// <summary>
+        /// Рисует прицел на эталоне согласно заданной в экземпляре точке.
+        /// </summary>
+        Bitmap DrawAimOnModel(Bitmap pictureBoxImage)
+        {
+            Graphics paintAim = Graphics.FromImage(pictureBoxImage);// pictureBoxForModelForSearch.CreateGraphics();
+            PaintingAim(paintAim, this.exemplarOfSearch.aimModel);
+            return pictureBoxImage;
+
+        }
+        /// <summary>
+        /// Рисует четырехкрылый прицел, разными цветами, да потолще, чтобы видно было.
+        /// </summary>
+        /// <param name="paintAim"></param>
+        /// <param name="centerAim"></param>
+        void PaintingAim(Graphics paintAim, Point centerAim)
+        {
+            int radiusLine = 15;
+            Pen redPen = new Pen(Color.Red);
+            Pen bluePen = new Pen(Color.Blue);
+            Pen greenPen = new Pen(Color.Green);
+
+            //Левое крыло
+            int centerAimY = centerAim.Y;
+            paintAim.DrawLine(redPen, centerAim.X - 5 - radiusLine, centerAimY++, centerAim.X - 5, centerAimY);
+            paintAim.DrawLine(redPen, centerAim.X - 5 - radiusLine, centerAimY++, centerAim.X - 5, centerAimY);
+            paintAim.DrawLine(bluePen, centerAim.X - 5 - radiusLine, centerAimY++, centerAim.X - 5, centerAimY);
+            paintAim.DrawLine(bluePen, centerAim.X - 5 - radiusLine, centerAimY++, centerAim.X - 5, centerAimY);
+            paintAim.DrawLine(greenPen, centerAim.X - 5 - radiusLine, centerAimY++, centerAim.X - 5, centerAimY);
+            paintAim.DrawLine(greenPen, centerAim.X - 5 - radiusLine, centerAimY++, centerAim.X - 5, centerAimY);
+            //Правое крыло
+            centerAimY = centerAim.Y;
+            paintAim.DrawLine(redPen, centerAim.X + 5 + radiusLine, centerAimY--, centerAim.X + 5, centerAimY);
+            paintAim.DrawLine(redPen, centerAim.X + 5 + radiusLine, centerAimY--, centerAim.X + 5, centerAimY);
+            paintAim.DrawLine(bluePen, centerAim.X + 5 + radiusLine, centerAimY--, centerAim.X + 5, centerAimY);
+            paintAim.DrawLine(bluePen, centerAim.X + 5 + radiusLine, centerAimY--, centerAim.X + 5, centerAimY);
+            paintAim.DrawLine(greenPen, centerAim.X + 5 + radiusLine, centerAimY--, centerAim.X + 5, centerAimY);
+            paintAim.DrawLine(greenPen, centerAim.X + 5 + radiusLine, centerAimY--, centerAim.X + 5, centerAimY);
+            //Верхнее крыло
+            int centerAimX = centerAim.X;
+            paintAim.DrawLine(redPen, centerAimX--, centerAim.Y - 5 - radiusLine, centerAimX, centerAim.Y - 5);
+            paintAim.DrawLine(redPen, centerAimX--, centerAim.Y - 5 - radiusLine, centerAimX, centerAim.Y - 5);
+            paintAim.DrawLine(bluePen, centerAimX--, centerAim.Y - 5 - radiusLine, centerAimX, centerAim.Y - 5);
+            paintAim.DrawLine(bluePen, centerAimX--, centerAim.Y - 5 - radiusLine, centerAimX, centerAim.Y - 5);
+            paintAim.DrawLine(greenPen, centerAimX--, centerAim.Y - 5 - radiusLine, centerAimX, centerAim.Y - 5);
+            paintAim.DrawLine(greenPen, centerAimX--, centerAim.Y - 5 - radiusLine, centerAimX, centerAim.Y - 5);
+            //Нижнее крыло
+            centerAimX = centerAim.X;
+            paintAim.DrawLine(redPen, centerAimX++, centerAim.Y + 5 + radiusLine, centerAimX, centerAim.Y + 5);
+            paintAim.DrawLine(redPen, centerAimX++, centerAim.Y + 5 + radiusLine, centerAimX, centerAim.Y + 5);
+            paintAim.DrawLine(bluePen, centerAimX++, centerAim.Y + 5 + radiusLine, centerAimX, centerAim.Y + 5);
+            paintAim.DrawLine(bluePen, centerAimX++, centerAim.Y + 5 + radiusLine, centerAimX, centerAim.Y + 5);
+            paintAim.DrawLine(greenPen, centerAimX++, centerAim.Y + 5 + radiusLine, centerAimX, centerAim.Y + 5);
+            paintAim.DrawLine(greenPen, centerAimX++, centerAim.Y + 5 + radiusLine, centerAimX, centerAim.Y + 5);
+
         }
         private void ButtonForChangeSizeOferyBigModelForSearch_Click(object sender, EventArgs e)
         {
@@ -417,6 +493,23 @@ namespace MyLittleMinion
 
         }
 
+        void SetImageModelConfig()
+        {
+            if (checkBoxShowNotCorrectModel.Checked)
+            {
+                pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
+                pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
+            }
+            else
+            {
+                pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.correctModel;
+                pictureBoxForModelForSearch.Size = exemplarOfSearch.correctModel.Size;
+            }
+            imageForUpdateModelPicture = (Bitmap)pictureBoxForModelForSearch.Image;
+            imageForUpdateModelPicture = DrawAimOnModel((Bitmap)imageForUpdateModelPicture.Clone());
+            FillUINewDataFromListSearchAndAction();
+        }
+        Bitmap imageForUpdateModelPicture;
         void FillUINewDataFromListSearchAndAction()
         {
 
@@ -441,10 +534,11 @@ namespace MyLittleMinion
 
             checkBoxFirstFoundModelIsEnd.Checked = exemplarOfSearch.stopSearchingAfterFirstPointFound;
             numericUpDownPercentageComplianceWithModel.Value = exemplarOfSearch.percentageComplianceWithModel;
-            pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
-            pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
+            pictureBoxForModelForSearch.Image = (Image)imageForUpdateModelPicture;// exemplarOfSearch.pictureModelForSearch;
+            /*pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
             pictureBoxForCorrectModelForSearch.Image = (Image)exemplarOfSearch.correctModel;
             pictureBoxForCorrectModelForSearch.Size = exemplarOfSearch.correctModel.Size;
+            DrawAimOnModel();*/
 
             checkBoxForPlaceOfSearch.Checked = exemplarOfSearch.UsePlaceForSearch;
             checkBoxSelectActiveWindow.Checked = exemplarOfSearch.UseActiveWindow;
@@ -566,7 +660,6 @@ namespace MyLittleMinion
         /// <param name="e"></param>
         private void ButtonCloneThisAction_Click(object sender, EventArgs e)
         {
-
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             exemplarsOfLAM[numberLOEOLAM].Add(exemplarOfSearch.Clone(), exemplarOfActionOfMinion.Clone());
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
@@ -574,6 +667,7 @@ namespace MyLittleMinion
             FillUINewDataFromListSearchAndAction();
 
             labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+
         }
 
         /// <summary>
@@ -587,7 +681,9 @@ namespace MyLittleMinion
             FillUINewDataFromListSearchAndAction();
         }
 
-        
+
+
+
 
 
 

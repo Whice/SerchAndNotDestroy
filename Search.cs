@@ -33,6 +33,7 @@ namespace MyLittleMinion
             this.pictureSearchArea = null;
             this.pictureModelForSearchPrivate = null;
             this.correctModelPrivate = null;
+            this.aimModelPrivate = new Point(0,0);
             this.foundPoints = null;
 
             this.UsePlaceForSearch = false;
@@ -58,9 +59,21 @@ namespace MyLittleMinion
 
         ///Уточнение образа эталона для более точного поиска НАЧАЛО
 
-        
-        Bitmap pictureModelForSearchPrivate;
-        Bitmap correctModelPrivate;
+        private Point aimModelPrivate;
+        public Point aimModel {
+            get { return this.aimModelPrivate; }
+            set
+            {
+                aimModelPrivate = value;
+                //Чтобы лишнего нельзя было сюда запихать, только внутри эталона может быть прицел.
+                if (value.X < 0 || value.X > this.pictureModelForSearchPrivate.Width)
+                    aimModelPrivate.X = 0;
+                if (value.Y < 0 || value.Y > this.pictureModelForSearchPrivate.Height)
+                    aimModelPrivate.Y = 0;
+            }
+        }
+        private Bitmap pictureModelForSearchPrivate;
+        private Bitmap correctModelPrivate;
         public Bitmap correctModel { get { return this.correctModelPrivate; } }
         /// <summary>
         /// Bitmap для хранения эталона, поиск местонахождения которого выполняется.
@@ -74,6 +87,7 @@ namespace MyLittleMinion
             }
             set
             {
+                this.aimModel = new Point(0, 0);
                 this.pictureModelForSearchPrivate = value;
                 this.correctModelPrivate = value;
             }
@@ -158,6 +172,7 @@ namespace MyLittleMinion
                     }
                 }
             this.pictureModelForSearch = this.pictureModelForSearchPrivate;
+            this.correctModelPrivate = this.pictureModelForSearchPrivate;
         }
 
         ///Уточнение образа эталона для более точного поиска КОНЕЦ
@@ -627,6 +642,11 @@ namespace MyLittleMinion
         /// <returns></returns>
         public bool SearchModelInArea()
         {
+            //Смешно подумать о таком, но...
+            //Если эталон больше области поиска, его не стоит в ней искать.
+            if (pictureModelForSearchPrivate.Width > pictureSearchArea.Width || pictureModelForSearchPrivate.Height > pictureSearchArea.Height)
+                return false;
+
             //Перед поиском новых точек старые надо забыть
             this.foundPoints = null;
             //Создать список для записи найденых точек
@@ -740,6 +760,14 @@ namespace MyLittleMinion
                 this.foundPoints[i] = new Point(
                 (int)(this.foundPoints[i].X / getScalingFactor()),
                 (int)(this.foundPoints[i].Y / getScalingFactor()));
+            }
+
+            //Добавление смещения согласно прицелу на эталоне
+            for (int i = 0; i < foundPoints.Length; i++)
+            {
+                this.foundPoints[i] = new Point(
+                this.foundPoints[i].X + aimModelPrivate.X,
+                this.foundPoints[i].Y + aimModelPrivate.Y);
             }
         }
 
@@ -1203,6 +1231,7 @@ namespace MyLittleMinion
             cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
             cloneThisSearch.pictureModelForSearchPrivate = (Bitmap)this.pictureModelForSearchPrivate.Clone();
             cloneThisSearch.correctModelPrivate = (Bitmap)this.correctModelPrivate.Clone();
+            cloneThisSearch.aimModelPrivate = this.aimModelPrivate;
 
             if (this.pictureSearchArea != null)
                 cloneThisSearch.pictureSearchArea = (Bitmap)this.pictureSearchArea.Clone();

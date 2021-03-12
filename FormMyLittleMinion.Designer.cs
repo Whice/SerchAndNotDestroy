@@ -91,7 +91,6 @@
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisAction = new System.Windows.Forms.Button();
-            this.pictureBoxForCorrectModelForSearch = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -102,7 +101,6 @@
             this.panelConfigurationOfSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForCorrectModelForSearch)).BeginInit();
             this.SuspendLayout();
             // 
             // FindButton
@@ -125,12 +123,10 @@
             this.pictureBoxForModelForSearch.Size = new System.Drawing.Size(75, 41);
             this.pictureBoxForModelForSearch.TabIndex = 1;
             this.pictureBoxForModelForSearch.TabStop = false;
-            this.pictureBoxForModelForSearch.Visible = false;
             this.pictureBoxForModelForSearch.Click += new System.EventHandler(this.PictureBoxForModelForSearch_Click);
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
@@ -340,7 +336,6 @@
             // panelForModelForSearch
             // 
             this.panelForModelForSearch.BackColor = System.Drawing.Color.LightCoral;
-            this.panelForModelForSearch.Controls.Add(this.pictureBoxForCorrectModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.checkBoxShowNotCorrectModel);
             this.panelForModelForSearch.Controls.Add(this.buttonCorrectModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.labelPercentageComplianceWithModel);
@@ -766,16 +761,6 @@
             this.buttonCloneThisAction.UseVisualStyleBackColor = true;
             this.buttonCloneThisAction.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
             // 
-            // pictureBoxForCorrectModelForSearch
-            // 
-            this.pictureBoxForCorrectModelForSearch.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.pictureBoxForCorrectModelForSearch.Location = new System.Drawing.Point(270, 151);
-            this.pictureBoxForCorrectModelForSearch.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBoxForCorrectModelForSearch.Name = "pictureBoxForCorrectModelForSearch";
-            this.pictureBoxForCorrectModelForSearch.Size = new System.Drawing.Size(75, 41);
-            this.pictureBoxForCorrectModelForSearch.TabIndex = 28;
-            this.pictureBoxForCorrectModelForSearch.TabStop = false;
-            // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -799,6 +784,7 @@
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.buttonFindAndPerformAllAction);
             this.Controls.Add(this.buttonSaveListOfAction);
+            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MyLittleMonion";
@@ -820,7 +806,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForCorrectModelForSearch)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -890,7 +875,6 @@
         private System.Windows.Forms.Label labelCountSecondForAddIgnorColor;
         private System.Windows.Forms.Button buttonCorrectModelForSearch;
         private System.Windows.Forms.CheckBox checkBoxShowNotCorrectModel;
-        private System.Windows.Forms.PictureBox pictureBoxForCorrectModelForSearch;
     }
 }
 
