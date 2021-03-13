@@ -59,7 +59,8 @@ namespace MyLittleMinion
             TestMemoryMindOfMyLittleMinion.nameOfCellOfMemory = "TestNaborImage";
             numberOfCaptureInMemory = 0;
             settingOfMinion = new SettingOfMinion();
-            settingOfMinion.pathForSaveOfList = fullAdressOfFileName;
+            dialogWindowForSetting = new DialogWindowForSetting(settingOfMinion);
+            dialogWindowForSetting.SaveChanges();
 
 
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
@@ -148,6 +149,7 @@ namespace MyLittleMinion
         private void CheckBoxForColorsForIgnor_CheckedChanged(object sender, EventArgs e)
         {
             panelForColorsForIgnor.Visible = checkBoxForColorsForIgnor.Checked;
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
             //panelForColorsForIgnor.Size = new Size(330, 170);
         }
         private void Next_Click(object sender, EventArgs e)
@@ -406,10 +408,10 @@ namespace MyLittleMinion
         }
         private void ButtonForChangeSizeOferyBigModelForSearch_Click(object sender, EventArgs e)
         {
-            if (panelForModelForSearch.Width == 8000)
+            if (panelForModelForSearch.Width != 370)
             {
-                panelForModelForSearch.Width = 350;
-                panelForModelForSearch.Height = 200;
+                panelForModelForSearch.Width = 370;
+                panelForModelForSearch.Height = 250;
                 panelConfigurationOfSearch.Width = 850;
                 panelConfigurationOfSearch.Height = 450;
             }
@@ -490,11 +492,18 @@ namespace MyLittleMinion
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
             exemplarsOfLAM[numberLOEOLAM].SaveAs(settingOfMinion);
+
         }
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             exemplarsOfLAM[numberLOEOLAM].Open(settingOfMinion);
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+            FillUINewDataFromListSearchAndAction();
+
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
         }
         private void TextBoxNameOfLisActions_TextChanged(object sender, EventArgs e)
         {

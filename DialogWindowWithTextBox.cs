@@ -23,7 +23,7 @@ namespace MyLittleMinion
             settingInDialog.GetFullPathOfExeMinion();
             OpenSettingOfMinion();
         }
-        
+
         public DialogWindowForSetting(SettingOfMinion setting)
         {
             InitializeComponent();
@@ -34,6 +34,10 @@ namespace MyLittleMinion
         }
 
         private void ButtonSaveChanges_Click(object sender, EventArgs e)
+        {
+            SaveChanges();
+        }
+        public void SaveChanges()
         {
             settingInDialog.pathForSaveOfList = textBoxOfPathForSaveFile.Text;
             SaveSettingOfMinion();

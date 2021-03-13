@@ -91,6 +91,8 @@ namespace MyLittleMinion
             string nameOpenFile = "";
             OpenFileDialog open_dialog = new OpenFileDialog();
             open_dialog.Filter = "My little minion files (*.MLM)|*.MLM*"; //формат загружаемого файла
+
+            open_dialog.InitialDirectory = settingOfMinion.pathForSaveOfList;
             if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
             {
                 nameOpenFile = open_dialog.FileName;
@@ -101,6 +103,7 @@ namespace MyLittleMinion
                 Stream stream = new FileStream(nameOpenFile, FileMode.Open, FileAccess.Read, FileShare.Read);
                 ListOfActionsOfMinion loadFileListOfActionsOfMinion = (ListOfActionsOfMinion)formatter.Deserialize(stream);
                 stream.Close();
+                nameOpenFile = nameOpenFile.Replace(nameOpenFile.Replace(open_dialog.SafeFileName, ""), "");
                 this.listOfSearching = loadFileListOfActionsOfMinion.listOfSearching;
                 this.listOfActionsAfterSearchin = loadFileListOfActionsOfMinion.listOfActionsAfterSearchin;
                 this.nameOfListOfSearchingAndActions = nameOpenFile;
