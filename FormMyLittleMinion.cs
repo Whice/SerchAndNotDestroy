@@ -475,7 +475,7 @@ namespace MyLittleMinion
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Помощник - хороший мальчик!");
+           // MessageBox.Show("Помощник - хороший мальчик!");
         }
 
         private void SettingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -490,7 +490,15 @@ namespace MyLittleMinion
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            exemplarsOfLAM[numberLOEOLAM].SaveAs(settingOfMinion);
+        }
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            exemplarsOfLAM[numberLOEOLAM].Open(settingOfMinion);
+        }
+        private void TextBoxNameOfLisActions_TextChanged(object sender, EventArgs e)
+        {
+            exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
         }
 
         void SetImageModelConfig()
@@ -680,6 +688,16 @@ namespace MyLittleMinion
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             FillUINewDataFromListSearchAndAction();
         }
+
+        private void ИнструкцияToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InstructionFrom InsForm = new InstructionFrom();
+            InsForm.Show();
+        }
+
+       
+
+
 
 
 

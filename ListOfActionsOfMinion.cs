@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MyLittleMinion
 {
+    [Serializable]
     class ListOfActionsOfMinion
     {
         private List<Search> listOfSearching;
@@ -41,7 +46,7 @@ namespace MyLittleMinion
             this.listOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
             this.numberSearchAndActionInList = this.listOfSearching.Count - 1;
                 if(listOfSearching.Count<1)
-            this.nameOfListOfSearchingAndActions = "Default list search and action.";
+            this.nameOfListOfSearchingAndActions = "Default list search and action";
 
         }
         public int GetSizeOfListOfSearchAndActionsOfMinion()
@@ -69,6 +74,44 @@ namespace MyLittleMinion
             if (this.numberSearchAndActionInList > 0)
                 this.numberSearchAndActionInList--;
 
+        }
+        
+        public bool SaveAs(SettingOfMinion settingOfMinion)
+        {
+            if(this.nameOfListOfSearchingAndActions=="")
+                this.nameOfListOfSearchingAndActions = "Default list search and action";
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(settingOfMinion.fullPathOfExeOfMinion+ this.nameOfListOfSearchingAndActions + ".MLM", FileMode.Create, FileAccess.Write, FileShare.None);
+            formatter.Serialize(stream, this);
+            stream.Close();
+            return true;
+        }
+        public bool Open(SettingOfMinion settingOfMinion)
+        {
+            string nameOpenFile = "";
+            OpenFileDialog open_dialog = new OpenFileDialog();
+            open_dialog.Filter = "My little minion files (*.MLM)|*.MLM*"; //формат загружаемого файла
+            if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
+            {
+                nameOpenFile = open_dialog.FileName;
+            }
+            if (nameOpenFile != "")
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream(nameOpenFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                ListOfActionsOfMinion loadFileListOfActionsOfMinion = (ListOfActionsOfMinion)formatter.Deserialize(stream);
+                stream.Close();
+                this.listOfSearching = loadFileListOfActionsOfMinion.listOfSearching;
+                this.listOfActionsAfterSearchin = loadFileListOfActionsOfMinion.listOfActionsAfterSearchin;
+                this.nameOfListOfSearchingAndActions = nameOpenFile;
+                this.numberSearchAndActionInList = 0;
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

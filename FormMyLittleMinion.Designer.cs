@@ -32,7 +32,6 @@
             this.FindButton = new System.Windows.Forms.Button();
             this.pictureBoxForModelForSearch = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.buttonSaveListOfAction = new System.Windows.Forms.Button();
             this.buttonNextForColorsForIgnor = new System.Windows.Forms.Button();
             this.buttonPreviousForColorsForIgnor = new System.Windows.Forms.Button();
             this.buttonFindAndPerformAllAction = new System.Windows.Forms.Button();
@@ -71,7 +70,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
             this.panelConfigurationOfSearch = new System.Windows.Forms.Panel();
-            this.buttonOpenListOfAction = new System.Windows.Forms.Button();
             this.comboBoxForSelectAction = new System.Windows.Forms.ComboBox();
             this.buttonFindAndPerformThisAction = new System.Windows.Forms.Button();
             this.buttonPrevAction = new System.Windows.Forms.Button();
@@ -82,12 +80,14 @@
             this.numericUpDownWaitAfterThisAction = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.создатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.инструкцияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisAction = new System.Windows.Forms.Button();
@@ -129,18 +129,6 @@
             // 
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
-            // 
-            // buttonSaveListOfAction
-            // 
-            this.buttonSaveListOfAction.Enabled = false;
-            this.buttonSaveListOfAction.Location = new System.Drawing.Point(8, 395);
-            this.buttonSaveListOfAction.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonSaveListOfAction.Name = "buttonSaveListOfAction";
-            this.buttonSaveListOfAction.Size = new System.Drawing.Size(120, 39);
-            this.buttonSaveListOfAction.TabIndex = 2;
-            this.buttonSaveListOfAction.Text = "Сохранить список действий";
-            this.buttonSaveListOfAction.UseVisualStyleBackColor = true;
-            this.buttonSaveListOfAction.Click += new System.EventHandler(this.SaveImage_Click);
             // 
             // buttonNextForColorsForIgnor
             // 
@@ -576,17 +564,6 @@
             this.panelConfigurationOfSearch.Size = new System.Drawing.Size(861, 456);
             this.panelConfigurationOfSearch.TabIndex = 24;
             // 
-            // buttonOpenListOfAction
-            // 
-            this.buttonOpenListOfAction.Enabled = false;
-            this.buttonOpenListOfAction.Location = new System.Drawing.Point(8, 439);
-            this.buttonOpenListOfAction.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonOpenListOfAction.Name = "buttonOpenListOfAction";
-            this.buttonOpenListOfAction.Size = new System.Drawing.Size(120, 39);
-            this.buttonOpenListOfAction.TabIndex = 25;
-            this.buttonOpenListOfAction.Text = "Открыть список действий";
-            this.buttonOpenListOfAction.UseVisualStyleBackColor = true;
-            // 
             // comboBoxForSelectAction
             // 
             this.comboBoxForSelectAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -686,6 +663,7 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.создатьToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.openToolStripMenuItem,
@@ -693,6 +671,12 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.fileToolStripMenuItem.Text = "Файл";
+            // 
+            // создатьToolStripMenuItem
+            // 
+            this.создатьToolStripMenuItem.Name = "создатьToolStripMenuItem";
+            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.создатьToolStripMenuItem.Text = "Создать";
             // 
             // saveToolStripMenuItem
             // 
@@ -713,6 +697,7 @@
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
             this.openToolStripMenuItem.Text = "Открыть";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -729,10 +714,19 @@
             // 
             // aboutToolStripMenuItem
             // 
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.инструкцияToolStripMenuItem});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
             this.aboutToolStripMenuItem.Text = "О программе";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
+            // 
+            // инструкцияToolStripMenuItem
+            // 
+            this.инструкцияToolStripMenuItem.Name = "инструкцияToolStripMenuItem";
+            this.инструкцияToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.инструкцияToolStripMenuItem.Text = "Инструкция";
+            this.инструкцияToolStripMenuItem.Click += new System.EventHandler(this.ИнструкцияToolStripMenuItem_Click);
             // 
             // labelNameOfLisActions
             // 
@@ -750,6 +744,7 @@
             this.textBoxNameOfLisActions.Size = new System.Drawing.Size(162, 20);
             this.textBoxNameOfLisActions.TabIndex = 24;
             this.textBoxNameOfLisActions.Text = "Default list search and action.";
+            this.textBoxNameOfLisActions.TextChanged += new System.EventHandler(this.TextBoxNameOfLisActions_TextChanged);
             // 
             // buttonCloneThisAction
             // 
@@ -779,11 +774,9 @@
             this.Controls.Add(this.buttonNextAction);
             this.Controls.Add(this.buttonFindAndPerformThisAction);
             this.Controls.Add(this.comboBoxForSelectAction);
-            this.Controls.Add(this.buttonOpenListOfAction);
             this.Controls.Add(this.panelConfigurationOfSearch);
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.buttonFindAndPerformAllAction);
-            this.Controls.Add(this.buttonSaveListOfAction);
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -816,7 +809,6 @@
         private System.Windows.Forms.Button FindButton;
         private System.Windows.Forms.PictureBox pictureBoxForModelForSearch;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Button buttonSaveListOfAction;
         private System.Windows.Forms.Button buttonNextForColorsForIgnor;
         private System.Windows.Forms.Button buttonPreviousForColorsForIgnor;
         private System.Windows.Forms.Button buttonFindAndPerformAllAction;
@@ -851,7 +843,6 @@
         private System.Windows.Forms.Label labelPercentageComplianceWithModel;
         private System.Windows.Forms.NumericUpDown numericUpDownPercentageComplianceWithModel;
         private System.Windows.Forms.Panel panelConfigurationOfSearch;
-        private System.Windows.Forms.Button buttonOpenListOfAction;
         private System.Windows.Forms.ComboBox comboBoxForSelectAction;
         private System.Windows.Forms.Button buttonFindAndPerformThisAction;
         private System.Windows.Forms.Button buttonPrevAction;
@@ -875,6 +866,8 @@
         private System.Windows.Forms.Label labelCountSecondForAddIgnorColor;
         private System.Windows.Forms.Button buttonCorrectModelForSearch;
         private System.Windows.Forms.CheckBox checkBoxShowNotCorrectModel;
+        private System.Windows.Forms.ToolStripMenuItem инструкцияToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem создатьToolStripMenuItem;
     }
 }
 

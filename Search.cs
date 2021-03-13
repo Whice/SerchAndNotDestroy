@@ -10,6 +10,7 @@ using System.Drawing.Imaging;
 
 namespace MyLittleMinion
 {
+    [Serializable]
     /// <summary>
     /// Это класс поиска.
     /// Он позволяет искать заданный эталон на экране, а так же предоставляет инструменты для ускорения поиска этого эталона.

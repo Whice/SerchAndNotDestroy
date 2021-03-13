@@ -80,6 +80,12 @@
     <Compile Include="FormMyLittleMinion.Designer.cs">
       <DependentUpon>FormMyLittleMinion.cs</DependentUpon>
     </Compile>
+    <Compile Include="InstructionFrom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InstructionFrom.Designer.cs">
+      <DependentUpon>InstructionFrom.cs</DependentUpon>
+    </Compile>
     <Compile Include="ListOfActionsOfMinion.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,6 +101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMyLittleMinion.resx">
       <DependentUpon>FormMyLittleMinion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InstructionFrom.resx">
+      <DependentUpon>InstructionFrom.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

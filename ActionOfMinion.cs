@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace MyLittleMinion
 {
+    [Serializable]
     class ActionOfMinion
     {
         /// <summary>
