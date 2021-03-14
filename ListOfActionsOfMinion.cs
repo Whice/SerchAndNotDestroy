@@ -11,12 +11,36 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace MyLittleMinion
 {
     [Serializable]
+    /// <summary>
+    /// Это класс списка поисков и действий.
+    /// Он объединяет в пару поиск-действие два класса, позволяя использовать их экемпляры вместе.
+    /// Внутри задается и храниться номер пары, указывающий, какую именно пару можно спользовать.
+    /// Этот класс можно сериализовать.
+    /// </summary>
     class ListOfActionsOfMinion
     {
+        /// <summary>
+        /// Список класса поиска.
+        /// </summary>
         private List<Search> listOfSearching;
+        /// <summary>
+        /// Списко класса действия.
+        /// </summary>
         private List<ActionOfMinion> listOfActionsAfterSearchin;
+        /// <summary>
+        /// Имя принадлежащее этому экземпляру списка поисков и действий.
+        /// По умолчанию Default list search and action.
+        /// </summary>
         public string nameOfListOfSearchingAndActions { get; set; }
+        /// <summary>
+        /// Внутренний номер пары, указывающий, какую именно пару можно спользовать.
+        /// Номер не должен быть меньше 0 и больше длинны списка.
+        /// </summary>
         private int numberSearchAndActionInListPrivate;
+        /// <summary>
+        /// Задает и возвращает номер пары, указывающий, какую именно пару можно спользовать.
+        /// Номер не может быть меньше 0 и больше длинны списка.
+        /// </summary>
         public int numberSearchAndActionInList
         {
             get { return this.numberSearchAndActionInListPrivate; }
@@ -28,6 +52,9 @@ namespace MyLittleMinion
                     this.numberSearchAndActionInListPrivate = value;
             }
         }
+        /// <summary>
+        /// Инициализирует списки и добавляет первые экзепляры поиска и действия со стандарными значениями.
+        /// </summary>
         public ListOfActionsOfMinion()
         {
             this.listOfSearching = new List<Search>();
@@ -45,23 +72,39 @@ namespace MyLittleMinion
             this.listOfSearching.Add(SearchingForAdding);
             this.listOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
             this.numberSearchAndActionInList = this.listOfSearching.Count - 1;
-                if(listOfSearching.Count<1)
-            this.nameOfListOfSearchingAndActions = "Default list search and action";
+            if (listOfSearching.Count < 1)
+                this.nameOfListOfSearchingAndActions = "Default list search and action";
 
         }
+        /// <summary>
+        /// Возвращает длину списка.
+        /// </summary>
+        /// <returns></returns>
         public int GetSizeOfListOfSearchAndActionsOfMinion()
         {
             return this.listOfSearching.Count;
         }
+        /// <summary>
+        /// Возвращает экземпляр поиска соотвествующий установленому номеру списка.
+        /// </summary>
+        /// <returns></returns>
         public Search GetThisExemplarSearch()
         {
             return this.listOfSearching[numberSearchAndActionInList];
         }
+        /// <summary>
+        /// Возвращает экземпляр действия, соотвествующий установленому номеру списка.
+        /// </summary>
+        /// <returns></returns>
         public ActionOfMinion GetThisExemplarActionOfMinion()
         {
             return this.listOfActionsAfterSearchin[numberSearchAndActionInList];
         }
-        void RemoveThisExemplarSearchingAndAction()
+        /// <summary>
+        /// Удаляет экземпляры действия и поиска, соотвествующие установленому номеру списка.
+        /// </summary>
+        /// <returns></returns>
+        public void RemoveThisExemplarSearchingAndAction()
         {
             if(listOfSearching.Count ==1)
             {
@@ -75,17 +118,26 @@ namespace MyLittleMinion
                 this.numberSearchAndActionInList--;
 
         }
-        
+        /// <summary>
+        /// Сохраняет список в ПЗУ по указанному в settingOfMinion адресу.
+        /// </summary>
+        /// <param name="settingOfMinion"></param>
+        /// <returns></returns>
         public bool SaveAs(SettingOfMinion settingOfMinion)
         {
             if(this.nameOfListOfSearchingAndActions=="")
                 this.nameOfListOfSearchingAndActions = "Default list search and action";
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(settingOfMinion.fullPathOfExeOfMinion+ this.nameOfListOfSearchingAndActions + ".MLM", FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream(settingOfMinion.pathForSaveOfList + this.nameOfListOfSearchingAndActions + ".MLM", FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this);
             stream.Close();
             return true;
         }
+        /// <summary>
+        /// Открывает список из ПЗУ по указанному пользователем адресу.
+        /// </summary>
+        /// <param name="settingOfMinion"></param>
+        /// <returns></returns>
         public bool Open(SettingOfMinion settingOfMinion)
         {
             string nameOpenFile = "";
@@ -120,33 +172,4 @@ namespace MyLittleMinion
     }
 
 
-
-
-
-
-
-
-
-
-    /*
-    /// <summary>
-    /// Структура хранящая иформацию о настройках поиска и выборе действия для одного экземпляра соответсвующего номеру.
-    /// </summary>
-    public struct ConfigOfSearch
-    {
-        /// <summary>
-        /// Если true, то устанавливает заданные структурой настройки по умолчанию.
-        /// </summary>
-        /// <param name="defaultConfig"></param>
-        public ConfigOfSearch(bool defaultConfig)
-        {
-            multyThreadSearch = 0;
-        }
-        /// <summary>
-        /// Использование многопоточности во время поиска. 0 - Четыре потока для четвертей по углам. 1 или больше, число становиться количеством потоков: область поиска делиться потоками на столбцы.
-        /// </summary>
-        public int multyThreadSearch { get; set; }
-
-        //Для хранения установок поиска!!
-    }*/
 }

@@ -14,6 +14,7 @@ namespace MyLittleMinion
     /// <summary>
     /// Это класс поиска.
     /// Он позволяет искать заданный эталон на экране, а так же предоставляет инструменты для ускорения поиска этого эталона.
+    /// Этот класс можно сериализовать.
     /// </summary>
     class Search
     {
@@ -60,7 +61,13 @@ namespace MyLittleMinion
 
         ///Уточнение образа эталона для более точного поиска НАЧАЛО
 
+        /// <summary>
+        /// Внутренее поле точки прицела на эталоне. Не должно быть меньше 0, или больше ширины и высоты эталона по координатам X, Y соответственно.
+        /// </summary>
         private Point aimModelPrivate;
+        /// <summary>
+        /// Свойство точки прицела на эталоне. Не может быть меньше 0, или больше ширины и высоты эталона по координатам X, Y соответственно.
+        /// </summary>
         public Point aimModel {
             get { return this.aimModelPrivate; }
             set
@@ -73,12 +80,23 @@ namespace MyLittleMinion
                     aimModelPrivate.Y = 0;
             }
         }
+        /// <summary>
+        /// Внутренее поле эталона.
+        /// </summary>
         private Bitmap pictureModelForSearchPrivate;
+        /// <summary>
+        /// Внутренее поле скоректированного эталона.
+        /// </summary>
         private Bitmap correctModelPrivate;
+        /// <summary>
+        /// Возвращает картинку скорректированного эталона.
+        /// </summary>
         public Bitmap correctModel { get { return this.correctModelPrivate; } }
         /// <summary>
         /// Bitmap для хранения эталона, поиск местонахождения которого выполняется.
         /// По умолчанию храниться картинка размером 50х50: две красные диагонали на белом фоне.
+        /// Так же заменяет скорректированный эталон, если он был, на новую картинку эталона.
+        /// Устанавливает прицел в точку с нулевыми координатами.
         /// </summary>
         public Bitmap pictureModelForSearch
         {
@@ -93,35 +111,52 @@ namespace MyLittleMinion
                 this.correctModelPrivate = value;
             }
         }
+        /// <summary>
+        /// Корректирует картинку скорректированного эталона новым изображением. 
+        /// На скорректированном эталоне, который уже был в экземпляре, остаются только цвета, которые присутствовали на обоих изображениях.
+        /// Точки изображний, цвета которых отсутсвовали на обоих изображениях, будут иметь нулевой альфа канал(А=0) на скорректированном эталоне.
+        /// </summary>
+        /// <param name="newImageForCorrectModel"></param>
         public void CorrectionModel(Bitmap newImageForCorrectModel)
         {
+            //Создание и заполнение списков цветов у обоих изображений.
             List<Color> listColorsnewImageForCorrectModel = new List<Color>();
             List<Color> listColorscorrectModel = new List<Color>();
             Task threadForBitmapInListColors1 = Task.Run(() => { listColorsnewImageForCorrectModel = BreakOnColors(newImageForCorrectModel); });
             Task threadForBitmapInListColors2 = Task.Run(() => { listColorscorrectModel = BreakOnColors(this.correctModelPrivate); });
             threadForBitmapInListColors1.Wait();
             threadForBitmapInListColors2.Wait();
+
+            //Создание списка, в котором будут только цвета, которые были на обоих изображениях.
             List<Color> mergedList = MergerTwoListAmountOfColor(listColorscorrectModel, listColorsnewImageForCorrectModel);
 
+            //Создание нового изображения с рамерами эталона.
             Bitmap newImageForChangeColors = new Bitmap(this.correctModelPrivate.Width, this.correctModelPrivate.Height);
             for (int i = 0; i < this.correctModelPrivate.Width; i++)
                 for (int j = 0; j < this.correctModelPrivate.Height; j++)
                 {
-
+                    //Если цвет указанного пикселя отстсвует в списке объеденненых списков, то в новое изображение он помещается с нулевым альфа-каналом.
                     if (!ListColorsHaveColor(mergedList, this.correctModelPrivate.GetPixel(i, j)))
                     {
                         System.Drawing.Color newAddColor = System.Drawing.Color.FromArgb(0,
                             this.correctModelPrivate.GetPixel(i, j).R, this.correctModelPrivate.GetPixel(i, j).G, this.correctModelPrivate.GetPixel(i, j).B);
                         newImageForChangeColors.SetPixel(i, j, newAddColor);
                     }
+                    //А если он есть, то помещается без измений.
                     else
                     {
                         newImageForChangeColors.SetPixel(i, j, this.correctModelPrivate.GetPixel(i, j));
                     }
                 }
 
+            //Новое скорретированое изображение заменяет старое.
             this.correctModelPrivate = newImageForChangeColors;
         }
+        /// <summary>
+        /// Разбивает картику на цвета. Возвращает список цветов, которые есть в картинке.
+        /// </summary>
+        /// <param name="picture"></param>
+        /// <returns></returns>
         private List<Color> BreakOnColors(Bitmap picture)
         {
             List<Color> colorsList = new List<Color>();
@@ -132,6 +167,13 @@ namespace MyLittleMinion
 
             return colorsList;
         }
+
+        /// <summary>
+        /// Объединяет два списка цветов, исключая любой цвет, которго нет в одном из двух списков.
+        /// </summary>
+        /// <param name="colorsList1"></param>
+        /// <param name="colorsList2"></param>
+        /// <returns></returns>
         private List<Color> MergerTwoListAmountOfColor(List<Color> colorsList1, List<Color> colorsList2)
         {
             List<Color> mergedColorsList = new List<Color>();
@@ -145,6 +187,12 @@ namespace MyLittleMinion
 
             return mergedColorsList;
         }
+        /// <summary>
+        /// Проверяет наличие цвета в списке.
+        /// </summary>
+        /// <param name="colorList"></param>
+        /// <param name="colorForCheck"></param>
+        /// <returns></returns>
         private bool ListColorsHaveColor(List<Color> colorList, System.Drawing.Color colorForCheck)
         {
             foreach (var color in colorList)
@@ -549,6 +597,11 @@ namespace MyLittleMinion
         /// Определяет выполнятеся ли поиск до первого найденого элемента.
         /// </summary>
         public bool stopSearchingAfterFirstPointFound { get; set; }
+        /// <summary>
+        /// Поле процентного соответсвия эталону. Значение должно быть от 1 до 100, где 100 полное соответсвие эталону(100%).
+        /// По умолчанию 100.
+        /// Из-за дополнительных рассчетов на пиксель может сильно упасть производительность и скорость поиска.
+        /// </summary>
         private byte percentageComplianceWithModelPivate;
         /// <summary>
         /// Свойство процентного соответсвия эталону. Значение может быть от 1 до 100, где 100 полное соответсвие эталону(100%).
@@ -566,6 +619,11 @@ namespace MyLittleMinion
                     this.percentageComplianceWithModelPivate = value;
             }
         }
+        /// <summary>
+        /// Проверяет соответсвие диагоналей эталона и указанного на скриншоте точкой участка, размер которого равняется рамеру эталона.
+        /// </summary>
+        /// <param name="pointBeginModelOnSerachArea"></param>
+        /// <returns></returns>
         private bool ComparisonUpLeftDiagonalOfmodelAndAreaForSearch(Point pointBeginModelOnSerachArea)
         {
             //Находится меньшая из сторон
@@ -601,7 +659,11 @@ namespace MyLittleMinion
                     return true;
             }
         }
-
+        /// <summary>
+        /// Проверяет соответсвие эталона и указанного на скриншоте точкой участка, размер которого равняется рамеру эталона.
+        /// </summary>
+        /// <param name="pointBeginModelOnSerachArea"></param>
+        /// <returns></returns>
         private bool ComparisonOfModelAndAreaForSearch(Point pointBeginModelOnSerachArea)
         {
             //Если установлено полное соответствие эталону, используется алгоритм без подсчета для ускорения проверки.
@@ -639,8 +701,6 @@ namespace MyLittleMinion
         /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра. 
         /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
         /// </summary>
-        /// <param name="stopSearchingAfterFirstPointFound"></param>
-        /// <returns></returns>
         public bool SearchModelInArea()
         {
             //Смешно подумать о таком, но...
@@ -799,10 +859,10 @@ namespace MyLittleMinion
         /// </summary>
         private delegate void IterSearchModelInAreaDelegate();
         /// <summary>
-        /// Выполняет обычный поиск, но делит область поиска на четыре части, поиск в каждой части выполняется в своем отдельном потоке.
-        /// Вполне может работать медленней, чем последовательный поиск в случае поиска первой попавшейся точки(true).
-        /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра. 
-        /// Если принимает true, то ищет только до первой попавшейся точки.
+        /// Выполняет обычный поиск, но делит область поиска на четыре части, расположенных по углам, поиск в каждой части выполняется в своем отдельном потоке.
+        /// Вполне может работать медленней, чем последовательный поиск в случае поиска первой попавшейся точки.
+        /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра.
+        /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
         /// </summary>
         public bool SearchModelInAreaInFourThreads()
         {
@@ -954,6 +1014,13 @@ namespace MyLittleMinion
             SortAfterEndSearching();
             return true;
         }
+        /// <summary>
+        /// Выполняет обычный поиск, но делит область поиска на указанное количество частей, каждая из которых столбец,
+        /// ширина которого - часть ширины скриншота поделенной на колчиство потоков. Поиск в каждой части выполняется в своем отдельном потоке.
+        /// Вполне может работать медленней, чем последовательный поиск в случае поиска первой попавшейся точки.
+        /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра.
+        /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
+        /// </summary>
         public bool SearchModelInAreaInMultyThreads(int countOfThreads)
         {
             //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
@@ -1297,6 +1364,3 @@ namespace MyLittleMinion
         }
     }
 }
-
-//Мысли:
-//Можно сделать фукнцию создания из нескольких похожих эталонов один, в котором будут устранены места, которые меняются, из-за которых при поиске 100% соответствия он будет неудачным.

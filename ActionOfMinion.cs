@@ -13,6 +13,11 @@ using System.Windows.Forms;
 namespace MyLittleMinion
 {
     [Serializable]
+    /// <summary>
+    /// Это класс действия.
+    /// Он позволяет выполнять действия мышкой, при заданных для координатах, или действия с клавиатурой.
+    /// Этот класс можно сериализовать.
+    /// </summary>
     class ActionOfMinion
     {
         /// <summary>
@@ -24,6 +29,9 @@ namespace MyLittleMinion
         /// 0 - Click LBM, 1 - double click LBM.
         /// </summary>
         public ushort numberOfAction { get; set; }
+        /// <summary>
+        /// Хранит время ожидания после совершенного действия.
+        /// </summary>
         public int timeOfWaitingAfterAction { get; set; }
         public ActionOfMinion()
         {

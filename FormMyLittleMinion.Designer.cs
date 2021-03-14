@@ -163,7 +163,7 @@
             this.buttonFindAndPerformAllAction.TabIndex = 5;
             this.buttonFindAndPerformAllAction.Text = "Найти и выполнить все действия";
             this.buttonFindAndPerformAllAction.UseVisualStyleBackColor = true;
-            this.buttonFindAndPerformAllAction.Click += new System.EventHandler(this.FindNextButton_Click);
+            this.buttonFindAndPerformAllAction.Click += new System.EventHandler(this.FindAndPerformThisActionButton_Click);
             // 
             // TestButton
             // 

@@ -10,8 +10,18 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MyLittleMinion
 {
+    /// <summary>
+    /// Класс содержащий дополнительные функции для помощника.
+    /// </summary>
     class AdditionalFunctions
     {
+        /// <summary>
+        /// Возвращает Bitmap заданных размеров и заполненый одним цветом.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="colorForFill"></param>
+        /// <returns></returns>
         public static Bitmap FillBitmapWithColor(int width, int height, Color colorForFill)
         {
             Bitmap pictureForReturn = new Bitmap(width, height);
@@ -26,6 +36,9 @@ namespace MyLittleMinion
     }
 
     [Serializable()]
+    /// <summary>
+    /// Класс содержащий общие настройки для помощника.
+    /// </summary>
     class SettingOfMinion
     {
         public void SetSettingDefault()
@@ -33,14 +46,22 @@ namespace MyLittleMinion
             GetFullPathOfExeMinion();
             this.pathForSaveOfList = this.fullPathOfExeOfMinion;
         }
+        /// <summary>
+        /// Получает адресс, по которому находиться исполняемый файл.
+        /// </summary>
         public void GetFullPathOfExeMinion()
         {
             //Узнаю полный адрес exe файла.
             this.fullPathOfExeOfMinion = Path.GetFullPath("e");
             this.fullPathOfExeOfMinion = this.fullPathOfExeOfMinion.Remove(this.fullPathOfExeOfMinion.Length - 1);
         }
-
+        /// <summary>
+        /// Содержит путь до исполняемого файла помощника.
+        /// </summary>
         public string fullPathOfExeOfMinion { get; set; }
+        /// <summary>
+        /// Хранит путь, по которому надо сохранять списки поиска и действий.
+        /// </summary>
         public string pathForSaveOfList { get; set; }
     }
 
