@@ -754,7 +754,7 @@
             this.buttonCloneThisAction.Name = "buttonCloneThisAction";
             this.buttonCloneThisAction.Size = new System.Drawing.Size(89, 41);
             this.buttonCloneThisAction.TabIndex = 35;
-            this.buttonCloneThisAction.Text = "Клонровать действие";
+            this.buttonCloneThisAction.Text = "Клонировать действие";
             this.buttonCloneThisAction.UseVisualStyleBackColor = true;
             this.buttonCloneThisAction.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
             // 
