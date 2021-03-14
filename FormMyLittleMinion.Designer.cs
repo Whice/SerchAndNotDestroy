@@ -91,6 +91,7 @@
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisAction = new System.Windows.Forms.Button();
+            this.buttonDeleteAction = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -127,6 +128,7 @@
             // 
             // timer1
             // 
+            this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
@@ -756,12 +758,23 @@
             this.buttonCloneThisAction.UseVisualStyleBackColor = true;
             this.buttonCloneThisAction.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
             // 
+            // buttonDeleteAction
+            // 
+            this.buttonDeleteAction.Location = new System.Drawing.Point(5, 279);
+            this.buttonDeleteAction.Name = "buttonDeleteAction";
+            this.buttonDeleteAction.Size = new System.Drawing.Size(89, 41);
+            this.buttonDeleteAction.TabIndex = 36;
+            this.buttonDeleteAction.Text = "Удалить действие";
+            this.buttonDeleteAction.UseVisualStyleBackColor = true;
+            this.buttonDeleteAction.Click += new System.EventHandler(this.ButtonDeleteAction_Click);
+            // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(1113, 574);
+            this.Controls.Add(this.buttonDeleteAction);
             this.Controls.Add(this.buttonCloneThisAction);
             this.Controls.Add(this.labelNameOfLisActions);
             this.Controls.Add(this.textBoxNameOfLisActions);
@@ -868,6 +881,7 @@
         private System.Windows.Forms.CheckBox checkBoxShowNotCorrectModel;
         private System.Windows.Forms.ToolStripMenuItem инструкцияToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem создатьToolStripMenuItem;
+        private System.Windows.Forms.Button buttonDeleteAction;
     }
 }
 

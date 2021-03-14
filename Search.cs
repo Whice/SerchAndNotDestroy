@@ -22,7 +22,11 @@ namespace MyLittleMinion
         /// Bitmap для хранения области, в которой осуществляется поиск эталона. По умолчанию null.
         /// </summary>
         public Bitmap pictureSearchArea { get; set; }
-        
+        /// <summary>
+        /// Хранит размер области поиска.
+        /// </summary>
+        public Size SearchAreaSize { get; set; }
+
         /// <summary>
         /// Массив точек, которые были найдены во время поиска. По умолчанию null.
         /// </summary>
@@ -468,7 +472,7 @@ namespace MyLittleMinion
             if (placeForSearching.Height < 1) placeForSearching.Height = 1;
             this.locationOfPlaceForSearchPrivate.X = placeForSearching.X;
             this.locationOfPlaceForSearchPrivate.Y = placeForSearching.Y;
-            this.pictureSearchArea = new Bitmap(placeForSearching.Width, placeForSearching.Height);
+            this.SearchAreaSize = new Size(placeForSearching.Width, placeForSearching.Height);
         }
         /// <summary>
         /// Задает значение расположения и размеров прямоугольника области, где выполняется поиск.
@@ -497,7 +501,7 @@ namespace MyLittleMinion
 
             //Оригинальное разрешение может масштабироваться системой. Потому с помощью метода getScalingFactor координаты приводятся к оригинальным
             this.locationOfPlaceForSearchPrivate = new Point(0, 0);
-            this.pictureSearchArea = new Bitmap(
+            this.SearchAreaSize = new Size(
                 (int)(resolutionOfFullScreen.Width * getScalingFactor()),
                 (int)(resolutionOfFullScreen.Height * getScalingFactor()));
         }
@@ -798,12 +802,17 @@ namespace MyLittleMinion
                         }
                     }
                 }
+            //Стоит обнулить скриншот, чтобы сэкономить память.
+            this.pictureSearchArea = null;
+
+            //Если точки были найдены, то их верность корректируется и сообщается об удаче поиска.
             if (listFoundPoints != null)
             {
                 ListToMassiveOfFoundPoints(listFoundPoints);
                 SortAfterEndSearching();
                 return true;
             }
+            //Если точки не были найдены сообщаем об этом.
             return false;
         }
 
@@ -1002,6 +1011,7 @@ namespace MyLittleMinion
             
             //Здесь параллельный расчет считается законченым
             this.isEnableFourThreadsPrivate = false;
+            this.pictureSearchArea = null;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
             if (listFoundPointsInFourThread == null)
@@ -1230,6 +1240,7 @@ namespace MyLittleMinion
         /// </summary>
         public void CreateScreenShot()
         {
+            this.pictureSearchArea = new Bitmap(SearchAreaSize.Width, SearchAreaSize.Height);
             using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))
             {
                 using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
@@ -1241,8 +1252,8 @@ namespace MyLittleMinion
                     hSrcDC = gsrc.GetHdc();
                     hDC = gdest.GetHdc();
                     retval = BitBlt(hDC, -this.locationOfPlaceForSearchPrivate.X, -this.locationOfPlaceForSearchPrivate.Y,
-                        this.pictureSearchArea.Width + this.locationOfPlaceForSearchPrivate.X,
-                        this.pictureSearchArea.Height + this.locationOfPlaceForSearchPrivate.Y,
+                        this.SearchAreaSize.Width + this.locationOfPlaceForSearchPrivate.X,
+                        this.SearchAreaSize.Height + this.locationOfPlaceForSearchPrivate.Y,
                         hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
                     gdest.ReleaseHdc();
                     gsrc.ReleaseHdc();
@@ -1305,6 +1316,7 @@ namespace MyLittleMinion
                 cloneThisSearch.pictureSearchArea = (Bitmap)this.pictureSearchArea.Clone();
             else
                 cloneThisSearch.pictureSearchArea = null;
+            cloneThisSearch.SearchAreaSize = this.SearchAreaSize;
 
             cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
             cloneThisSearch.pointerOnActiveWindow = this.pointerOnActiveWindow;

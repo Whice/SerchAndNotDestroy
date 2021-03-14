@@ -102,6 +102,7 @@ namespace MyLittleMinion
         }
         /// <summary>
         /// Удаляет экземпляры действия и поиска, соотвествующие установленому номеру списка.
+        /// Счетчик движется назад. Если осталось одно действие в списке, то оно стирается и добавлется действие по умолчанию.
         /// </summary>
         /// <returns></returns>
         public void RemoveThisExemplarSearchingAndAction()
@@ -128,7 +129,7 @@ namespace MyLittleMinion
             if(this.nameOfListOfSearchingAndActions=="")
                 this.nameOfListOfSearchingAndActions = "Default list search and action";
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(settingOfMinion.pathForSaveOfList + this.nameOfListOfSearchingAndActions + ".MLM", FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream(settingOfMinion.pathForSaveOfList + "\\" + this.nameOfListOfSearchingAndActions + ".MLM", FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this);
             stream.Close();
             return true;
@@ -156,6 +157,7 @@ namespace MyLittleMinion
                 ListOfActionsOfMinion loadFileListOfActionsOfMinion = (ListOfActionsOfMinion)formatter.Deserialize(stream);
                 stream.Close();
                 nameOpenFile = nameOpenFile.Replace(nameOpenFile.Replace(open_dialog.SafeFileName, ""), "");
+                nameOpenFile = nameOpenFile.Replace(".MLM" , "");
                 this.listOfSearching = loadFileListOfActionsOfMinion.listOfSearching;
                 this.listOfActionsAfterSearchin = loadFileListOfActionsOfMinion.listOfActionsAfterSearchin;
                 this.nameOfListOfSearchingAndActions = nameOpenFile;

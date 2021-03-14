@@ -32,12 +32,12 @@ namespace MyLittleMinion
         /// <summary>
         /// Хранит время ожидания после совершенного действия.
         /// </summary>
-        public int timeOfWaitingAfterAction { get; set; }
+        public int timeOfWaitingAfterActionInSecond { get; set; }
         public ActionOfMinion()
         {
             this.cursorPosition = new Point(0, 0);
             this.numberOfAction = 0;
-            this.timeOfWaitingAfterAction = 1;
+            this.timeOfWaitingAfterActionInSecond = 1;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace MyLittleMinion
 
             cloneOfActionOfMinion.cursorPosition = this.cursorPosition ;
             cloneOfActionOfMinion.numberOfAction = this.numberOfAction;
-            cloneOfActionOfMinion.timeOfWaitingAfterAction = this.timeOfWaitingAfterAction;
+            cloneOfActionOfMinion.timeOfWaitingAfterActionInSecond = this.timeOfWaitingAfterActionInSecond;
 
             return cloneOfActionOfMinion;
         }
@@ -138,3 +138,13 @@ namespace MyLittleMinion
 
     }
 }
+/*/// <summary>
+        /// Я родился! Что ж уж тут еще сказать?!
+        /// </summary>
+        /// этот код копирует в буефр обмена текст.
+        void IamBorn()
+        {
+            Clipboard.SetDataObject("Я родился!");
+            IDataObject iData = Clipboard.GetDataObject();
+        }
+*/

@@ -24,12 +24,13 @@ namespace MyLittleMinion
             OpenSettingOfMinion();
         }
 
-        public DialogWindowForSetting(SettingOfMinion setting)
+        public DialogWindowForSetting(ref SettingOfMinion setting)
         {
             InitializeComponent();
-            settingInDialog = setting;
-            settingInDialog.GetFullPathOfExeMinion();
+            this.settingInDialog = setting;
+            this.settingInDialog.GetFullPathOfExeMinion();
             OpenSettingOfMinion();
+            setting = this.settingInDialog;
             textBoxOfPathForSaveFile.Text = settingInDialog.pathForSaveOfList;
         }
 

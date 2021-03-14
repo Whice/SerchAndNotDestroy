@@ -46,15 +46,17 @@ namespace MyLittleMinion
         /// </summary>
         ActionOfMinion exemplarOfActionOfMinion;
 
+
         public MyLittleMonion()
         {
             InitializeComponent();
             settingOfMinion = new SettingOfMinion();
-            dialogWindowForSetting = new DialogWindowForSetting(settingOfMinion);
-            dialogWindowForSetting.SaveChanges();
+            dialogWindowForSetting = new DialogWindowForSetting(ref settingOfMinion);
+            //dialogWindowForSetting.SaveChanges();
 
 
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
+
             FillUINewDataFromListSearchAndAction();
 
             SetImageModelConfig();
@@ -63,6 +65,7 @@ namespace MyLittleMinion
             FillVariantsOfActionsForComboBoxForSelectAction();
         }
 
+        
         /// Вспомогательные методы НАЧАЛО
 
         private void Timer1_Tick(object sender, EventArgs e)
@@ -88,31 +91,34 @@ namespace MyLittleMinion
             exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
 
             textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions;
-
+            
             if (comboBoxForSelectAction.SelectedIndex >= 0)//призагрузке формы имеет значение -1 и отказывается принимать другие. В работе уже все нормально.
                 comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
-            numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterAction;
+            numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond;
 
+            textBoxCountOfThreads.Enabled = false;
             if (exemplarOfSearch.multyThreadSearch == 0)
                 checkBoxParallelSearch.Checked = true;
             else if (exemplarOfSearch.multyThreadSearch > 0)
             {
                 checkBoxCountOfThreads.Checked = true;
                 textBoxCountOfThreads.Text = Convert.ToString(exemplarOfSearch.multyThreadSearch);
+                textBoxCountOfThreads.Enabled = true;
             }
             else
                 checkBoxParallelSearch.Checked = false;
 
             checkBoxFirstFoundModelIsEnd.Checked = exemplarOfSearch.stopSearchingAfterFirstPointFound;
             numericUpDownPercentageComplianceWithModel.Value = exemplarOfSearch.percentageComplianceWithModel;
-            pictureBoxForModelForSearch.Image = (Image)imageForUpdateModelPicture;
+            SetImageModelConfig();
+                
 
             checkBoxForPlaceOfSearch.Checked = exemplarOfSearch.UsePlaceForSearch;
             checkBoxSelectActiveWindow.Checked = exemplarOfSearch.UseActiveWindow;
             textBoxXBegin.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().X);
             textBoxYBegin.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y);
-            textBoxXEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().X + exemplarOfSearch.pictureSearchArea.Width);
-            textBoxYEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y + exemplarOfSearch.pictureSearchArea.Height);
+            textBoxXEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().X + exemplarOfSearch.SearchAreaSize.Width);
+            textBoxYEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y + exemplarOfSearch.SearchAreaSize.Height);
 
             checkBoxForColorsForIgnor.Checked = exemplarOfSearch.UseIgnorColors;
             UpdateContentPanelOfColorsForIgnor();
@@ -125,7 +131,7 @@ namespace MyLittleMinion
             exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
 
             exemplarOfActionOfMinion.numberOfAction = (ushort)comboBoxForSelectAction.SelectedIndex;
-            exemplarOfActionOfMinion.timeOfWaitingAfterAction = (int)numericUpDownWaitAfterThisAction.Value;
+            exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond = (int)numericUpDownWaitAfterThisAction.Value;
 
             exemplarOfSearch.multyThreadSearch = -1;
             if (checkBoxParallelSearch.Checked)
@@ -223,7 +229,7 @@ namespace MyLittleMinion
         {
             panelForColorsForIgnor.Visible = checkBoxForColorsForIgnor.Checked;
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            //panelForColorsForIgnor.Size = new Size(330, 170);
+            UpdateContentPanelOfColorsForIgnor();
         }
         private void Next_Click(object sender, EventArgs e)
         {
@@ -254,7 +260,6 @@ namespace MyLittleMinion
             buttonAddSingleColorForIgnor.Text = savedText;
 
             UpdateContentPanelOfColorsForIgnor();
-            DisableButtonsForEmptyList(true);
             pictureBoxForIgnorColor.Visible = true;
         }
         private void ButtonAddManyColorsForIgnor_Click(object sender, EventArgs e)
@@ -325,7 +330,7 @@ namespace MyLittleMinion
             {
                 pictureBoxForIgnorColor.Image = AdditionalFunctions.FillBitmapWithColor(pictureBoxForIgnorColor.Width, pictureBoxForIgnorColor.Height,
                     exemplarOfSearch.ShowIgnorColor());
-
+                DisableButtonsForEmptyList(true);
                 labelForNumberOfIgnorColor.Text = "Цвет номер: " + Convert.ToString(exemplarOfSearch.numberIgnorColorInList + 1);
             }
         }
@@ -534,7 +539,7 @@ namespace MyLittleMinion
             }
             imageForUpdateModelPicture = (Bitmap)pictureBoxForModelForSearch.Image;
             imageForUpdateModelPicture = DrawAimOnModel((Bitmap)imageForUpdateModelPicture.Clone());
-            FillUINewDataFromListSearchAndAction();
+            pictureBoxForModelForSearch.Image = (Image)imageForUpdateModelPicture;
         }
         private void CheckBoxParallelSearch_CheckedChanged(object sender, EventArgs e)
         {
@@ -598,7 +603,7 @@ namespace MyLittleMinion
 
         private void SettingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dialogWindowForSetting = new DialogWindowForSetting(settingOfMinion);
+            dialogWindowForSetting = new DialogWindowForSetting(ref settingOfMinion);
             dialogWindowForSetting.Show();
         }
 
@@ -658,25 +663,30 @@ namespace MyLittleMinion
         private void ButtonPrevAction_Click(object sender, EventArgs e)
         {
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList >0)
+            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList > 0)//если есть куда назад
+            {
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList--;
-            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
-            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
-            FillUINewDataFromListSearchAndAction();
+                exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+                exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+                FillUINewDataFromListSearchAndAction();
 
-            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+                labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+            }
         }
 
         private void ButtonNextAction_Click(object sender, EventArgs e)
         {
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion()-1)
+            //Если есть куда вперед
+            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion() - 1)
+            {
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
-            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
-            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
-            FillUINewDataFromListSearchAndAction();
+                exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+                exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+                FillUINewDataFromListSearchAndAction();
 
-            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+                labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+            }
         }
 
         private void ButtonFindAndPerformThisAction_Click(object sender, EventArgs e)
@@ -701,19 +711,11 @@ namespace MyLittleMinion
         /// </summary>
         void FindAndPerformThisAction()
         {
-            IamBorn();//для первого сообщения.
             SearchingModelOnScreen();
             exemplarOfActionOfMinion.RealizeAction();
-            Thread.Sleep(Convert.ToInt32(numericUpDownWaitAfterThisAction.Value));
+            Thread.Sleep(Convert.ToInt32(exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond)*1000);//Надо умножать на 1000, чтобы из получить ожидание в секундах
         }
-        /// <summary>
-        /// Я родился! Что ж уж тут еще сказать?!
-        /// </summary>
-        void IamBorn()
-        {
-            Clipboard.SetDataObject("Я родился!");
-            IDataObject iData = Clipboard.GetDataObject();
-        }
+        
 
         /// <summary>
         /// Создает новый экземпляр поиска и действия применяя конфигурацию нынешнего.
@@ -731,10 +733,19 @@ namespace MyLittleMinion
             labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
 
         }
-        
+
+        private void ButtonDeleteAction_Click(object sender, EventArgs e)
+        {
+            exemplarsOfLAM[numberLOEOLAM].RemoveThisExemplarSearchingAndAction();
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
+            FillUINewDataFromListSearchAndAction();
+
+        }
+
         ///Информация о списке, с которым сейчас идет работа КОНЕЦ
 
-       
+
 
     }
 }
