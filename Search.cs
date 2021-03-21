@@ -18,14 +18,7 @@ namespace MyLittleMinion
     /// </summary>
     class Search
     {
-        /// <summary>
-        /// Bitmap для хранения области, в которой осуществляется поиск эталона. По умолчанию null.
-        /// </summary>
-        public Bitmap pictureSearchArea { get; set; }
-        /// <summary>
-        /// Хранит размер области поиска.
-        /// </summary>
-        public Size SearchAreaSize { get; set; }
+        
 
         /// <summary>
         /// Массив точек, которые были найдены во время поиска. По умолчанию null.
@@ -63,7 +56,100 @@ namespace MyLittleMinion
         }
 
 
-        ///Уточнение образа эталона для более точного поиска НАЧАЛО
+        #region        ///Действия со скриншотом и областью для него НАЧАЛО
+
+        /// <summary>
+        /// Bitmap для хранения области, в которой осуществляется поиск эталона. По умолчанию null.
+        /// </summary>
+        private Bitmap pictureSearchArea { get; set; }
+        /// <summary>
+        /// Массив для хранения скриншота. Взаимодействие с его элементами происходит намного бстрее, чем получение цвета из объекта Bitmap.
+        /// </summary>
+        private byte[] pictureSearchAreaByteArray;
+        /// <summary>
+        /// Хранит размер области поиска.
+        /// </summary>
+        public Size SearchAreaSize { get; private set; }
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
+        public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
+        /// <summary>
+        /// Создание скришота и запоминание его в pictureSearchArea. Ширина и высота скришота соответствует ширине и высоте параметра pictureSearchArea.
+        /// Точка отсчета соотвествует точке отсчета запомненой экземляром. По умочанию равна 0,0. Узнать значение можно через свойство locationOfPlaceForSearch.
+        /// </summary>
+        public void CreateScreenShot()
+        {
+            this.pictureSearchArea = new Bitmap(SearchAreaSize.Width, SearchAreaSize.Height);
+            using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))
+            {
+                using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
+                {
+
+                    IntPtr hSrcDC;
+                    IntPtr hDC;
+                    int retval;
+                    hSrcDC = gsrc.GetHdc();
+                    hDC = gdest.GetHdc();
+                    retval = BitBlt(hDC, -this.locationOfPlaceForSearchPrivate.X, -this.locationOfPlaceForSearchPrivate.Y,
+                        this.SearchAreaSize.Width + this.locationOfPlaceForSearchPrivate.X,
+                        this.SearchAreaSize.Height + this.locationOfPlaceForSearchPrivate.Y,
+                        hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
+                    gdest.ReleaseHdc();
+                    gsrc.ReleaseHdc();
+                    FillByteArrayFromBitmap(this.pictureSearchArea, ref pictureSearchAreaByteArray);
+                }
+            }
+        }
+        /// <summary>
+        /// Загрузить картинку вместо скриншота.
+        /// </summary>
+        /// <param name="picture"></param>
+        public void UploadScreenshot(Bitmap picture)
+        {
+            this.pictureSearchArea = picture;
+            SearchAreaSize = picture.Size;
+            FillByteArrayFromBitmap(this.pictureSearchArea, ref pictureSearchAreaByteArray);
+        }
+        /// <summary>
+        /// Заполняет массив байтов данными из Bitmap.
+        /// Работа с массивом байтов приоритетнее, чем с Bitmap, потому что быстрее обращение к элементу.
+        /// </summary>
+        /// <param name="picture"></param>
+        /// <param name="rgbValueArray"></param>
+        private void FillByteArrayFromBitmap(Bitmap picture, ref byte[] rgbValueArray)
+        {
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, picture.Width, picture.Height);
+            System.Drawing.Imaging.BitmapData bmpData =
+                picture.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                picture.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int countBytes = Math.Abs(bmpData.Stride) * picture.Height;
+            rgbValueArray = new byte[countBytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValueArray, 0, countBytes);
+
+            // Unlock the bits.
+            picture.UnlockBits(bmpData);
+
+        }
+        /// <summary>
+        /// Делает null (самую большую по логике) картинку, где хзраниться скришот экрана или его области.
+        /// </summary>
+        public void RemoveScreenshot()
+        {
+            this.pictureSearchArea = null;
+        }
+
+        #endregion ///Действия со скриншотом и областью для него КОНЕЦ
+
+
+
+        #region ///Уточнение образа эталона для более точного поиска НАЧАЛО
 
         /// <summary>
         /// Внутренее поле точки прицела на эталоне. Не должно быть меньше 0, или больше ширины и высоты эталона по координатам X, Y соответственно.
@@ -93,6 +179,10 @@ namespace MyLittleMinion
         /// </summary>
         private Bitmap correctModelPrivate;
         /// <summary>
+        /// Массив для хранения скоректированного эталона. Из массива байтов получение цвета происходит намного быстрее, чем из Bitmap объекта.
+        /// </summary>
+        private byte[] pictureCorrectModelForSearchByteArray;
+        /// <summary>
         /// Возвращает картинку скорректированного эталона.
         /// </summary>
         public Bitmap correctModel { get { return this.correctModelPrivate; } }
@@ -113,6 +203,7 @@ namespace MyLittleMinion
                 this.aimModel = new Point(0, 0);
                 this.pictureModelForSearchPrivate = value;
                 this.correctModelPrivate = value;
+                FillByteArrayFromBitmap(this.correctModelPrivate, ref pictureCorrectModelForSearchByteArray);
             }
         }
         /// <summary>
@@ -155,6 +246,8 @@ namespace MyLittleMinion
 
             //Новое скорретированое изображение заменяет старое.
             this.correctModelPrivate = newImageForChangeColors;
+            //Обновление массива для скорректированного эталона
+            FillByteArrayFromBitmap(this.correctModelPrivate, ref pictureCorrectModelForSearchByteArray);
         }
         /// <summary>
         /// Разбивает картику на цвета. Возвращает список цветов, которые есть в картинке.
@@ -228,11 +321,11 @@ namespace MyLittleMinion
             this.correctModelPrivate = this.pictureModelForSearchPrivate;
         }
 
-        ///Уточнение образа эталона для более точного поиска КОНЕЦ
+        #endregion///Уточнение образа эталона для более точного поиска КОНЕЦ
 
 
 
-        ///цвета, которые надо игнорировать НАЧАЛО
+        #region ///цвета, которые надо игнорировать НАЧАЛО
 
         /// <summary>
         /// Определяет будут ли использоваться игнорируемые цвета.
@@ -439,12 +532,12 @@ namespace MyLittleMinion
                 this.listOfIgnorColors = newIgnorColorList;
         }
 
-        ///цвета, которые надо игнорировать КОНЕЦ
+        #endregion///цвета, которые надо игнорировать КОНЕЦ
 
 
 
 
-        ///Область, в которой выполняется поиск НАЧАЛО
+        #region ///Область, в которой выполняется поиск НАЧАЛО
 
         /// <summary>
         /// Определяет будет ли использоваться область, в которой выполняется поиск.
@@ -506,12 +599,12 @@ namespace MyLittleMinion
                 (int)(resolutionOfFullScreen.Height * getScalingFactor()));
         }
 
-        ///Область, в которой выполняется поиск КОНЕЦ
+        #endregion///Область, в которой выполняется поиск КОНЕЦ
 
 
 
 
-        ///Скриншот активного окна НАЧАЛО
+        #region ///Скриншот активного окна НАЧАЛО
 
         /// <summary>
         /// Определяет будет ли использоваться активное окно как область, в которой выполняется поиск.
@@ -590,12 +683,12 @@ namespace MyLittleMinion
             this.pointerOnActiveWindow = GetForegroundWindow();
         }
 
-        ///Скриншот активного окна КОНЕЦ
+        #endregion///Скриншот активного окна КОНЕЦ
 
 
 
 
-        ///Выполнение поиска НАЧАЛО
+        #region ///Выполнение поиска НАЧАЛО
 
         /// <summary>
         /// Определяет выполнятеся ли поиск до первого найденого элемента.
@@ -639,23 +732,23 @@ namespace MyLittleMinion
             {
                 //Просматривается диагональ, любое несовпадение завершает проверку возвращая ложь
                 for (int i = 0; i < lesserSide; i++)
-                    if (!CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, i),
-                    pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
-                            return false;
+                    //Если цвета не совпадают, то можно смело выходить
+                    if (!CheckForEqualityOfTwoColorsByRGBForByteArray(pictureCorrectModelForSearchByteArray, pictureModelForSearch.Width, i, i,
+                        pictureSearchAreaByteArray, SearchAreaSize.Width, pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i))
+                        return false;
 
                 return true;
             }
             else
             {
-              
+
                 //Счетчик для учета процентного соответствия эталону
                 int counterPercentageCompliance = 0;
                 //Просматривается диагональ
                 for (int i = 0; i < lesserSide; i++)
-                    if (CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, i),
-                        pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i)))
+                    if (CheckForEqualityOfTwoColorsByRGBForByteArray(pictureCorrectModelForSearchByteArray, pictureModelForSearch.Width, i, i,
+                        pictureSearchAreaByteArray, SearchAreaSize.Width, pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + i))
                         counterPercentageCompliance++;
-
                 //Положительный рензультат выдается, если счетчик насчитал достаточную сумму, которая не меньше, чем указаное процентное соотношение
                 if ((counterPercentageCompliance * 100) / lesserSide < percentageComplianceWithModelPivate)
                     return false;
@@ -676,8 +769,8 @@ namespace MyLittleMinion
                 //Просматривается вся площадь, любое несовпадение завершает проверку возвращая ложь
                 for (int i = 0; i < correctModelPrivate.Width; i++)
                     for (int j = 0; j < correctModelPrivate.Height; j++)
-                        if (!CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, j),//Если цвета не совпадают, то можно смело выходить
-                        pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
+                        if (!CheckForEqualityOfTwoColorsByRGBForByteArray(pictureCorrectModelForSearchByteArray, pictureModelForSearch.Width, i, j,
+                        pictureSearchAreaByteArray, SearchAreaSize.Width, pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j))//Если цвета не совпадают, то можно смело выходить
                             return false;
 
                 return true;
@@ -689,8 +782,8 @@ namespace MyLittleMinion
                 //Просматривается вся площадь
                 for (int i = 0; i < correctModelPrivate.Width; i++)
                     for (int j = 0; j < correctModelPrivate.Height; j++)
-                        if (CheckForEqualityOfTwoColorsByRGB(correctModelPrivate.GetPixel(i, j),
-                            pictureSearchArea.GetPixel(pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j)))
+                        if (CheckForEqualityOfTwoColorsByRGBForByteArray(pictureCorrectModelForSearchByteArray, pictureModelForSearch.Width, i, j,
+                        pictureSearchAreaByteArray, SearchAreaSize.Width, pointBeginModelOnSerachArea.X + i, pointBeginModelOnSerachArea.Y + j))
                             counterPercentageCompliance++;
 
                 //Положительный рензультат выдается, если счетчик насчитал достаточную сумму, которая не меньше, чем указаное процентное соотношение
@@ -776,10 +869,10 @@ namespace MyLittleMinion
                 for(int j = pixelOfModelForSearch.Y;
                     j < (pictureSearchArea.Height - correctModelPrivate.Height + pixelOfModelForSearch.Y); j++)
                 {
-                    if(!IsColorForIgnor(pictureSearchArea.GetPixel(i, j)))//Если цвет не игнорируется
+                    if(!IsColorForIgnor(GetColorFromArray(pictureSearchAreaByteArray, SearchAreaSize.Width, i, j)))//Если цвет не игнорируется
                     {
-                        if(CheckForEqualityOfTwoColorsByRGB(pictureSearchArea.GetPixel(i, j),
-                            correctModelPrivate.GetPixel(pixelOfModelForSearch.X, pixelOfModelForSearch.Y)))
+                        if(CheckForEqualityOfTwoColorsByRGBForByteArray(pictureSearchAreaByteArray, SearchAreaSize.Width, i, j,
+                        pictureCorrectModelForSearchByteArray, correctModelPrivate.Width, pixelOfModelForSearch.X, pixelOfModelForSearch.Y))
                         {//Если пиксели совпали, надо сравнить диагонали
                             if(ComparisonUpLeftDiagonalOfmodelAndAreaForSearch(new Point(i- pixelOfModelForSearch.X, j- pixelOfModelForSearch.Y)))
                             {//A если совпали и они, то полностью площадь эталона
@@ -841,12 +934,12 @@ namespace MyLittleMinion
             }
         }
 
-        ///Выполнение поиска КОНЕЦ
+        #endregion///Выполнение поиска КОНЕЦ
 
 
 
-        ///Выполнение поиска с использованием потоков НАЧАЛО
-        
+        #region ///Выполнение поиска с использованием потоков НАЧАЛО
+
         /// <summary>
         /// Использование многопоточности во время поиска. 0 - Четыре потока для четвертей по углам. 1 или больше, число становиться количеством потоков: область поиска делиться потоками на столбцы.
         /// </summary>
@@ -1186,13 +1279,13 @@ namespace MyLittleMinion
             return false;
         }
 
-        ///Выполнение поиска с использованием потоков КОНЕЦ
+        #endregion///Выполнение поиска с использованием потоков КОНЕЦ
 
 
 
 
-        ///Вспомогательные методы:
-        
+        #region ///Вспомогательные методы:
+
         /// <summary>
         ///Метод для сортировки найденных точек, чтобы они перечислялись всегда сторого в определенном порядке после любого способа поиска.
         ///Точки сортируются по составляющей X, если она равна, то по состовляющей Y.
@@ -1232,34 +1325,6 @@ namespace MyLittleMinion
                 }
             }
         }
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
-        public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
-        /// <summary>
-        /// Сорздание скришота и запоминание его в pictureSearchArea. Ширина и высота скришота соответствует ширине и высоте параметра pictureSearchArea.
-        /// Точка отсчета соотвествует точке отсчета запомненой экземляром. По умочанию равна 0,0. Узнать значение можно через свойство locationOfPlaceForSearch.
-        /// </summary>
-        public void CreateScreenShot()
-        {
-            this.pictureSearchArea = new Bitmap(SearchAreaSize.Width, SearchAreaSize.Height);
-            using (Graphics gdest = Graphics.FromImage(this.pictureSearchArea))
-            {
-                using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
-                {
-                    
-                    IntPtr hSrcDC;
-                    IntPtr hDC;
-                    int retval;
-                    hSrcDC = gsrc.GetHdc();
-                    hDC = gdest.GetHdc();
-                    retval = BitBlt(hDC, -this.locationOfPlaceForSearchPrivate.X, -this.locationOfPlaceForSearchPrivate.Y,
-                        this.SearchAreaSize.Width + this.locationOfPlaceForSearchPrivate.X,
-                        this.SearchAreaSize.Height + this.locationOfPlaceForSearchPrivate.Y,
-                        hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
-                    gdest.ReleaseHdc();
-                    gsrc.ReleaseHdc();
-                }
-            }
-        }
         
         /// <summary>
         /// Сравнивает два цвета только по свойствам R, G и B.
@@ -1284,6 +1349,51 @@ namespace MyLittleMinion
             }
             return false;
         }
+        /// <summary>
+        /// Сравнивает два цвета только по свойствам R, G и B.
+        /// Если свойство афльфа-канала одно из цветов равено 0, то цвета считаются одинаковыми.
+        /// Специальная версия для байтового массива данных, который был взят из Bitmapa.
+        /// </summary>
+        /// <param name="firstColorArray"></param>
+        /// <param name="secondColorArray"></param>
+        /// <returns></returns>
+        private static bool CheckForEqualityOfTwoColorsByRGBForByteArray(byte[] firstColorArray, int widthOfPictureOfFirstColor, int x1, int y1,
+            byte[] secondColorArray, int widthOfPictureOfSecondColor, int x2, int y2)
+        {
+            //Получение местонаходжения в массивах альфа-канала первого и второго цветов
+            //Отталкиваясь от местонахождения альфа канала можно найти другие цвета
+            int countAOfFirstColor = (y1 * widthOfPictureOfFirstColor + 1) * 4 - 1 + x1 * 4;
+            int countAOfSecondColor = (y2 * widthOfPictureOfSecondColor + 1) * 4 - 1 + x2 * 4;
+            if (firstColorArray[countAOfFirstColor] == 0 || secondColorArray[countAOfSecondColor] ==0)
+                return true;
+            if (firstColorArray[countAOfFirstColor - 1] == secondColorArray[countAOfSecondColor - 1])
+                if (firstColorArray[countAOfFirstColor - 2] == secondColorArray[countAOfSecondColor - 2])
+                    if (firstColorArray[countAOfFirstColor - 3] == secondColorArray[countAOfSecondColor - 3])
+                        return true;
+
+            return false;
+        }
+        /// <summary>
+        /// Возвращает цвет из массива байтов согласно указанным координатам.
+        /// </summary>
+        /// <param name="colorArray"></param>
+        /// <param name="colorArrayWidth"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private Color GetColorFromArray(byte[] colorArray, int colorArrayWidth, int x, int y)
+        {
+            //Получение местонаходжения в массиве альфа-канала
+            //Отталкиваясь от местонахождения альфа-канала можно найти другие цвета
+            int countAOfColor = (y * colorArrayWidth + 1) * 4 - 1 + x * 4;
+            return Color.FromArgb(
+                colorArray[countAOfColor],
+                colorArray[countAOfColor - 1],
+                colorArray[countAOfColor - 2],
+                colorArray[countAOfColor - 3]
+                );
+        }
+        
         /// <summary>
         /// Создает клон нынешнего экземпляра.
         /// </summary>
@@ -1310,6 +1420,7 @@ namespace MyLittleMinion
             cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
             cloneThisSearch.pictureModelForSearchPrivate = (Bitmap)this.pictureModelForSearchPrivate.Clone();
             cloneThisSearch.correctModelPrivate = (Bitmap)this.correctModelPrivate.Clone();
+            cloneThisSearch.pictureCorrectModelForSearchByteArray = this.pictureCorrectModelForSearchByteArray.ToList<byte>().ToArray();
             cloneThisSearch.aimModelPrivate = this.aimModelPrivate;
 
             if (this.pictureSearchArea != null)
@@ -1317,6 +1428,7 @@ namespace MyLittleMinion
             else
                 cloneThisSearch.pictureSearchArea = null;
             cloneThisSearch.SearchAreaSize = this.SearchAreaSize;
+            cloneThisSearch.pictureSearchAreaByteArray = this.pictureSearchAreaByteArray.ToList<byte>().ToArray();
 
             cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
             cloneThisSearch.pointerOnActiveWindow = this.pointerOnActiveWindow;
@@ -1325,13 +1437,7 @@ namespace MyLittleMinion
 
             return cloneThisSearch;
         }
-        /// <summary>
-        /// Делает null (самую большую по логике) картинку, где хзраниться скришот экрана или его области.
-        /// </summary>
-        public void RemoveScreenshot()
-        {
-            this.pictureSearchArea = null;
-        }
+        
         ///Помогает узнать масштабирование системы
         [DllImport("gdi32.dll")]
         static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
@@ -1374,5 +1480,47 @@ namespace MyLittleMinion
                 }
             return smallPicture;
         }
+        #endregion 
     }
 }
+
+
+/* Этот код оставил к вопросу о том, как происхоит взаимодействие с массивом данных, забранных из битмапа
+ * Тут из pictureBox1 забрается картинка в битмап, потом из него извлекается массив байтов.
+ * Цвета в массиве расположены в порядкен BGRA потому такое смещение по ним идет в цикле, где они записываются в демостративный второй битмап.
+ * Формула получения каждого из цветов и порядок выполнения цикла описаны в конце.
+pictureBox2.Size = pictureBox1.Size;
+            Bitmap btmp = new Bitmap(this.pictureBox1.Size.Width, this.pictureBox1.Size.Height);
+            btmp = (Bitmap)pictureBox1.Image;
+            Bitmap btmp2 = new Bitmap(this.pictureBox1.Size.Width, this.pictureBox1.Size.Height);
+
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, btmp.Width, btmp.Height);
+            System.Drawing.Imaging.BitmapData bmpData =
+                btmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                btmp.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(bmpData.Stride) * btmp.Height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            // Unlock the bits.
+            btmp.UnlockBits(bmpData);
+
+            for (int i = 0; i < pictureBox1.Size.Height; i++)
+                for (int j = 0; j < pictureBox1.Size.Width; j++)
+                {
+                    int stepI = (i * pictureBox1.Size.Width + 1)*4 - 1;
+                    
+Color col = Color.FromArgb(rgbValues[stepI + j * 4], rgbValues[stepI + j * 4 - 1],
+    rgbValues[stepI + j * 4 - 2], rgbValues[stepI + j * 4 - 3]);
+btmp2.SetPixel(j, i, col);
+                }
+            pictureBox2.Image = btmp2;
+    */
