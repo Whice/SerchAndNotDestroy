@@ -149,7 +149,7 @@ namespace MyLittleMinion
 
 
 
-        #region ///Уточнение образа эталона для более точного поиска НАЧАЛО
+        #region ///Уточнение/добавление образа эталона для более точного поиска НАЧАЛО
 
         /// <summary>
         /// Внутренее поле точки прицела на эталоне. Не должно быть меньше 0, или больше ширины и высоты эталона по координатам X, Y соответственно.
@@ -264,7 +264,6 @@ namespace MyLittleMinion
 
             return colorsList;
         }
-
         /// <summary>
         /// Объединяет два списка цветов, исключая любой цвет, которго нет в одном из двух списков.
         /// </summary>
@@ -320,8 +319,30 @@ namespace MyLittleMinion
             this.pictureModelForSearch = this.pictureModelForSearchPrivate;
             this.correctModelPrivate = this.pictureModelForSearchPrivate;
         }
+        public void AddModelInAreaOnScreen(Rectangle rectangleForModel)
+        {
+            this.pictureModelForSearch = new Bitmap(rectangleForModel.Width, rectangleForModel.Height);
+            using (Graphics gdest = Graphics.FromImage(this.pictureModelForSearch))
+            {
+                using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
+                {
 
-        #endregion///Уточнение образа эталона для более точного поиска КОНЕЦ
+                    IntPtr hSrcDC;
+                    IntPtr hDC;
+                    int retval;
+                    hSrcDC = gsrc.GetHdc();
+                    hDC = gdest.GetHdc();
+                    retval = BitBlt(hDC, -rectangleForModel.X, -rectangleForModel.Y,
+                        rectangleForModel.Width + rectangleForModel.X,
+                        rectangleForModel.Height + rectangleForModel.Y,
+                        hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
+                    gdest.ReleaseHdc();
+                    gsrc.ReleaseHdc();
+                }
+            }
+        }
+
+        #endregion///Уточнение/добавление образа эталона для более точного поиска КОНЕЦ
 
 
 
@@ -1420,7 +1441,8 @@ namespace MyLittleMinion
             cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
             cloneThisSearch.pictureModelForSearchPrivate = (Bitmap)this.pictureModelForSearchPrivate.Clone();
             cloneThisSearch.correctModelPrivate = (Bitmap)this.correctModelPrivate.Clone();
-            cloneThisSearch.pictureCorrectModelForSearchByteArray = this.pictureCorrectModelForSearchByteArray.ToList<byte>().ToArray();
+            if(this.pictureCorrectModelForSearchByteArray!=null)
+                cloneThisSearch.pictureCorrectModelForSearchByteArray = this.pictureCorrectModelForSearchByteArray.ToList<byte>().ToArray();
             cloneThisSearch.aimModelPrivate = this.aimModelPrivate;
 
             if (this.pictureSearchArea != null)

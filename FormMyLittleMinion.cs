@@ -65,8 +65,8 @@ namespace MyLittleMinion
             FillVariantsOfActionsForComboBoxForSelectAction();
         }
 
-        
-        /// Вспомогательные методы НАЧАЛО
+
+        #region/// Вспомогательные методы НАЧАЛО
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
@@ -96,18 +96,18 @@ namespace MyLittleMinion
                 comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
             numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond;
 
-            textBoxCountOfThreads.Enabled = false;
+            numericUpDownCountOfThreads.Enabled = false;
             if (exemplarOfSearch.multyThreadSearch == 0)
                 checkBoxParallelSearch.Checked = true;
             else if (exemplarOfSearch.multyThreadSearch > 0)
             {
                 checkBoxCountOfThreads.Checked = true;
-                textBoxCountOfThreads.Text = Convert.ToString(exemplarOfSearch.multyThreadSearch);
-                textBoxCountOfThreads.Enabled = true;
+                numericUpDownCountOfThreads.Text = Convert.ToString(exemplarOfSearch.multyThreadSearch);
+                numericUpDownCountOfThreads.Enabled = true;
             }
             else
                 checkBoxParallelSearch.Checked = false;
-
+            
             checkBoxFirstFoundModelIsEnd.Checked = exemplarOfSearch.stopSearchingAfterFirstPointFound;
             numericUpDownPercentageComplianceWithModel.Value = exemplarOfSearch.percentageComplianceWithModel;
             SetImageModelConfig();
@@ -115,10 +115,10 @@ namespace MyLittleMinion
 
             checkBoxForPlaceOfSearch.Checked = exemplarOfSearch.UsePlaceForSearch;
             checkBoxSelectActiveWindow.Checked = exemplarOfSearch.UseActiveWindow;
-            textBoxXBegin.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().X);
-            textBoxYBegin.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y);
-            textBoxXEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().X + exemplarOfSearch.SearchAreaSize.Width);
-            textBoxYEnd.Text = Convert.ToString(exemplarOfSearch.GetLocationOfPlaceForSearch().Y + exemplarOfSearch.SearchAreaSize.Height);
+            numericUpDownXBegin.Value = exemplarOfSearch.GetLocationOfPlaceForSearch().X;
+            numericUpDownYBegin.Value =exemplarOfSearch.GetLocationOfPlaceForSearch().Y;
+            numericUpDownXEnd.Value = exemplarOfSearch.GetLocationOfPlaceForSearch().X + exemplarOfSearch.SearchAreaSize.Width;
+            numericUpDownYEnd.Value = exemplarOfSearch.GetLocationOfPlaceForSearch().Y + exemplarOfSearch.SearchAreaSize.Height;
 
             checkBoxForColorsForIgnor.Checked = exemplarOfSearch.UseIgnorColors;
             UpdateContentPanelOfColorsForIgnor();
@@ -137,7 +137,7 @@ namespace MyLittleMinion
             if (checkBoxParallelSearch.Checked)
                 exemplarOfSearch.multyThreadSearch = 0;
             if (checkBoxCountOfThreads.Checked)
-                exemplarOfSearch.multyThreadSearch = Convert.ToInt32(textBoxCountOfThreads.Text);
+                exemplarOfSearch.multyThreadSearch = Convert.ToInt32(numericUpDownCountOfThreads.Text);
 
             exemplarOfSearch.percentageComplianceWithModel = Convert.ToByte(numericUpDownPercentageComplianceWithModel.Value);
             exemplarOfSearch.stopSearchingAfterFirstPointFound = checkBoxFirstFoundModelIsEnd.Checked;
@@ -149,8 +149,8 @@ namespace MyLittleMinion
                 if (checkBoxSelectActiveWindow.Checked)
                     exemplarOfSearch.SetActiveWindowForPlaceForSearching();
                 else
-                    exemplarOfSearch.SetPlaceForSearching(Convert.ToInt32(textBoxXBegin.Text), Convert.ToInt32(textBoxYBegin.Text),
-                        Convert.ToInt32(textBoxXEnd.Text), Convert.ToInt32(textBoxYEnd.Text));
+                    exemplarOfSearch.SetPlaceForSearching(Convert.ToInt32(numericUpDownXBegin.Value), Convert.ToInt32(numericUpDownYBegin.Value),
+                        Convert.ToInt32(numericUpDownXEnd.Value), Convert.ToInt32(numericUpDownYEnd.Value));
             }
             else
             {
@@ -166,11 +166,10 @@ namespace MyLittleMinion
         }
 
 
-        /// Вспомогательные методы КОНЕЦ
+        #endregion/// Вспомогательные методы КОНЕЦ
 
 
-
-        /// Поиск НАЧАЛО
+        #region/// Поиск НАЧАЛО
 
         private void FindButton_Click(object sender, EventArgs e)
         {
@@ -195,7 +194,7 @@ namespace MyLittleMinion
 
             srPerSearchModelInArea srPerSearchModelInArea1;
             if (checkBoxCountOfThreads.Checked)
-                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInAreaInMultyThreads(Convert.ToInt32(textBoxCountOfThreads.Text)));
+                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInAreaInMultyThreads(Convert.ToInt32(numericUpDownCountOfThreads.Text)));
             else if (checkBoxParallelSearch.Checked)
                 srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInAreaInFourThreads());
             else
@@ -216,15 +215,10 @@ namespace MyLittleMinion
             pictureBoxForModelForSearch.Visible = true;
         }
 
-        /// Поиск КОНЕЦ
+        #endregion/// Поиск КОНЕЦ
 
 
-        
-
-
-
-
-        ///Панель игнорирования цветов НАЧАЛО
+        #region///Панель игнорирования цветов НАЧАЛО
         private void CheckBoxForColorsForIgnor_CheckedChanged(object sender, EventArgs e)
         {
             panelForColorsForIgnor.Visible = checkBoxForColorsForIgnor.Checked;
@@ -335,14 +329,12 @@ namespace MyLittleMinion
             }
         }
 
-        ///Панель игнорирования цветов КОНЕЦ
+        #endregion///Панель игнорирования цветов КОНЕЦ
 
 
-
-        ///Панель для действий с эталоном НАЧАЛО
-        private void ButtonAddModelForSearch_Click(object sender, EventArgs e)
+        #region///Панель для действий с эталоном НАЧАЛО
+        private void ButtonAddModelForSearchUploadFromHard_Click(object sender, EventArgs e)
         {
-
             using (OpenFileDialog open_dialog = new OpenFileDialog())
             {//создание диалогового окна для выбора файла
                 open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
@@ -375,35 +367,44 @@ namespace MyLittleMinion
             }
             SetImageModelConfig();
         }
+        private void ButtonAddModelForSearchSelectOnScreen_Click(object sender, EventArgs e)
+        {
+            FormForSelectionFilm formForSelectionFilm = new FormForSelectionFilm();
+            formForSelectionFilm.Show();
+            formForSelectionFilm.SendRectangle += exemplarOfSearch.AddModelInAreaOnScreen;
+            formForSelectionFilm.IndicateUpdateFromSender += FillUINewDataFromListSearchAndAction;
+        }
         private void ButtonCorrectModelForSearch_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog open_dialog = new OpenFileDialog())
             {//создание диалогового окна для выбора файла
                 open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
+                open_dialog.Multiselect = true;
                 if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
                 {
                     try
                     {
-                        Bitmap image;
-
                         //копирование битмапа в стриме позволяет создать полностью независимую копию битмапа
-                        MemoryStream ms = new MemoryStream();
-                        using (FileStream stream = new FileStream(open_dialog.FileName, FileMode.Open))
+                        foreach (var file in open_dialog.FileNames)
                         {
-                            stream.CopyTo(ms);
-                            image = (Bitmap)Bitmap.FromStream(ms);
+                            using (FileStream stream = new FileStream(file, FileMode.Open))
+                            {
+                                Bitmap image;
+                                MemoryStream ms = new MemoryStream();
+                                stream.CopyTo(ms);
+                                image = (Bitmap)Bitmap.FromStream(ms);
+                                //укажите pictureBox, в который нужно загрузить изображение 
+                                exemplarOfSearch.CorrectionModel((Bitmap)image.Clone());
+                            }
                         }
-                        //укажите pictureBox, в который нужно загрузить изображение 
-                        exemplarOfSearch.CorrectionModel((Bitmap)image.Clone());
-                        image = null;
-                        GC.Collect();
-                        this.pictureBoxForModelForSearch.Invalidate();
                     }
                     catch
                     {
                         DialogResult rezult = MessageBox.Show("Невозможно открыть выбранный файл",
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    this.pictureBoxForModelForSearch.Invalidate();
+                    GC.Collect();
                 }
             }
             SetImageModelConfig();
@@ -497,15 +498,15 @@ namespace MyLittleMinion
             {
                 panelForModelForSearch.Width = 370;
                 panelForModelForSearch.Height = 250;
-                panelConfigurationOfSearch.Width = 850;
-                panelConfigurationOfSearch.Height = 450;
+                /*panelConfigurationOfSearch.Width = 850;
+                panelConfigurationOfSearch.Height = 450;*/
             }
             else
             {
                 panelForModelForSearch.Width = 8000;
                 panelForModelForSearch.Height = 4000;
-                panelConfigurationOfSearch.Width = 8500;
-                panelConfigurationOfSearch.Height = 4500;
+                /*panelConfigurationOfSearch.Width = 8500;
+                panelConfigurationOfSearch.Height = 4500;*/
             }
         }
         private void NumericUpDownPercentageComplianceWithModel_ValueChanged(object sender, EventArgs e)
@@ -549,20 +550,19 @@ namespace MyLittleMinion
         }
         private void CheckBoxCountOfThreads_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxCountOfThreads.Enabled = checkBoxCountOfThreads.Checked;
+            numericUpDownCountOfThreads.Enabled = checkBoxCountOfThreads.Checked;
         }
-        
-        ///Панель для действий с эталоном КОНЕЦ
 
-        
-            
-        ///Панель с настройками области поиска НАЧАЛО
+        #endregion///Панель для действий с эталоном КОНЕЦ
+
+
+        #region///Панель с настройками области поиска НАЧАЛО
         private void CheckBoxSelectActiveWindow_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxXBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
-            textBoxXEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
-            textBoxYBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
-            textBoxYEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
+            numericUpDownXBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
+            numericUpDownXEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
+            numericUpDownYBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
+            numericUpDownYEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             FillUINewDataFromListSearchAndAction();
         }
@@ -571,15 +571,50 @@ namespace MyLittleMinion
         {
             panelForPlaceOfSearch.Visible = checkBoxForPlaceOfSearch.Checked;
         }
+        private void ButtonSelectSearchAreaOnScreen_Click(object sender, EventArgs e)
+        {
+            FormForSelectionFilm formForSelectionFilm = new FormForSelectionFilm();
+            formForSelectionFilm.Show();
+            formForSelectionFilm.SendTwoPointsOfRectangle += ReceiveRectangle;
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+        }
+        void ReceiveRectangle(int xBegin, int yBegin, int xEnd, int yEnd)
+        {
+            numericUpDownXBegin.Value = xBegin;
+            numericUpDownYBegin.Value = yBegin;
+            numericUpDownXEnd.Value = xEnd;
+            numericUpDownYEnd.Value = yEnd;
+        }
+        private void NumericUpDownYBegin_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDownYBegin.Value >= numericUpDownYEnd.Value)
+                numericUpDownYBegin.Value = numericUpDownYEnd.Value - 1;
+        }
 
-        ///Панель с настройками области поиска КОНЕЦ
+        private void NumericUpDownYEnd_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDownYBegin.Value >= numericUpDownYEnd.Value)
+                numericUpDownYEnd.Value = numericUpDownYBegin.Value + 1;
+        }
+
+        private void NumericUpDownXEnd_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDownXBegin.Value >= numericUpDownXEnd.Value)
+                numericUpDownXEnd.Value = numericUpDownXBegin.Value + 1;
+        }
+
+        private void NumericUpDownXBegin_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDownXBegin.Value >= numericUpDownXEnd.Value)
+                numericUpDownXBegin.Value = numericUpDownXEnd.Value - 1;
+        }
+
+        #endregion///Панель с настройками области поиска КОНЕЦ
 
 
+        #region///Конфигурация действий НАЧАЛО
 
 
-        ///Конфигурация действий НАЧАЛО
-        
-        
         private void FillVariantsOfActionsForComboBoxForSelectAction()
         {
             comboBoxForSelectAction.Items.Add("Щелчек левой кнопкой");
@@ -589,12 +624,10 @@ namespace MyLittleMinion
 
         }
 
-        ///Конфигурация действий КОНЕЦ
-        
+        #endregion///Конфигурация действий КОНЕЦ
 
 
-
-        ///Верхнее меню НАЧАЛО
+        #region///Верхнее меню НАЧАЛО
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -637,11 +670,10 @@ namespace MyLittleMinion
             InsForm.Show();
         }
 
-        ///Верхнее меню КОНЕЦ
+        #endregion///Верхнее меню КОНЕЦ
 
 
-
-        ///Информация о списке, с которым сейчас идет работа НАЧАЛО
+        #region///Информация о списке, с которым сейчас идет работа НАЧАЛО
         private void TextBoxNameOfLisActions_TextChanged(object sender, EventArgs e)
         {
             exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
@@ -743,9 +775,11 @@ namespace MyLittleMinion
 
         }
 
-        ///Информация о списке, с которым сейчас идет работа КОНЕЦ
 
 
 
+        #endregion///Информация о списке, с которым сейчас идет работа КОНЕЦ
+
+        
     }
 }

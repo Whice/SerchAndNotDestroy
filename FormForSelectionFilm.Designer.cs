@@ -36,32 +36,37 @@
             // 
             // pbSelectionFilm
             // 
-            this.pbSelectionFilm.BackColor = System.Drawing.Color.White;
-            this.pbSelectionFilm.Location = new System.Drawing.Point(70, 84);
+            this.pbSelectionFilm.BackColor = System.Drawing.Color.LightSeaGreen;
+            this.pbSelectionFilm.Location = new System.Drawing.Point(277, 175);
+            this.pbSelectionFilm.Margin = new System.Windows.Forms.Padding(2);
             this.pbSelectionFilm.Name = "pbSelectionFilm";
-            this.pbSelectionFilm.Size = new System.Drawing.Size(100, 50);
+            this.pbSelectionFilm.Size = new System.Drawing.Size(180, 112);
             this.pbSelectionFilm.TabIndex = 0;
             this.pbSelectionFilm.TabStop = false;
-            this.pbSelectionFilm.Visible = false;
+            this.pbSelectionFilm.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PbSelectionFilm_MouseDown);
+            this.pbSelectionFilm.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PbSelectionFilm_MouseUp);
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // FormForSelectionFilm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkSlateGray;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(600, 366);
             this.Controls.Add(this.pbSelectionFilm);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormForSelectionFilm";
             this.Opacity = 0.3D;
             this.Text = "FormForSelectionFilm";
+            this.TopMost = true;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormForSelectionFilm_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SelectionFilm_MouseDown);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SelectionFilm_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.pbSelectionFilm)).EndInit();
