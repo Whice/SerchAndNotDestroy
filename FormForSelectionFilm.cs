@@ -42,45 +42,41 @@ namespace MyLittleMinion
                     gsrc.ReleaseHdc();
                 }
             }
-            this.BackgroundImage = (Image)picture;
+            panelBackGroundImage.Location = new Point(0, 0);
+            panelBackGroundImage.Size = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Size;
+            panelBackGroundImage.BackgroundImage = (Image)picture;
         }
 
+        //Для скриншота. Он нужен, хотя не очень понятно, что он дает.
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
         public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
-        public void FilmActiveted(Rectangle ptrRectangeForSelectionPlace)
-        {
-            this.rectangeSelectionPlace = ptrRectangeForSelectionPlace;
-            pbSelectionFilm.BackColor = Color.FromArgb(50, 255, 255, 255);
-            this.Show();
-
-        }
-
+        
+        /// <summary>
+        /// Точка, где была опущена ЛКМ.
+        /// </summary>
         public Point startPoint
         {
             get { return this.startPointPrivate; }
         }
+        /// <summary>
+        /// Точка, где была поднята ЛКМ.
+        /// </summary>
         public Point finishPoint
         {
             get { return this.finishPointPrivate; }
         }
 
+        //Для рисования прямоугольника на pictureBox и визуального отображения ввыделения.
+        Graphics areaForSelect;
         Rectangle selectionPlace = new Rectangle();
-        private void SelectionFilm_MouseDown(object sender, MouseEventArgs e)
-        {
-            this.startPointPrivate = Cursor.Position;
-            timer1.Enabled = true;
-        }
         private void PbSelectionFilm_MouseDown(object sender, MouseEventArgs e)
         {
-            this.Opacity = 0;
+            //При нажатии ЛКМ запомнить, где было нажато, и запустить таймер.
             this.startPointPrivate = Cursor.Position;
             timer1.Enabled = true;
         }
-
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            
-
             selectionPlace.Location = this.startPointPrivate;
             //Определяются размеры области выделения, относительно точки нажатия
             selectionPlace.Width = Cursor.Position.X - this.startPointPrivate.X;
@@ -108,18 +104,40 @@ namespace MyLittleMinion
                 selectionPlace.Location = new Point(selectionPlace.Location.X, this.startPointPrivate.Y);
             }
 
-
-            Graphics battlefield = pbSelectionFilm.CreateGraphics();
-            SolidBrush d = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
-            SolidBrush fone = new SolidBrush(pbSelectionFilm.BackColor);
-            battlefield.FillRectangle(fone, pbSelectionFilm.Location.X, pbSelectionFilm.Location.Y, pbSelectionFilm.Width, pbSelectionFilm.Height);
-            battlefield.FillRectangle(d, selectionPlace);
+            //Создается новая картинка, в которой по зкрашивается все, кроме области которая выделяется.
+            //Просто рисовать саму область не вышло на разных формах, но на битмапе возможно получится.
+            //Если выйдет, то можно сделать проще.
+            Bitmap imageForRectangle = new Bitmap(pbSelectionFilm.Width, pbSelectionFilm.Height);
+            areaForSelect = Graphics.FromImage(imageForRectangle);
+            pbSelectionFilm.BackColor = Color.FromArgb(0, 0, 0, 0);
+            SolidBrush notClearRetangle = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
+            areaForSelect.FillRectangle(
+                new SolidBrush(Color.FromArgb(0, 255, 255, 255)), pbSelectionFilm.Location.X, pbSelectionFilm.Location.Y, pbSelectionFilm.Width, pbSelectionFilm.Height);
+            areaForSelect.FillRectangle(
+                notClearRetangle, pbSelectionFilm.Location.X, pbSelectionFilm.Location.Y, pbSelectionFilm.Width - (pbSelectionFilm.Width - selectionPlace.X), pbSelectionFilm.Height);
+            areaForSelect.FillRectangle(
+                notClearRetangle, pbSelectionFilm.Location.X, pbSelectionFilm.Location.Y, pbSelectionFilm.Width, pbSelectionFilm.Height - (pbSelectionFilm.Height - selectionPlace.Y));
+            areaForSelect.FillRectangle(
+                notClearRetangle, pbSelectionFilm.Location.X+ (selectionPlace.X + selectionPlace.Width), pbSelectionFilm.Location.Y, pbSelectionFilm.Width, pbSelectionFilm.Height);
+            areaForSelect.FillRectangle(
+                notClearRetangle, pbSelectionFilm.Location.X, pbSelectionFilm.Location.Y+ (selectionPlace.Y + selectionPlace.Height), pbSelectionFilm.Width, pbSelectionFilm.Height);
+            //Заполнение новой картинкой pictureBox, который показывает на экран нарисованую область.
+            pbSelectionFilm.Image = imageForRectangle;
+            
         }
 
         public delegate void GetPointsOfRectangle(int xBeg, int yBeg, int xEnd, int yEnd);
+        /// <summary>
+        /// Принимает функцию с аргументами координат левой верхней и нижней правой точек прямоугольника, область которого была найдена.
+        /// </summary>
         public event GetPointsOfRectangle SendTwoPointsOfRectangle;
+        
         public delegate void GetRectangle(Rectangle rect);
+        /// <summary>
+        /// Принимает функцию с аргументом прямоугольника, область которого была найдена.
+        /// </summary>
         public event GetRectangle SendRectangle;
+
         public delegate void UpdateSender();
         /// <summary>
         /// Принимает на вход функцию обновления без аргументов и просто ее запускает.
@@ -131,10 +149,11 @@ namespace MyLittleMinion
 
         private void PbSelectionFilm_MouseUp(object sender, MouseEventArgs e)
         {
+            //Кнопка поднята, таймер больше ненужен, координата конца должна быть запомнена.
             timer1.Enabled = false;
             this.finishPointPrivate = Cursor.Position;
 
-            //Надо сделать так, чтобы левая координата области была с верхней, а правая с нижней
+            //Надо сделать так, чтобы левая координата области была с верхней, а правая с нижней.
             if (this.finishPointPrivate.X < this.startPointPrivate.X)
             {
                 int swap = this.finishPointPrivate.X;
@@ -148,14 +167,24 @@ namespace MyLittleMinion
                 this.startPointPrivate.Y = swap;
             }
 
+            //Подсчет игового прямоугольника.
             this.rectangeSelectionPlace.X = this.startPoint.X;
             this.rectangeSelectionPlace.Y = this.startPoint.Y;
             this.rectangeSelectionPlace.Width = this.finishPoint.X - this.startPoint.X;
             this.rectangeSelectionPlace.Height = this.finishPoint.Y - this.startPoint.Y;
 
-            SendTwoPointsOfRectangle?.Invoke(rectangeSelectionPlace.X, rectangeSelectionPlace.Y,
-                rectangeSelectionPlace.X + rectangeSelectionPlace.Width, rectangeSelectionPlace.Y + rectangeSelectionPlace.Height);
-            SendRectangle?.Invoke(rectangeSelectionPlace);
+            //Скрывается перед выполнением вызовов событий, т.к. они могут делать скриншот.
+            //Если скрыть, точно не будет никаких искажений цветов.
+            this.Hide();
+
+            //Потому что не может быть ни ширина, ни высота нолем.
+            if (rectangeSelectionPlace.Height!=0 && rectangeSelectionPlace.Width!=0)
+            {
+                SendTwoPointsOfRectangle?.Invoke(rectangeSelectionPlace.X, rectangeSelectionPlace.Y,
+                    rectangeSelectionPlace.X + rectangeSelectionPlace.Width, rectangeSelectionPlace.Y + rectangeSelectionPlace.Height);
+                SendRectangle?.Invoke(rectangeSelectionPlace);
+            }
+            //Для всяких обновлений, если требуется.
             IndicateUpdateFromSender?.Invoke();
 
             pbSelectionFilm.Visible = false;
@@ -164,42 +193,10 @@ namespace MyLittleMinion
 
         private void FormForSelectionFilm_KeyDown(object sender, KeyEventArgs e)
         {
+            //Escape для принудительного закрытия.
             if (e.KeyCode == Keys.Escape)
                 this.Close();
         }
 
-        private void SelectionFilm_MouseUp(object sender, MouseEventArgs e)
-        {
-
-            timer1.Enabled = false;
-            this.finishPointPrivate = Cursor.Position;
-
-            //Надо сделать так, чтобы левая координата области была с верхней, а правая с нижней
-            if(this.finishPointPrivate.X< this.startPointPrivate.X)
-            {
-                int swap = this.finishPointPrivate.X;
-                this.finishPointPrivate.X = this.startPointPrivate.X;
-                this.startPointPrivate.X = swap;
-            }
-            if (this.finishPointPrivate.Y < this.startPointPrivate.Y)
-            {
-                int swap = this.finishPointPrivate.Y;
-                this.finishPointPrivate.Y = this.startPointPrivate.Y;
-                this.startPointPrivate.Y = swap;
-            }
-
-            this.rectangeSelectionPlace.X = this.startPoint.X;
-            this.rectangeSelectionPlace.Y = this.startPoint.Y;
-            this.rectangeSelectionPlace.Width = this.finishPoint.X - this.startPoint.X;
-            this.rectangeSelectionPlace.Height = this.finishPoint.Y - this.startPoint.Y;
-
-            SendTwoPointsOfRectangle?.Invoke(rectangeSelectionPlace.X,rectangeSelectionPlace.Y,
-                rectangeSelectionPlace.X+ rectangeSelectionPlace.Width,rectangeSelectionPlace.Y+ rectangeSelectionPlace.Height);
-            SendRectangle?.Invoke(rectangeSelectionPlace);
-            IndicateUpdateFromSender?.Invoke();
-
-             pbSelectionFilm.Visible = false;
-            this.Close();
-        }
     }
 }

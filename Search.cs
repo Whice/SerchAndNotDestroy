@@ -321,8 +321,8 @@ namespace MyLittleMinion
         }
         public void AddModelInAreaOnScreen(Rectangle rectangleForModel)
         {
-            this.pictureModelForSearch = new Bitmap(rectangleForModel.Width, rectangleForModel.Height);
-            using (Graphics gdest = Graphics.FromImage(this.pictureModelForSearch))
+            Bitmap forPictureModelForSearch = new Bitmap(rectangleForModel.Width, rectangleForModel.Height);
+            using (Graphics gdest = Graphics.FromImage(forPictureModelForSearch))
             {
                 using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
                 {
@@ -340,6 +340,7 @@ namespace MyLittleMinion
                     gsrc.ReleaseHdc();
                 }
             }
+            this.pictureModelForSearch = forPictureModelForSearch;
         }
 
         #endregion///Уточнение/добавление образа эталона для более точного поиска КОНЕЦ
