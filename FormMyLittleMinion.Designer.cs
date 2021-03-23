@@ -94,6 +94,7 @@
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisAction = new System.Windows.Forms.Button();
             this.buttonDeleteAction = new System.Windows.Forms.Button();
+            this.buttonCorrectModelForSearchSelectOnScreen = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -258,7 +259,6 @@
             this.numericUpDownCountSecondForAddIgnorColor.Name = "numericUpDownCountSecondForAddIgnorColor";
             this.numericUpDownCountSecondForAddIgnorColor.Size = new System.Drawing.Size(45, 20);
             this.numericUpDownCountSecondForAddIgnorColor.TabIndex = 20;
-            this.numericUpDownCountSecondForAddIgnorColor.UseWaitCursor = true;
             this.numericUpDownCountSecondForAddIgnorColor.Value = new decimal(new int[] {
             3,
             0,
@@ -333,6 +333,7 @@
             // panelForModelForSearch
             // 
             this.panelForModelForSearch.BackColor = System.Drawing.Color.LightCoral;
+            this.panelForModelForSearch.Controls.Add(this.buttonCorrectModelForSearchSelectOnScreen);
             this.panelForModelForSearch.Controls.Add(this.buttonAddModelForSearchSelectOnScreen);
             this.panelForModelForSearch.Controls.Add(this.numericUpDownCountOfThreads);
             this.panelForModelForSearch.Controls.Add(this.checkBoxShowNotCorrectModel);
@@ -346,7 +347,7 @@
             this.panelForModelForSearch.Controls.Add(this.buttonAddModelForSearchUploadFromHard);
             this.panelForModelForSearch.Controls.Add(this.pictureBoxForModelForSearch);
             this.panelForModelForSearch.Controls.Add(this.label2);
-            this.panelForModelForSearch.Location = new System.Drawing.Point(403, 11);
+            this.panelForModelForSearch.Location = new System.Drawing.Point(405, 64);
             this.panelForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.panelForModelForSearch.Name = "panelForModelForSearch";
             this.panelForModelForSearch.Size = new System.Drawing.Size(476, 429);
@@ -637,7 +638,7 @@
             this.panelConfigurationOfSearch.Controls.Add(this.checkBoxForColorsForIgnor);
             this.panelConfigurationOfSearch.Location = new System.Drawing.Point(198, 106);
             this.panelConfigurationOfSearch.Name = "panelConfigurationOfSearch";
-            this.panelConfigurationOfSearch.Size = new System.Drawing.Size(940, 498);
+            this.panelConfigurationOfSearch.Size = new System.Drawing.Size(896, 505);
             this.panelConfigurationOfSearch.TabIndex = 24;
             // 
             // comboBoxForSelectAction
@@ -842,6 +843,17 @@
             this.buttonDeleteAction.UseVisualStyleBackColor = true;
             this.buttonDeleteAction.Click += new System.EventHandler(this.ButtonDeleteAction_Click);
             // 
+            // buttonCorrectModelForSearchSelectOnScreen
+            // 
+            this.buttonCorrectModelForSearchSelectOnScreen.Location = new System.Drawing.Point(136, 162);
+            this.buttonCorrectModelForSearchSelectOnScreen.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonCorrectModelForSearchSelectOnScreen.Name = "buttonCorrectModelForSearchSelectOnScreen";
+            this.buttonCorrectModelForSearchSelectOnScreen.Size = new System.Drawing.Size(120, 41);
+            this.buttonCorrectModelForSearchSelectOnScreen.TabIndex = 29;
+            this.buttonCorrectModelForSearchSelectOnScreen.Text = "Скорректировать эталон с экрана";
+            this.buttonCorrectModelForSearchSelectOnScreen.UseVisualStyleBackColor = true;
+            this.buttonCorrectModelForSearchSelectOnScreen.Click += new System.EventHandler(this.ButtonCorrectModelForSearchSelectOnScreen_Click);
+            // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -963,6 +975,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownYBegin;
         private System.Windows.Forms.NumericUpDown numericUpDownXBegin;
         private System.Windows.Forms.Button buttonAddModelForSearchSelectOnScreen;
+        private System.Windows.Forms.Button buttonCorrectModelForSearchSelectOnScreen;
     }
 }
 

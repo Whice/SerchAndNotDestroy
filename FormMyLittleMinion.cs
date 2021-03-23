@@ -91,7 +91,7 @@ namespace MyLittleMinion
             exemplarOfActionOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarActionOfMinion();
 
             textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions;
-            
+
             if (comboBoxForSelectAction.SelectedIndex >= 0)//призагрузке формы имеет значение -1 и отказывается принимать другие. В работе уже все нормально.
                 comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
             numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond;
@@ -107,16 +107,16 @@ namespace MyLittleMinion
             }
             else
                 checkBoxParallelSearch.Checked = false;
-            
+
             checkBoxFirstFoundModelIsEnd.Checked = exemplarOfSearch.stopSearchingAfterFirstPointFound;
             numericUpDownPercentageComplianceWithModel.Value = exemplarOfSearch.percentageComplianceWithModel;
             SetImageModelConfig();
-                
+
 
             checkBoxForPlaceOfSearch.Checked = exemplarOfSearch.UsePlaceForSearch;
             checkBoxSelectActiveWindow.Checked = exemplarOfSearch.UseActiveWindow;
             numericUpDownXBegin.Value = exemplarOfSearch.GetLocationOfPlaceForSearch().X;
-            numericUpDownYBegin.Value =exemplarOfSearch.GetLocationOfPlaceForSearch().Y;
+            numericUpDownYBegin.Value = exemplarOfSearch.GetLocationOfPlaceForSearch().Y;
             numericUpDownXEnd.Value = exemplarOfSearch.GetLocationOfPlaceForSearch().X + exemplarOfSearch.SearchAreaSize.Width;
             numericUpDownYEnd.Value = exemplarOfSearch.GetLocationOfPlaceForSearch().Y + exemplarOfSearch.SearchAreaSize.Height;
 
@@ -282,7 +282,7 @@ namespace MyLittleMinion
         }
         private void ButtonForDeleteSelectedColor_Click(object sender, EventArgs e)
         {
-            
+
             if (exemplarOfSearch.ShowIgnorColor().A == 0)
             {
                 DisableButtonsForEmptyList(false);
@@ -352,7 +352,7 @@ namespace MyLittleMinion
                             image = (Bitmap)Bitmap.FromStream(ms);
                         }
                         //укажите pictureBox, в который нужно загрузить изображение 
-                        
+
                         exemplarOfSearch.pictureModelForSearch = (Bitmap)image.Clone();
                         image = null;
                         GC.Collect();
@@ -371,7 +371,7 @@ namespace MyLittleMinion
         {
             FormForSelectionFilm formForSelectionFilm = new FormForSelectionFilm();
             formForSelectionFilm.Show();
-            formForSelectionFilm.SendRectangle += exemplarOfSearch.AddModelInAreaOnScreen;
+            formForSelectionFilm.SendRectangle += exemplarOfSearch.AddModelFromAreaOnScreen;
             formForSelectionFilm.IndicateUpdateFromSender += FillUINewDataFromListSearchAndAction;
         }
         private void ButtonCorrectModelForSearch_Click(object sender, EventArgs e)
@@ -409,6 +409,13 @@ namespace MyLittleMinion
             }
             SetImageModelConfig();
         }
+        private void ButtonCorrectModelForSearchSelectOnScreen_Click(object sender, EventArgs e)
+        {
+            FormForSelectionFilm formForSelectionFilm = new FormForSelectionFilm();
+            formForSelectionFilm.Show();
+            formForSelectionFilm.SendRectangle += exemplarOfSearch.CorrectModelFromAreaOnScreen;
+            formForSelectionFilm.IndicateUpdateFromSender += FillUINewDataFromListSearchAndAction;
+        }
         private void CheckBoxShowCorrectModel_CheckedChanged(object sender, EventArgs e)
         {
             SetImageModelConfig();
@@ -417,9 +424,9 @@ namespace MyLittleMinion
         {
             //Поиск местположения pictureBox в глобальных координатах.
             //Сперва смотрю всех его родительских окон до формы, а потом и координаты самой формы добавляю. Точнее наоброт.
-            Point locationPBForModel = new Point(this.Location.X+ pictureBoxForModelForSearch.Location.X, this.Location.Y + pictureBoxForModelForSearch.Location.Y);
+            Point locationPBForModel = new Point(this.Location.X + pictureBoxForModelForSearch.Location.X, this.Location.Y + pictureBoxForModelForSearch.Location.Y);
             Control pbParent = pictureBoxForModelForSearch.Parent;
-            while(pbParent != this)
+            while (pbParent != this)
             {
                 locationPBForModel = new Point(locationPBForModel.X + pbParent.Location.X, locationPBForModel.Y + pbParent.Location.Y);
                 pbParent = pbParent.Parent;
@@ -631,7 +638,7 @@ namespace MyLittleMinion
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           // MessageBox.Show("Помощник - хороший мальчик!");
+            // MessageBox.Show("Помощник - хороший мальчик!");
         }
 
         private void SettingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -745,9 +752,9 @@ namespace MyLittleMinion
         {
             SearchingModelOnScreen();
             exemplarOfActionOfMinion.RealizeAction();
-            Thread.Sleep(Convert.ToInt32(exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond)*1000);//Надо умножать на 1000, чтобы из получить ожидание в секундах
+            Thread.Sleep(Convert.ToInt32(exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond) * 1000);//Надо умножать на 1000, чтобы из получить ожидание в секундах
         }
-        
+
 
         /// <summary>
         /// Создает новый экземпляр поиска и действия применяя конфигурацию нынешнего.
@@ -778,8 +785,8 @@ namespace MyLittleMinion
 
 
 
+
         #endregion///Информация о списке, с которым сейчас идет работа КОНЕЦ
 
-        
     }
 }

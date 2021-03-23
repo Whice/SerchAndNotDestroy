@@ -319,7 +319,11 @@ namespace MyLittleMinion
             this.pictureModelForSearch = this.pictureModelForSearchPrivate;
             this.correctModelPrivate = this.pictureModelForSearchPrivate;
         }
-        public void AddModelInAreaOnScreen(Rectangle rectangleForModel)
+        /// <summary>
+        /// Добавление эталона скриншотом заданной прямоугольником области.
+        /// </summary>
+        /// <param name="rectangleForModel"></param>
+        public void AddModelFromAreaOnScreen(Rectangle rectangleForModel)
         {
             Bitmap forPictureModelForSearch = new Bitmap(rectangleForModel.Width, rectangleForModel.Height);
             using (Graphics gdest = Graphics.FromImage(forPictureModelForSearch))
@@ -342,6 +346,33 @@ namespace MyLittleMinion
             }
             this.pictureModelForSearch = forPictureModelForSearch;
         }
+        /// <summary>
+        /// Корректировка эталона скриншотом заданной прямоугольником области.
+        /// </summary>
+        /// <param name="rectangleForModel"></param>
+        public void CorrectModelFromAreaOnScreen(Rectangle rectangleForModel)
+        {
+            Bitmap pictureForCorrectModelForSearch = new Bitmap(rectangleForModel.Width, rectangleForModel.Height);
+            using (Graphics gdest = Graphics.FromImage(pictureForCorrectModelForSearch))
+            {
+                using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
+                {
+                    IntPtr hSrcDC;
+                    IntPtr hDC;
+                    int retval;
+                    hSrcDC = gsrc.GetHdc();
+                    hDC = gdest.GetHdc();
+                    retval = BitBlt(hDC, -rectangleForModel.X, -rectangleForModel.Y,
+                        rectangleForModel.Width + rectangleForModel.X,
+                        rectangleForModel.Height + rectangleForModel.Y,
+                        hSrcDC, 0, 0, (int)CopyPixelOperation.SourceCopy);
+                    gdest.ReleaseHdc();
+                    gsrc.ReleaseHdc();
+                }
+            }
+            this.CorrectionModel(pictureForCorrectModelForSearch);
+        }
+
 
         #endregion///Уточнение/добавление образа эталона для более точного поиска КОНЕЦ
 
@@ -558,7 +589,6 @@ namespace MyLittleMinion
 
 
 
-
         #region ///Область, в которой выполняется поиск НАЧАЛО
 
         /// <summary>
@@ -622,7 +652,6 @@ namespace MyLittleMinion
         }
 
         #endregion///Область, в которой выполняется поиск КОНЕЦ
-
 
 
 
@@ -706,7 +735,6 @@ namespace MyLittleMinion
         }
 
         #endregion///Скриншот активного окна КОНЕЦ
-
 
 
 
@@ -1016,85 +1044,86 @@ namespace MyLittleMinion
 
             //Инициализация потоков и будущих клонов этого экземпляра для этих потоков
             Search[] fourSearchsForThreadPrivate = new Search[4];
-            Thread[] fourThread = new Thread[4];
+            Task[] fourThread = new Task[4];
 
 
 
             //В первый поток отправляется первая четверть
             fourSearchsForThreadPrivate[0] = this.Clone();
 
-            //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
-            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject1 = (() => fourSearchsForThreadPrivate[0].SetPlaceForSearching(
+            fourThread[0] = Task.Run(() =>
+            {
+                //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
+                fourSearchsForThreadPrivate[0].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X, this.locationOfPlaceForSearchPrivate.Y,
                     //Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                     halfWidthPSA + this.correctModelPrivate.Width, halfHeightPSA + this.correctModelPrivate.Height
-                    )));
-            iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject1 += (() => fourSearchsForThreadPrivate[0].SearchModelInArea());
-
-            fourThread[0] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject1));
-            fourThread[0].Start();
+                    ));
+                fourSearchsForThreadPrivate[0].CreateScreenShot();
+                fourSearchsForThreadPrivate[0].SearchModelInArea();
+            });
 
 
 
             //Во второй поток отправляется вторая четверть
             fourSearchsForThreadPrivate[1] = this.Clone();
 
-            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject2 = (() => fourSearchsForThreadPrivate[1].SetPlaceForSearching(
+            fourThread[1] = Task.Run(() =>
+            {
+                //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
+                fourSearchsForThreadPrivate[1].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X,
                     this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
                     halfWidthPSA + this.correctModelPrivate.Width,//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                     this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
-                    )));
-            iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject2 += (() => fourSearchsForThreadPrivate[1].SearchModelInArea());
-
-            fourThread[1] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject2));
-            fourThread[1].Start();
+                    ));
+                fourSearchsForThreadPrivate[1].CreateScreenShot();
+                fourSearchsForThreadPrivate[1].SearchModelInArea();
+            });
 
 
 
             //В третий поток отправляется третья четверть 
             fourSearchsForThreadPrivate[2] = this.Clone();
 
-            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject3 = (() => fourSearchsForThreadPrivate[2].SetPlaceForSearching(
+            fourThread[2] = Task.Run(() =>
+            {
+                //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
+                fourSearchsForThreadPrivate[2].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
                     this.locationOfPlaceForSearchPrivate.Y,
                     this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                     halfHeightPSA + this.correctModelPrivate.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
-                    )));
-            iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject3 += (() => fourSearchsForThreadPrivate[2].SearchModelInArea());
-
-            fourThread[2] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject3));
-            fourThread[2].Start();
-
+                    ));
+                fourSearchsForThreadPrivate[2].CreateScreenShot();
+                fourSearchsForThreadPrivate[2].SearchModelInArea();
+            });
 
 
             //В четвертый поток отправляется четвертая четверть
             fourSearchsForThreadPrivate[3] = this.Clone();
 
-            IterSearchModelInAreaDelegate iterSearchModelInAreaDelegateObject4 = (() => fourSearchsForThreadPrivate[3].SetPlaceForSearching(
+            fourThread[3] = Task.Run(() =>
+            {
+                //Задать для этого потока координаты и размер новой области, соответсвующие его четверти
+                fourSearchsForThreadPrivate[3].SetPlaceForSearching(
                 new Rectangle(
                     this.locationOfPlaceForSearchPrivate.X + halfWidthPSA,//Горизонтальная точка начала для этой четверти сдвигается
                     this.locationOfPlaceForSearchPrivate.Y + halfHeightPSA, //Вертикальная точка начала для этой четверти сдвигается
                     this.pictureSearchArea.Width - halfWidthPSA,//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                     this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
-                    )));
-            iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].CreateScreenShot());
-            iterSearchModelInAreaDelegateObject4 += (() => fourSearchsForThreadPrivate[3].SearchModelInArea());
-
-            fourThread[3] = new Thread(new ThreadStart(iterSearchModelInAreaDelegateObject4));
-            fourThread[3].Start();
+                    ));
+                fourSearchsForThreadPrivate[3].CreateScreenShot();
+                fourSearchsForThreadPrivate[3].SearchModelInArea();
+            });
 
 
             //Ожидание заершения всех потоков
-            for (int i = 0; i < 4; i++)
-                fourThread[i].Join();
-
+            Task.WaitAll(fourThread);
+            
             //Объединение всех найденых точек
             List<Point> listFoundPointsInFourThread = null;//Создается новый список дл простоты добавления
             for (int i = 0; i < 4; i++)
@@ -1174,7 +1203,7 @@ namespace MyLittleMinion
 
             //Инициализация потоков и будущих клонов этого экземпляра для этих потоков
             Search[] muchSearchsForThreadPrivate = new Search[countOfThreads];
-            System.Threading.Tasks.Task[] muchTasks = new Task[countOfThreads];
+            Task[] muchTasks = new Task[countOfThreads];
 
             //Создание клонов нынешнего экземпдяра
             for (int i = 0; i < countOfThreads; i++)
@@ -1302,7 +1331,6 @@ namespace MyLittleMinion
         }
 
         #endregion///Выполнение поиска с использованием потоков КОНЕЦ
-
 
 
 
