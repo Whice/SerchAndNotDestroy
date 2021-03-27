@@ -45,6 +45,10 @@ namespace MyLittleMinion
         /// Локальная переменная ссылка на класс действия помощника для взаимодействия с интерфесом. По сути укороченыое имя, псевдоним.
         /// </summary>
         ActionOfMinion exemplarOfActionOfMinion;
+        /// <summary>
+        /// Сообщает была ил загружена форма.
+        /// </summary>
+        bool FormIsLoad = false;
 
 
         public MyLittleMonion()
@@ -52,7 +56,7 @@ namespace MyLittleMinion
             InitializeComponent();
             settingOfMinion = new SettingOfMinion();
             dialogWindowForSetting = new DialogWindowForSetting(ref settingOfMinion);
-            //dialogWindowForSetting.SaveChanges();
+            dialogWindowForSetting.Close();
 
 
             exemplarsOfLAM.Add(new ListOfActionsOfMinion());
@@ -64,15 +68,25 @@ namespace MyLittleMinion
 
             FillVariantsOfActionsForComboBoxForSelectAction();
         }
+        private void MyLittleMonion_Load(object sender, EventArgs e)
+        {
+            FormIsLoad = true;
+            timer1.Enabled = true;
+        }
 
 
-        #region/// Вспомогательные методы НАЧАЛО
-
+        #region/// Вспомогательные функции НАЧАЛО
+        /// <summary>
+        ///Счетчик, который после достижения определенной велечины позволит изменить цвет фона.
+        /// </summary>
+        int countTimerTickForChangeBackColor = 0;
         private void Timer1_Tick(object sender, EventArgs e)
         {
             labelMousePosiotonView.Text = "Mouse position: " + Convert.ToString(Cursor.Position.X) + "; " + Convert.ToString(Cursor.Position.Y) + ";";
-        }
 
+           
+        }
+        
         private void TestButton_Click(object sender, EventArgs e)
         {
             // MessageBox.Show(Convert.ToString(comboBoxForSelectAction.SelectedIndex));
@@ -164,9 +178,32 @@ namespace MyLittleMinion
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             FillUINewDataFromListSearchAndAction();
         }
+        private void MyLittleMonion_SizeChanged(object sender, EventArgs e)
+        {
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            FillUINewDataFromListSearchAndAction();
+            ResizeUI();
+        }
+        private void ResizeUI()
+        {
+            //Изменение размера с учетом изменения родительского контейнера. Точка отсчета не должна меняться.
+            Control parenControl = generalTabControlOfConfiguration.Parent;
+            generalTabControlOfConfiguration.Size = new Size(
+                (parenControl.Width - 15) - generalTabControlOfConfiguration.Location.X,
+                (parenControl.Height - 38) - generalTabControlOfConfiguration.Location.Y);
 
+            parenControl = tabControlConfigurationOfSearch.Parent;
+            tabControlConfigurationOfSearch.Size = new Size(
+                (parenControl.Width - 5) - tabControlConfigurationOfSearch.Location.X,
+                (parenControl.Height - 5) - tabControlConfigurationOfSearch.Location.Y);
 
-        #endregion/// Вспомогательные методы КОНЕЦ
+            parenControl = comboBoxForSelectAction.Parent;
+            comboBoxForSelectAction.Size = new Size(
+                (parenControl.Width - 5) - comboBoxForSelectAction.Location.X,
+                comboBoxForSelectAction.Height);
+        }
+
+        #endregion/// Вспомогательные функции КОНЕЦ
 
 
         #region/// Поиск НАЧАЛО
@@ -221,7 +258,7 @@ namespace MyLittleMinion
         #region///Панель игнорирования цветов НАЧАЛО
         private void CheckBoxForColorsForIgnor_CheckedChanged(object sender, EventArgs e)
         {
-            panelForColorsForIgnor.Visible = checkBoxForColorsForIgnor.Checked;
+            panelForColorsForIgnor.Enabled = checkBoxForColorsForIgnor.Checked;
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             UpdateContentPanelOfColorsForIgnor();
         }
@@ -499,23 +536,7 @@ namespace MyLittleMinion
             paintAim.DrawLine(greenPen, centerAimX++, centerAim.Y + 5 + radiusLine, centerAimX, centerAim.Y + 5);
 
         }
-        private void ButtonForChangeSizeOferyBigModelForSearch_Click(object sender, EventArgs e)
-        {
-            if (panelForModelForSearch.Width != 370)
-            {
-                panelForModelForSearch.Width = 370;
-                panelForModelForSearch.Height = 250;
-                /*panelConfigurationOfSearch.Width = 850;
-                panelConfigurationOfSearch.Height = 450;*/
-            }
-            else
-            {
-                panelForModelForSearch.Width = 8000;
-                panelForModelForSearch.Height = 4000;
-                /*panelConfigurationOfSearch.Width = 8500;
-                panelConfigurationOfSearch.Height = 4500;*/
-            }
-        }
+        
         private void NumericUpDownPercentageComplianceWithModel_ValueChanged(object sender, EventArgs e)
         {
             if (numericUpDownPercentageComplianceWithModel.Value < 1)
@@ -570,13 +591,14 @@ namespace MyLittleMinion
             numericUpDownXEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
             numericUpDownYBegin.Enabled = !checkBoxSelectActiveWindow.Checked;
             numericUpDownYEnd.Enabled = !checkBoxSelectActiveWindow.Checked;
+            buttonSelectSearchAreaOnScreen.Enabled = !checkBoxSelectActiveWindow.Checked;
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             FillUINewDataFromListSearchAndAction();
         }
 
         private void CheckBoxForPlaceOfSearch_CheckedChanged(object sender, EventArgs e)
         {
-            panelForPlaceOfSearch.Visible = checkBoxForPlaceOfSearch.Checked;
+            panelForPlaceOfSearch.Enabled = checkBoxForPlaceOfSearch.Checked;
         }
         private void ButtonSelectSearchAreaOnScreen_Click(object sender, EventArgs e)
         {
@@ -786,7 +808,9 @@ namespace MyLittleMinion
 
 
 
+
         #endregion///Информация о списке, с которым сейчас идет работа КОНЕЦ
 
+        
     }
 }

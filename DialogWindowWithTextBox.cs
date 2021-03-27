@@ -91,6 +91,10 @@ namespace MyLittleMinion
             }
         }
 
+        private void ButtonSetWhiteColorForFone_Click(object sender, EventArgs e)
+        {
+            this.settingInDialog.colorForBackColorMainForm = Color.FromArgb(255, 255, 255);
+        }
 
         /// <summary>
         /// Помещает в fullPathOfExeOfMinion экземпляра путь к exe помощника.

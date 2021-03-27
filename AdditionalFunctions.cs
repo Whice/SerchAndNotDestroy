@@ -13,7 +13,7 @@ namespace MyLittleMinion
     /// <summary>
     /// Класс содержащий дополнительные функции для помощника.
     /// </summary>
-    class AdditionalFunctions
+    static class AdditionalFunctions
     {
         /// <summary>
         /// Возвращает Bitmap заданных размеров и заполненый одним цветом.
@@ -31,6 +31,43 @@ namespace MyLittleMinion
                     pictureForReturn.SetPixel(i, j, colorForFill);
 
             return pictureForReturn;
+        }
+        /// <summary>
+        /// Изменяет каждый из основных цветов стремясь к величине указанной номером от 1 до 8.
+        /// </summary>
+        /// <param name="colorForChange"></param>
+        /// <param name="numBasicSet"></param>
+        /// <returns></returns>
+        static Color StriveForColor(Color colorForChange, int numBasicSet)
+        {
+            /*   R       G       B
+            1    255    255	    255
+            2    255	0	    255
+            3    0	    255	    255
+            4    0	    0	    255
+            5    255	255	    0
+            6    255	0	    0
+            7    0	    255	    0
+            8    0	    0	    0
+            */
+            //Для B
+            if (numBasicSet > 0 && numBasicSet < 5 && colorForChange.B < 255)
+                colorForChange = Color.FromArgb(colorForChange.R, colorForChange.G, colorForChange.B + 1);
+            if (numBasicSet > 5 && numBasicSet < 9 && colorForChange.B > 0)
+                colorForChange = Color.FromArgb(colorForChange.R, colorForChange.G, colorForChange.B - 1);
+
+            //Для G
+            if (numBasicSet % 2 == 0 && colorForChange.G < 255)
+                colorForChange = Color.FromArgb(colorForChange.R, colorForChange.G + 1, colorForChange.B);
+            if (numBasicSet % 2 != 0 && colorForChange.G > 0)
+                colorForChange = Color.FromArgb(colorForChange.R, colorForChange.G - 1, colorForChange.B);
+
+            //Для A
+            if ((numBasicSet == 1 || numBasicSet == 2 || numBasicSet == 5 || numBasicSet == 6) && colorForChange.R < 255)
+                colorForChange = Color.FromArgb(colorForChange.R + 1, colorForChange.G, colorForChange.B);
+            if ((numBasicSet == 3 || numBasicSet == 4 || numBasicSet == 7 || numBasicSet == 8) && colorForChange.R > 0)
+                colorForChange = Color.FromArgb(colorForChange.R - 1, colorForChange.G, colorForChange.B);
+            return colorForChange;
         }
 
     }
@@ -63,6 +100,8 @@ namespace MyLittleMinion
         /// Хранит путь, по которому надо сохранять списки поиска и действий.
         /// </summary>
         public string pathForSaveOfList { get; set; }
+
+        public Color colorForBackColorMainForm { get; set; }
     }
 
 

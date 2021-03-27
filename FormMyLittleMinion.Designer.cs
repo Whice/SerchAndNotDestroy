@@ -48,7 +48,7 @@
             this.buttonAddManyColorsForIgnor = new System.Windows.Forms.Button();
             this.buttonAddSingleColorForIgnor = new System.Windows.Forms.Button();
             this.checkBoxForColorsForIgnor = new System.Windows.Forms.CheckBox();
-            this.panelForModelForSearch = new System.Windows.Forms.Panel();
+            this.buttonCorrectModelForSearchSelectOnScreen = new System.Windows.Forms.Button();
             this.buttonAddModelForSearchSelectOnScreen = new System.Windows.Forms.Button();
             this.numericUpDownCountOfThreads = new System.Windows.Forms.NumericUpDown();
             this.checkBoxShowNotCorrectModel = new System.Windows.Forms.CheckBox();
@@ -58,7 +58,6 @@
             this.checkBoxCountOfThreads = new System.Windows.Forms.CheckBox();
             this.checkBoxFirstFoundModelIsEnd = new System.Windows.Forms.CheckBox();
             this.checkBoxParallelSearch = new System.Windows.Forms.CheckBox();
-            this.buttonForChangeSizeOferyBigModelForSearch = new System.Windows.Forms.Button();
             this.buttonAddModelForSearchUploadFromHard = new System.Windows.Forms.Button();
             this.labelMousePosiotonView = new System.Windows.Forms.Label();
             this.checkBoxForPlaceOfSearch = new System.Windows.Forms.CheckBox();
@@ -71,7 +70,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
-            this.panelConfigurationOfSearch = new System.Windows.Forms.Panel();
             this.comboBoxForSelectAction = new System.Windows.Forms.ComboBox();
             this.buttonFindAndPerformThisAction = new System.Windows.Forms.Button();
             this.buttonPrevAction = new System.Windows.Forms.Button();
@@ -94,12 +92,16 @@
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisAction = new System.Windows.Forms.Button();
             this.buttonDeleteAction = new System.Windows.Forms.Button();
-            this.buttonCorrectModelForSearchSelectOnScreen = new System.Windows.Forms.Button();
+            this.generalTabControlOfConfiguration = new System.Windows.Forms.TabControl();
+            this.tabPageConfigurationOfSearch = new System.Windows.Forms.TabPage();
+            this.tabControlConfigurationOfSearch = new System.Windows.Forms.TabControl();
+            this.tabPageMainConfiguration = new System.Windows.Forms.TabPage();
+            this.tabPageAdditionalConfiguration = new System.Windows.Forms.TabPage();
+            this.tabPageConfigurationOfAction = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).BeginInit();
-            this.panelForModelForSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountOfThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).BeginInit();
             this.panelForPlaceOfSearch.SuspendLayout();
@@ -107,14 +109,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYBegin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXBegin)).BeginInit();
-            this.panelConfigurationOfSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.generalTabControlOfConfiguration.SuspendLayout();
+            this.tabPageConfigurationOfSearch.SuspendLayout();
+            this.tabControlConfigurationOfSearch.SuspendLayout();
+            this.tabPageMainConfiguration.SuspendLayout();
+            this.tabPageAdditionalConfiguration.SuspendLayout();
+            this.tabPageConfigurationOfAction.SuspendLayout();
             this.SuspendLayout();
             // 
             // FindButton
             // 
-            this.FindButton.Location = new System.Drawing.Point(12, 11);
+            this.FindButton.Location = new System.Drawing.Point(16, 22);
             this.FindButton.Margin = new System.Windows.Forms.Padding(2);
             this.FindButton.Name = "FindButton";
             this.FindButton.Size = new System.Drawing.Size(86, 46);
@@ -126,7 +133,7 @@
             // pictureBoxForModelForSearch
             // 
             this.pictureBoxForModelForSearch.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(12, 284);
+            this.pictureBoxForModelForSearch.Location = new System.Drawing.Point(275, 221);
             this.pictureBoxForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxForModelForSearch.Name = "pictureBoxForModelForSearch";
             this.pictureBoxForModelForSearch.Size = new System.Drawing.Size(75, 41);
@@ -136,7 +143,6 @@
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
@@ -178,7 +184,7 @@
             // TestButton
             // 
             this.TestButton.Enabled = false;
-            this.TestButton.Location = new System.Drawing.Point(8, 504);
+            this.TestButton.Location = new System.Drawing.Point(5, 392);
             this.TestButton.Margin = new System.Windows.Forms.Padding(2);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(75, 58);
@@ -200,7 +206,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 7);
+            this.label2.Location = new System.Drawing.Point(13, 70);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(156, 13);
@@ -211,7 +217,7 @@
             // 
             this.labelForStatus.AutoSize = true;
             this.labelForStatus.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelForStatus.Location = new System.Drawing.Point(109, 11);
+            this.labelForStatus.Location = new System.Drawing.Point(113, 22);
             this.labelForStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelForStatus.Name = "labelForStatus";
             this.labelForStatus.Size = new System.Drawing.Size(205, 22);
@@ -230,7 +236,7 @@
             // 
             // panelForColorsForIgnor
             // 
-            this.panelForColorsForIgnor.BackColor = System.Drawing.Color.DarkSalmon;
+            this.panelForColorsForIgnor.BackColor = System.Drawing.Color.Tomato;
             this.panelForColorsForIgnor.Controls.Add(this.numericUpDownCountSecondForAddIgnorColor);
             this.panelForColorsForIgnor.Controls.Add(this.labelCountSecondForAddIgnorColor);
             this.panelForColorsForIgnor.Controls.Add(this.labelForNumberOfIgnorColor);
@@ -241,12 +247,12 @@
             this.panelForColorsForIgnor.Controls.Add(this.pictureBoxForIgnorColor);
             this.panelForColorsForIgnor.Controls.Add(this.buttonNextForColorsForIgnor);
             this.panelForColorsForIgnor.Controls.Add(this.labelForNameForIgnorColor);
-            this.panelForColorsForIgnor.Location = new System.Drawing.Point(12, 235);
+            this.panelForColorsForIgnor.Enabled = false;
+            this.panelForColorsForIgnor.Location = new System.Drawing.Point(17, 178);
             this.panelForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.panelForColorsForIgnor.Name = "panelForColorsForIgnor";
             this.panelForColorsForIgnor.Size = new System.Drawing.Size(372, 205);
             this.panelForColorsForIgnor.TabIndex = 14;
-            this.panelForColorsForIgnor.Visible = false;
             // 
             // numericUpDownCountSecondForAddIgnorColor
             // 
@@ -321,7 +327,7 @@
             // checkBoxForColorsForIgnor
             // 
             this.checkBoxForColorsForIgnor.AutoSize = true;
-            this.checkBoxForColorsForIgnor.Location = new System.Drawing.Point(12, 211);
+            this.checkBoxForColorsForIgnor.Location = new System.Drawing.Point(17, 154);
             this.checkBoxForColorsForIgnor.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxForColorsForIgnor.Name = "checkBoxForColorsForIgnor";
             this.checkBoxForColorsForIgnor.Size = new System.Drawing.Size(208, 17);
@@ -330,32 +336,20 @@
             this.checkBoxForColorsForIgnor.UseVisualStyleBackColor = true;
             this.checkBoxForColorsForIgnor.CheckedChanged += new System.EventHandler(this.CheckBoxForColorsForIgnor_CheckedChanged);
             // 
-            // panelForModelForSearch
+            // buttonCorrectModelForSearchSelectOnScreen
             // 
-            this.panelForModelForSearch.BackColor = System.Drawing.Color.LightCoral;
-            this.panelForModelForSearch.Controls.Add(this.buttonCorrectModelForSearchSelectOnScreen);
-            this.panelForModelForSearch.Controls.Add(this.buttonAddModelForSearchSelectOnScreen);
-            this.panelForModelForSearch.Controls.Add(this.numericUpDownCountOfThreads);
-            this.panelForModelForSearch.Controls.Add(this.checkBoxShowNotCorrectModel);
-            this.panelForModelForSearch.Controls.Add(this.buttonCorrectModelForSearch);
-            this.panelForModelForSearch.Controls.Add(this.labelPercentageComplianceWithModel);
-            this.panelForModelForSearch.Controls.Add(this.numericUpDownPercentageComplianceWithModel);
-            this.panelForModelForSearch.Controls.Add(this.checkBoxCountOfThreads);
-            this.panelForModelForSearch.Controls.Add(this.checkBoxFirstFoundModelIsEnd);
-            this.panelForModelForSearch.Controls.Add(this.checkBoxParallelSearch);
-            this.panelForModelForSearch.Controls.Add(this.buttonForChangeSizeOferyBigModelForSearch);
-            this.panelForModelForSearch.Controls.Add(this.buttonAddModelForSearchUploadFromHard);
-            this.panelForModelForSearch.Controls.Add(this.pictureBoxForModelForSearch);
-            this.panelForModelForSearch.Controls.Add(this.label2);
-            this.panelForModelForSearch.Location = new System.Drawing.Point(405, 64);
-            this.panelForModelForSearch.Margin = new System.Windows.Forms.Padding(2);
-            this.panelForModelForSearch.Name = "panelForModelForSearch";
-            this.panelForModelForSearch.Size = new System.Drawing.Size(476, 429);
-            this.panelForModelForSearch.TabIndex = 16;
+            this.buttonCorrectModelForSearchSelectOnScreen.Location = new System.Drawing.Point(140, 225);
+            this.buttonCorrectModelForSearchSelectOnScreen.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonCorrectModelForSearchSelectOnScreen.Name = "buttonCorrectModelForSearchSelectOnScreen";
+            this.buttonCorrectModelForSearchSelectOnScreen.Size = new System.Drawing.Size(120, 41);
+            this.buttonCorrectModelForSearchSelectOnScreen.TabIndex = 29;
+            this.buttonCorrectModelForSearchSelectOnScreen.Text = "Скорректировать эталон с экрана";
+            this.buttonCorrectModelForSearchSelectOnScreen.UseVisualStyleBackColor = true;
+            this.buttonCorrectModelForSearchSelectOnScreen.Click += new System.EventHandler(this.ButtonCorrectModelForSearchSelectOnScreen_Click);
             // 
             // buttonAddModelForSearchSelectOnScreen
             // 
-            this.buttonAddModelForSearchSelectOnScreen.Location = new System.Drawing.Point(136, 115);
+            this.buttonAddModelForSearchSelectOnScreen.Location = new System.Drawing.Point(140, 178);
             this.buttonAddModelForSearchSelectOnScreen.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddModelForSearchSelectOnScreen.Name = "buttonAddModelForSearchSelectOnScreen";
             this.buttonAddModelForSearchSelectOnScreen.Size = new System.Drawing.Size(120, 41);
@@ -366,7 +360,7 @@
             // 
             // numericUpDownCountOfThreads
             // 
-            this.numericUpDownCountOfThreads.Location = new System.Drawing.Point(201, 66);
+            this.numericUpDownCountOfThreads.Location = new System.Drawing.Point(205, 129);
             this.numericUpDownCountOfThreads.Maximum = new decimal(new int[] {
             -727379969,
             232,
@@ -389,7 +383,7 @@
             // checkBoxShowNotCorrectModel
             // 
             this.checkBoxShowNotCorrectModel.AutoSize = true;
-            this.checkBoxShowNotCorrectModel.Location = new System.Drawing.Point(11, 262);
+            this.checkBoxShowNotCorrectModel.Location = new System.Drawing.Point(274, 199);
             this.checkBoxShowNotCorrectModel.Name = "checkBoxShowNotCorrectModel";
             this.checkBoxShowNotCorrectModel.Size = new System.Drawing.Size(234, 17);
             this.checkBoxShowNotCorrectModel.TabIndex = 27;
@@ -399,7 +393,7 @@
             // 
             // buttonCorrectModelForSearch
             // 
-            this.buttonCorrectModelForSearch.Location = new System.Drawing.Point(12, 162);
+            this.buttonCorrectModelForSearch.Location = new System.Drawing.Point(16, 225);
             this.buttonCorrectModelForSearch.Margin = new System.Windows.Forms.Padding(2);
             this.buttonCorrectModelForSearch.Name = "buttonCorrectModelForSearch";
             this.buttonCorrectModelForSearch.Size = new System.Drawing.Size(120, 41);
@@ -411,7 +405,7 @@
             // labelPercentageComplianceWithModel
             // 
             this.labelPercentageComplianceWithModel.AutoSize = true;
-            this.labelPercentageComplianceWithModel.Location = new System.Drawing.Point(9, 49);
+            this.labelPercentageComplianceWithModel.Location = new System.Drawing.Point(13, 112);
             this.labelPercentageComplianceWithModel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelPercentageComplianceWithModel.Name = "labelPercentageComplianceWithModel";
             this.labelPercentageComplianceWithModel.Size = new System.Drawing.Size(183, 13);
@@ -420,7 +414,7 @@
             // 
             // numericUpDownPercentageComplianceWithModel
             // 
-            this.numericUpDownPercentageComplianceWithModel.Location = new System.Drawing.Point(11, 65);
+            this.numericUpDownPercentageComplianceWithModel.Location = new System.Drawing.Point(15, 128);
             this.numericUpDownPercentageComplianceWithModel.Name = "numericUpDownPercentageComplianceWithModel";
             this.numericUpDownPercentageComplianceWithModel.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownPercentageComplianceWithModel.TabIndex = 24;
@@ -435,7 +429,7 @@
             // 
             this.checkBoxCountOfThreads.AutoSize = true;
             this.checkBoxCountOfThreads.Enabled = false;
-            this.checkBoxCountOfThreads.Location = new System.Drawing.Point(201, 45);
+            this.checkBoxCountOfThreads.Location = new System.Drawing.Point(205, 108);
             this.checkBoxCountOfThreads.Name = "checkBoxCountOfThreads";
             this.checkBoxCountOfThreads.Size = new System.Drawing.Size(167, 17);
             this.checkBoxCountOfThreads.TabIndex = 13;
@@ -446,7 +440,7 @@
             // checkBoxFirstFoundModelIsEnd
             // 
             this.checkBoxFirstFoundModelIsEnd.AutoSize = true;
-            this.checkBoxFirstFoundModelIsEnd.Location = new System.Drawing.Point(11, 25);
+            this.checkBoxFirstFoundModelIsEnd.Location = new System.Drawing.Point(15, 88);
             this.checkBoxFirstFoundModelIsEnd.Name = "checkBoxFirstFoundModelIsEnd";
             this.checkBoxFirstFoundModelIsEnd.Size = new System.Drawing.Size(184, 17);
             this.checkBoxFirstFoundModelIsEnd.TabIndex = 12;
@@ -456,7 +450,7 @@
             // checkBoxParallelSearch
             // 
             this.checkBoxParallelSearch.AutoSize = true;
-            this.checkBoxParallelSearch.Location = new System.Drawing.Point(201, 25);
+            this.checkBoxParallelSearch.Location = new System.Drawing.Point(205, 88);
             this.checkBoxParallelSearch.Name = "checkBoxParallelSearch";
             this.checkBoxParallelSearch.Size = new System.Drawing.Size(184, 17);
             this.checkBoxParallelSearch.TabIndex = 11;
@@ -464,20 +458,9 @@
             this.checkBoxParallelSearch.UseVisualStyleBackColor = true;
             this.checkBoxParallelSearch.CheckedChanged += new System.EventHandler(this.CheckBoxParallelSearch_CheckedChanged);
             // 
-            // buttonForChangeSizeOferyBigModelForSearch
-            // 
-            this.buttonForChangeSizeOferyBigModelForSearch.Location = new System.Drawing.Point(11, 217);
-            this.buttonForChangeSizeOferyBigModelForSearch.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonForChangeSizeOferyBigModelForSearch.Name = "buttonForChangeSizeOferyBigModelForSearch";
-            this.buttonForChangeSizeOferyBigModelForSearch.Size = new System.Drawing.Size(152, 40);
-            this.buttonForChangeSizeOferyBigModelForSearch.TabIndex = 10;
-            this.buttonForChangeSizeOferyBigModelForSearch.Text = "Растянуть панель для большого эталона";
-            this.buttonForChangeSizeOferyBigModelForSearch.UseVisualStyleBackColor = true;
-            this.buttonForChangeSizeOferyBigModelForSearch.Click += new System.EventHandler(this.ButtonForChangeSizeOferyBigModelForSearch_Click);
-            // 
             // buttonAddModelForSearchUploadFromHard
             // 
-            this.buttonAddModelForSearchUploadFromHard.Location = new System.Drawing.Point(12, 114);
+            this.buttonAddModelForSearchUploadFromHard.Location = new System.Drawing.Point(16, 177);
             this.buttonAddModelForSearchUploadFromHard.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddModelForSearchUploadFromHard.Name = "buttonAddModelForSearchUploadFromHard";
             this.buttonAddModelForSearchUploadFromHard.Size = new System.Drawing.Size(120, 41);
@@ -498,7 +481,7 @@
             // checkBoxForPlaceOfSearch
             // 
             this.checkBoxForPlaceOfSearch.AutoSize = true;
-            this.checkBoxForPlaceOfSearch.Location = new System.Drawing.Point(12, 68);
+            this.checkBoxForPlaceOfSearch.Location = new System.Drawing.Point(17, 11);
             this.checkBoxForPlaceOfSearch.Name = "checkBoxForPlaceOfSearch";
             this.checkBoxForPlaceOfSearch.Size = new System.Drawing.Size(167, 17);
             this.checkBoxForPlaceOfSearch.TabIndex = 22;
@@ -508,7 +491,7 @@
             // 
             // panelForPlaceOfSearch
             // 
-            this.panelForPlaceOfSearch.BackColor = System.Drawing.Color.DarkSalmon;
+            this.panelForPlaceOfSearch.BackColor = System.Drawing.Color.Tomato;
             this.panelForPlaceOfSearch.Controls.Add(this.numericUpDownYEnd);
             this.panelForPlaceOfSearch.Controls.Add(this.numericUpDownXEnd);
             this.panelForPlaceOfSearch.Controls.Add(this.numericUpDownYBegin);
@@ -518,11 +501,11 @@
             this.panelForPlaceOfSearch.Controls.Add(this.label1);
             this.panelForPlaceOfSearch.Controls.Add(this.labelMousePosiotonView);
             this.panelForPlaceOfSearch.Controls.Add(this.checkBoxSelectActiveWindow);
-            this.panelForPlaceOfSearch.Location = new System.Drawing.Point(12, 91);
+            this.panelForPlaceOfSearch.Enabled = false;
+            this.panelForPlaceOfSearch.Location = new System.Drawing.Point(17, 34);
             this.panelForPlaceOfSearch.Name = "panelForPlaceOfSearch";
             this.panelForPlaceOfSearch.Size = new System.Drawing.Size(372, 112);
             this.panelForPlaceOfSearch.TabIndex = 23;
-            this.panelForPlaceOfSearch.Visible = false;
             // 
             // numericUpDownYEnd
             // 
@@ -625,30 +608,14 @@
             this.checkBoxSelectActiveWindow.UseVisualStyleBackColor = true;
             this.checkBoxSelectActiveWindow.CheckedChanged += new System.EventHandler(this.CheckBoxSelectActiveWindow_CheckedChanged);
             // 
-            // panelConfigurationOfSearch
-            // 
-            this.panelConfigurationOfSearch.AutoScroll = true;
-            this.panelConfigurationOfSearch.BackColor = System.Drawing.Color.Moccasin;
-            this.panelConfigurationOfSearch.Controls.Add(this.FindButton);
-            this.panelConfigurationOfSearch.Controls.Add(this.panelForPlaceOfSearch);
-            this.panelConfigurationOfSearch.Controls.Add(this.panelForModelForSearch);
-            this.panelConfigurationOfSearch.Controls.Add(this.checkBoxForPlaceOfSearch);
-            this.panelConfigurationOfSearch.Controls.Add(this.labelForStatus);
-            this.panelConfigurationOfSearch.Controls.Add(this.panelForColorsForIgnor);
-            this.panelConfigurationOfSearch.Controls.Add(this.checkBoxForColorsForIgnor);
-            this.panelConfigurationOfSearch.Location = new System.Drawing.Point(198, 106);
-            this.panelConfigurationOfSearch.Name = "panelConfigurationOfSearch";
-            this.panelConfigurationOfSearch.Size = new System.Drawing.Size(896, 505);
-            this.panelConfigurationOfSearch.TabIndex = 24;
-            // 
             // comboBoxForSelectAction
             // 
             this.comboBoxForSelectAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxForSelectAction.FormattingEnabled = true;
-            this.comboBoxForSelectAction.Location = new System.Drawing.Point(198, 37);
+            this.comboBoxForSelectAction.Location = new System.Drawing.Point(5, 10);
             this.comboBoxForSelectAction.Name = "comboBoxForSelectAction";
-            this.comboBoxForSelectAction.Size = new System.Drawing.Size(861, 21);
+            this.comboBoxForSelectAction.Size = new System.Drawing.Size(565, 21);
             this.comboBoxForSelectAction.TabIndex = 26;
             // 
             // buttonFindAndPerformThisAction
@@ -707,7 +674,7 @@
             // labelWaitAfterThisAction
             // 
             this.labelWaitAfterThisAction.AutoSize = true;
-            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(199, 65);
+            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(6, 38);
             this.labelWaitAfterThisAction.Name = "labelWaitAfterThisAction";
             this.labelWaitAfterThisAction.Size = new System.Drawing.Size(205, 13);
             this.labelWaitAfterThisAction.TabIndex = 32;
@@ -715,7 +682,7 @@
             // 
             // numericUpDownWaitAfterThisAction
             // 
-            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(198, 81);
+            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(5, 54);
             this.numericUpDownWaitAfterThisAction.Name = "numericUpDownWaitAfterThisAction";
             this.numericUpDownWaitAfterThisAction.Size = new System.Drawing.Size(203, 20);
             this.numericUpDownWaitAfterThisAction.TabIndex = 26;
@@ -733,7 +700,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1195, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
             this.menuStrip1.TabIndex = 34;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -843,37 +810,107 @@
             this.buttonDeleteAction.UseVisualStyleBackColor = true;
             this.buttonDeleteAction.Click += new System.EventHandler(this.ButtonDeleteAction_Click);
             // 
-            // buttonCorrectModelForSearchSelectOnScreen
+            // generalTabControlOfConfiguration
             // 
-            this.buttonCorrectModelForSearchSelectOnScreen.Location = new System.Drawing.Point(136, 162);
-            this.buttonCorrectModelForSearchSelectOnScreen.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonCorrectModelForSearchSelectOnScreen.Name = "buttonCorrectModelForSearchSelectOnScreen";
-            this.buttonCorrectModelForSearchSelectOnScreen.Size = new System.Drawing.Size(120, 41);
-            this.buttonCorrectModelForSearchSelectOnScreen.TabIndex = 29;
-            this.buttonCorrectModelForSearchSelectOnScreen.Text = "Скорректировать эталон с экрана";
-            this.buttonCorrectModelForSearchSelectOnScreen.UseVisualStyleBackColor = true;
-            this.buttonCorrectModelForSearchSelectOnScreen.Click += new System.EventHandler(this.ButtonCorrectModelForSearchSelectOnScreen_Click);
+            this.generalTabControlOfConfiguration.Controls.Add(this.tabPageConfigurationOfSearch);
+            this.generalTabControlOfConfiguration.Controls.Add(this.tabPageConfigurationOfAction);
+            this.generalTabControlOfConfiguration.Location = new System.Drawing.Point(198, 36);
+            this.generalTabControlOfConfiguration.Name = "generalTabControlOfConfiguration";
+            this.generalTabControlOfConfiguration.SelectedIndex = 0;
+            this.generalTabControlOfConfiguration.Size = new System.Drawing.Size(584, 414);
+            this.generalTabControlOfConfiguration.TabIndex = 37;
+            // 
+            // tabPageConfigurationOfSearch
+            // 
+            this.tabPageConfigurationOfSearch.BackColor = System.Drawing.Color.Maroon;
+            this.tabPageConfigurationOfSearch.Controls.Add(this.tabControlConfigurationOfSearch);
+            this.tabPageConfigurationOfSearch.Location = new System.Drawing.Point(4, 22);
+            this.tabPageConfigurationOfSearch.Name = "tabPageConfigurationOfSearch";
+            this.tabPageConfigurationOfSearch.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageConfigurationOfSearch.Size = new System.Drawing.Size(576, 388);
+            this.tabPageConfigurationOfSearch.TabIndex = 0;
+            this.tabPageConfigurationOfSearch.Text = "Настройки поиска";
+            // 
+            // tabControlConfigurationOfSearch
+            // 
+            this.tabControlConfigurationOfSearch.Controls.Add(this.tabPageMainConfiguration);
+            this.tabControlConfigurationOfSearch.Controls.Add(this.tabPageAdditionalConfiguration);
+            this.tabControlConfigurationOfSearch.Location = new System.Drawing.Point(6, 6);
+            this.tabControlConfigurationOfSearch.Name = "tabControlConfigurationOfSearch";
+            this.tabControlConfigurationOfSearch.SelectedIndex = 0;
+            this.tabControlConfigurationOfSearch.Size = new System.Drawing.Size(566, 376);
+            this.tabControlConfigurationOfSearch.TabIndex = 0;
+            // 
+            // tabPageMainConfiguration
+            // 
+            this.tabPageMainConfiguration.AutoScroll = true;
+            this.tabPageMainConfiguration.BackColor = System.Drawing.Color.IndianRed;
+            this.tabPageMainConfiguration.Controls.Add(this.buttonCorrectModelForSearchSelectOnScreen);
+            this.tabPageMainConfiguration.Controls.Add(this.FindButton);
+            this.tabPageMainConfiguration.Controls.Add(this.buttonAddModelForSearchSelectOnScreen);
+            this.tabPageMainConfiguration.Controls.Add(this.numericUpDownCountOfThreads);
+            this.tabPageMainConfiguration.Controls.Add(this.labelForStatus);
+            this.tabPageMainConfiguration.Controls.Add(this.checkBoxShowNotCorrectModel);
+            this.tabPageMainConfiguration.Controls.Add(this.label2);
+            this.tabPageMainConfiguration.Controls.Add(this.buttonCorrectModelForSearch);
+            this.tabPageMainConfiguration.Controls.Add(this.pictureBoxForModelForSearch);
+            this.tabPageMainConfiguration.Controls.Add(this.labelPercentageComplianceWithModel);
+            this.tabPageMainConfiguration.Controls.Add(this.buttonAddModelForSearchUploadFromHard);
+            this.tabPageMainConfiguration.Controls.Add(this.numericUpDownPercentageComplianceWithModel);
+            this.tabPageMainConfiguration.Controls.Add(this.checkBoxCountOfThreads);
+            this.tabPageMainConfiguration.Controls.Add(this.checkBoxParallelSearch);
+            this.tabPageMainConfiguration.Controls.Add(this.checkBoxFirstFoundModelIsEnd);
+            this.tabPageMainConfiguration.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMainConfiguration.Name = "tabPageMainConfiguration";
+            this.tabPageMainConfiguration.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMainConfiguration.Size = new System.Drawing.Size(558, 350);
+            this.tabPageMainConfiguration.TabIndex = 0;
+            this.tabPageMainConfiguration.Text = "Основные настройки";
+            // 
+            // tabPageAdditionalConfiguration
+            // 
+            this.tabPageAdditionalConfiguration.BackColor = System.Drawing.Color.Salmon;
+            this.tabPageAdditionalConfiguration.Controls.Add(this.panelForPlaceOfSearch);
+            this.tabPageAdditionalConfiguration.Controls.Add(this.checkBoxForColorsForIgnor);
+            this.tabPageAdditionalConfiguration.Controls.Add(this.panelForColorsForIgnor);
+            this.tabPageAdditionalConfiguration.Controls.Add(this.checkBoxForPlaceOfSearch);
+            this.tabPageAdditionalConfiguration.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAdditionalConfiguration.Name = "tabPageAdditionalConfiguration";
+            this.tabPageAdditionalConfiguration.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAdditionalConfiguration.Size = new System.Drawing.Size(558, 350);
+            this.tabPageAdditionalConfiguration.TabIndex = 1;
+            this.tabPageAdditionalConfiguration.Text = "Дополнительные настройки";
+            // 
+            // tabPageConfigurationOfAction
+            // 
+            this.tabPageConfigurationOfAction.BackColor = System.Drawing.Color.Thistle;
+            this.tabPageConfigurationOfAction.Controls.Add(this.labelWaitAfterThisAction);
+            this.tabPageConfigurationOfAction.Controls.Add(this.comboBoxForSelectAction);
+            this.tabPageConfigurationOfAction.Controls.Add(this.numericUpDownWaitAfterThisAction);
+            this.tabPageConfigurationOfAction.Location = new System.Drawing.Point(4, 22);
+            this.tabPageConfigurationOfAction.Name = "tabPageConfigurationOfAction";
+            this.tabPageConfigurationOfAction.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageConfigurationOfAction.Size = new System.Drawing.Size(576, 388);
+            this.tabPageConfigurationOfAction.TabIndex = 1;
+            this.tabPageConfigurationOfAction.Text = "Настройки действий";
             // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
-            this.ClientSize = new System.Drawing.Size(1195, 718);
+            this.ClientSize = new System.Drawing.Size(784, 454);
+            this.Controls.Add(this.generalTabControlOfConfiguration);
             this.Controls.Add(this.buttonDeleteAction);
             this.Controls.Add(this.buttonCloneThisAction);
             this.Controls.Add(this.labelNameOfLisActions);
             this.Controls.Add(this.textBoxNameOfLisActions);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.numericUpDownWaitAfterThisAction);
-            this.Controls.Add(this.labelWaitAfterThisAction);
             this.Controls.Add(this.labelNumberOfSearchAndAction);
             this.Controls.Add(this.buttonAddAction);
             this.Controls.Add(this.buttonPrevAction);
             this.Controls.Add(this.buttonNextAction);
             this.Controls.Add(this.buttonFindAndPerformThisAction);
-            this.Controls.Add(this.comboBoxForSelectAction);
-            this.Controls.Add(this.panelConfigurationOfSearch);
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.buttonFindAndPerformAllAction);
             this.DoubleBuffered = true;
@@ -882,14 +919,14 @@
             this.Name = "MyLittleMonion";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = " ";
+            this.Load += new System.EventHandler(this.MyLittleMonion_Load);
+            this.SizeChanged += new System.EventHandler(this.MyLittleMonion_SizeChanged);
             this.Move += new System.EventHandler(this.MyLittleMonion_Move);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).EndInit();
             this.panelForColorsForIgnor.ResumeLayout(false);
             this.panelForColorsForIgnor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountSecondForAddIgnorColor)).EndInit();
-            this.panelForModelForSearch.ResumeLayout(false);
-            this.panelForModelForSearch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountOfThreads)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercentageComplianceWithModel)).EndInit();
             this.panelForPlaceOfSearch.ResumeLayout(false);
@@ -898,11 +935,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYBegin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXBegin)).EndInit();
-            this.panelConfigurationOfSearch.ResumeLayout(false);
-            this.panelConfigurationOfSearch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitAfterThisAction)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.generalTabControlOfConfiguration.ResumeLayout(false);
+            this.tabPageConfigurationOfSearch.ResumeLayout(false);
+            this.tabControlConfigurationOfSearch.ResumeLayout(false);
+            this.tabPageMainConfiguration.ResumeLayout(false);
+            this.tabPageMainConfiguration.PerformLayout();
+            this.tabPageAdditionalConfiguration.ResumeLayout(false);
+            this.tabPageAdditionalConfiguration.PerformLayout();
+            this.tabPageConfigurationOfAction.ResumeLayout(false);
+            this.tabPageConfigurationOfAction.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -927,9 +971,7 @@
         private System.Windows.Forms.Button buttonAddManyColorsForIgnor;
         private System.Windows.Forms.Button buttonAddSingleColorForIgnor;
         private System.Windows.Forms.Label labelForNumberOfIgnorColor;
-        private System.Windows.Forms.Panel panelForModelForSearch;
         private System.Windows.Forms.Button buttonAddModelForSearchUploadFromHard;
-        private System.Windows.Forms.Button buttonForChangeSizeOferyBigModelForSearch;
         private System.Windows.Forms.Label labelMousePosiotonView;
         private System.Windows.Forms.CheckBox checkBoxForPlaceOfSearch;
         private System.Windows.Forms.Panel panelForPlaceOfSearch;
@@ -941,7 +983,6 @@
         private System.Windows.Forms.CheckBox checkBoxCountOfThreads;
         private System.Windows.Forms.Label labelPercentageComplianceWithModel;
         private System.Windows.Forms.NumericUpDown numericUpDownPercentageComplianceWithModel;
-        private System.Windows.Forms.Panel panelConfigurationOfSearch;
         private System.Windows.Forms.ComboBox comboBoxForSelectAction;
         private System.Windows.Forms.Button buttonFindAndPerformThisAction;
         private System.Windows.Forms.Button buttonPrevAction;
@@ -976,6 +1017,12 @@
         private System.Windows.Forms.NumericUpDown numericUpDownXBegin;
         private System.Windows.Forms.Button buttonAddModelForSearchSelectOnScreen;
         private System.Windows.Forms.Button buttonCorrectModelForSearchSelectOnScreen;
+        private System.Windows.Forms.TabControl generalTabControlOfConfiguration;
+        private System.Windows.Forms.TabPage tabPageConfigurationOfSearch;
+        private System.Windows.Forms.TabControl tabControlConfigurationOfSearch;
+        private System.Windows.Forms.TabPage tabPageMainConfiguration;
+        private System.Windows.Forms.TabPage tabPageAdditionalConfiguration;
+        private System.Windows.Forms.TabPage tabPageConfigurationOfAction;
     }
 }
 
