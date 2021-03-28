@@ -24,9 +24,9 @@ namespace MyLittleMinion
         /// </summary>
         private List<Search> listOfSearching;
         /// <summary>
-        /// Списко класса действия.
+        /// Списки класса действия.
         /// </summary>
-        private List<ActionOfMinion> listOfActionsAfterSearchin;
+        private List<ListActionOfMinion> listsOfActionsAfterSearchin;
         private string nameOfListOfSearchingAndActionsPrivate;
         /// <summary>
         /// Имя принадлежащее этому экземпляру списка поисков и действий.
@@ -70,17 +70,17 @@ namespace MyLittleMinion
         public ListOfActionsOfMinion()
         {
             this.listOfSearching = new List<Search>();
-            this.listOfActionsAfterSearchin = new List<ActionOfMinion>();
-            this.Add(new Search(), new ActionOfMinion());
+            this.listsOfActionsAfterSearchin = new List<ListActionOfMinion>();
+            this.Add(new Search(), new ListActionOfMinion());
         }
 
         /// <summary>
         /// Добавляет объекты Search и ActionOfMinion в концы соответсвующих очередей этого экземпляра.
         /// </summary>
-        public void Add(Search SearchingForAdding, ActionOfMinion ActionsAfterSearchinForAdding)
+        public void Add(Search SearchingForAdding, ListActionOfMinion ActionsAfterSearchinForAdding)
         {
             this.listOfSearching.Add(SearchingForAdding);
-            this.listOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
+            this.listsOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
             this.numberSearchAndActionInList = this.listOfSearching.Count - 1;
             if (listOfSearching.Count < 1)
                 this.nameOfListOfSearchingAndActions = "Default list search and action";
@@ -102,24 +102,24 @@ namespace MyLittleMinion
         /// <summary>
         /// Возвращает экземпляр действия, соотвествующий установленому номеру списка.
         /// </summary>
-        public ActionOfMinion GetThisExemplarActionOfMinion()
+        public ListActionOfMinion GetThisExemplarListActionsOfMinion()
         {
-            return this.listOfActionsAfterSearchin[numberSearchAndActionInList];
+            return this.listsOfActionsAfterSearchin[numberSearchAndActionInList];
         }
         /// <summary>
         /// Удаляет экземпляры действия и поиска, соотвествующие установленому номеру списка.
         /// Счетчик движется назад. Если осталось одно действие в списке, то оно стирается и добавлется действие по умолчанию.
         /// </summary>
-        public void RemoveThisExemplarSearchingAndAction()
+        public void RemoveThisExemplarSearchingAndActions()
         {
             if(listOfSearching.Count ==1)
             {
                 this.listOfSearching = new List<Search>();
-                this.listOfActionsAfterSearchin = new List<ActionOfMinion>();
-                this.Add(new Search(), new ActionOfMinion());
+                this.listsOfActionsAfterSearchin = new List<ListActionOfMinion>();
+                this.Add(new Search(), new ListActionOfMinion());
             }
             this.listOfSearching.RemoveAt(numberSearchAndActionInList);
-            this.listOfActionsAfterSearchin.RemoveAt(numberSearchAndActionInList);
+            this.listsOfActionsAfterSearchin.RemoveAt(numberSearchAndActionInList);
             if (this.numberSearchAndActionInList > 0)
                 this.numberSearchAndActionInList--;
 
@@ -200,7 +200,7 @@ namespace MyLittleMinion
                 nameOpenFile = nameOpenFile.Replace(nameOpenFile.Replace(open_dialog.SafeFileName, ""), "");
                 nameOpenFile = nameOpenFile.Replace(".MLM" , "");
                 this.listOfSearching = loadFileListOfActionsOfMinion.listOfSearching;
-                this.listOfActionsAfterSearchin = loadFileListOfActionsOfMinion.listOfActionsAfterSearchin;
+                this.listsOfActionsAfterSearchin = loadFileListOfActionsOfMinion.listsOfActionsAfterSearchin;
                 this.nameOfListOfSearchingAndActions = nameOpenFile;
                 this.numberSearchAndActionInList = 0;
 

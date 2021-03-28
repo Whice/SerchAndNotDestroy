@@ -8,6 +8,97 @@ using System.Windows.Forms;
 namespace MyLittleMinion
 {
     [Serializable]
+    class ListActionOfMinion
+    {
+        /// <summary>
+        /// Список действий
+        /// </summary>
+        private List<ActionOfMinion> actionsOfMinion;
+        /// <summary>
+        /// Количество действий в списке.
+        /// </summary>
+        public int count { get { return actionsOfMinion.Count; } }
+        private ushort numberActionInListPrivate;
+        /// <summary>
+        /// Номер действия в списке
+        /// </summary>
+        public ushort numberActionInList
+        {
+            get { return this.numberActionInListPrivate; }
+            set
+            {
+                if(value<0 || value>actionsOfMinion.Count-1)
+                    this.numberActionInListPrivate = 0;
+                else
+                    this.numberActionInListPrivate = value;
+            }
+        }
+
+        public ListActionOfMinion()
+        {
+            actionsOfMinion = new List<ActionOfMinion>();
+            actionsOfMinion.Add(new ActionOfMinion());
+        }
+        public ListActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn, string textForActionIn)
+        {
+            actionsOfMinion = new List<ActionOfMinion>();
+            if (actionsOfMinion.Count == 0)
+                actionsOfMinion.Add(new ActionOfMinion(cursorPositionIn, typeOfActionIn, numberOfActionIn, timeOfWaitingAfterActionInSecondIn, textForActionIn));
+        }
+        public ListActionOfMinion(ActionOfMinion newActionOfMinion)
+        {
+            actionsOfMinion = new List<ActionOfMinion>();
+            actionsOfMinion.Add(newActionOfMinion);
+        }
+        /// <summary>
+        /// Возвращает экземпляр ActionOfMinion соответсвующий нынешнему номеру.
+        /// </summary>
+        public ActionOfMinion GetAction()
+        {
+            return actionsOfMinion[numberActionInListPrivate];
+        }
+        /// <summary>
+        /// Возвращает копию списка действий этого экземпляра.
+        /// </summary>
+        public List<ActionOfMinion> GetListActions()
+        {
+            return this.Clone().actionsOfMinion;
+        }
+        /// <summary>
+        /// Добавить новый экземпляр действия.
+        /// </summary>
+        /// <param name="newActionOfMinion"></param>
+        public void Add(ActionOfMinion newActionOfMinion)
+        {
+            actionsOfMinion.Add(newActionOfMinion);
+        }
+        /// <summary>
+        /// Удаляет нынешний экземпляр действия.
+        /// </summary>
+        public void Remove()
+        {
+            if(actionsOfMinion.Count>1)
+            {
+                actionsOfMinion.RemoveAt(this.numberActionInList);
+                if(this.numberActionInList>0)
+                    this.numberActionInList--;
+            }
+        }
+        /// <summary>
+        /// Возвращает полный клон экземпляра списка действий.
+        /// </summary>
+        /// <returns></returns>
+        public ListActionOfMinion Clone()
+        {
+            ListActionOfMinion cloneListActionOfMinion = new ListActionOfMinion(this.actionsOfMinion[0].Clone());
+            for (int i = 1; i < this.actionsOfMinion.Count; i++)
+                cloneListActionOfMinion.Add(this.actionsOfMinion[i].Clone());
+
+            return cloneListActionOfMinion;
+        }
+    }
+
+    [Serializable]
     /// <summary>
     /// Это класс действия.
     /// Он позволяет выполнять действия мышкой, при заданных для координатах, или действия с клавиатурой.
@@ -73,6 +164,22 @@ namespace MyLittleMinion
 
             this.timeOfWaitingAfterActionInSecond = 1;
             this.textForAction = "";
+        }
+        public ActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn, string textForActionIn)
+        {
+            this.cursorPosition = cursorPositionIn;
+
+            //Из-за того, что numberOfAction работает с созданным списком, его надо объявить сразу.
+            listNameOfMauseAction = new List<string>[2];
+            for (int i = 0; i < listNameOfMauseAction.Length; i++)
+                listNameOfMauseAction[i] = new List<string>();
+            this.typeOfAction = typeOfActionIn;
+            this.numberOfAction = numberOfActionIn;
+            FillMassiveOfListsOfNames();
+
+
+            this.timeOfWaitingAfterActionInSecond = timeOfWaitingAfterActionInSecondIn;
+            this.textForAction = textForActionIn;
         }
         private void FillMassiveOfListsOfNames()
         {

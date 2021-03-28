@@ -34,7 +34,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.buttonNextForColorsForIgnor = new System.Windows.Forms.Button();
             this.buttonPreviousForColorsForIgnor = new System.Windows.Forms.Button();
-            this.buttonFindAndPerformAllAction = new System.Windows.Forms.Button();
+            this.buttonFindAndPerformAllSequenceElement = new System.Windows.Forms.Button();
             this.TestButton = new System.Windows.Forms.Button();
             this.labelForNameForIgnorColor = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -71,10 +71,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSelectActiveWindow = new System.Windows.Forms.CheckBox();
             this.comboBoxForSelectAction = new System.Windows.Forms.ComboBox();
-            this.buttonFindAndPerformThisAction = new System.Windows.Forms.Button();
-            this.buttonPrevAction = new System.Windows.Forms.Button();
-            this.buttonNextAction = new System.Windows.Forms.Button();
-            this.buttonAddAction = new System.Windows.Forms.Button();
+            this.buttonFindAndPerformThisSequenceElement = new System.Windows.Forms.Button();
+            this.buttonPrevSequenceElement = new System.Windows.Forms.Button();
+            this.buttonNextSequenceElement = new System.Windows.Forms.Button();
+            this.buttonAddSequenceElement = new System.Windows.Forms.Button();
             this.labelNumberOfSearchAndAction = new System.Windows.Forms.Label();
             this.labelWaitAfterThisAction = new System.Windows.Forms.Label();
             this.numericUpDownWaitAfterThisAction = new System.Windows.Forms.NumericUpDown();
@@ -90,16 +90,20 @@
             this.инструкцияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
-            this.buttonCloneThisAction = new System.Windows.Forms.Button();
-            this.buttonDeleteAction = new System.Windows.Forms.Button();
+            this.buttonCloneThisSequenceElement = new System.Windows.Forms.Button();
+            this.buttonDeleteSequenceElement = new System.Windows.Forms.Button();
             this.generalTabControlOfConfiguration = new System.Windows.Forms.TabControl();
             this.tabPageConfigurationOfSearch = new System.Windows.Forms.TabPage();
             this.tabControlConfigurationOfSearch = new System.Windows.Forms.TabControl();
             this.tabPageMainConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageAdditionalConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageConfigurationOfAction = new System.Windows.Forms.TabPage();
-            this.comboBoxTypeOfAction = new System.Windows.Forms.ComboBox();
+            this.buttonDeleteAction = new System.Windows.Forms.Button();
+            this.buttonAddAction = new System.Windows.Forms.Button();
+            this.listBoxForListOfActions = new System.Windows.Forms.ListBox();
             this.richTextBoxForExemplarOfAction = new System.Windows.Forms.RichTextBox();
+            this.comboBoxTypeOfAction = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -172,16 +176,16 @@
             this.buttonPreviousForColorsForIgnor.UseVisualStyleBackColor = true;
             this.buttonPreviousForColorsForIgnor.Click += new System.EventHandler(this.Prev_Click);
             // 
-            // buttonFindAndPerformAllAction
+            // buttonFindAndPerformAllSequenceElement
             // 
-            this.buttonFindAndPerformAllAction.Location = new System.Drawing.Point(5, 36);
-            this.buttonFindAndPerformAllAction.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonFindAndPerformAllAction.Name = "buttonFindAndPerformAllAction";
-            this.buttonFindAndPerformAllAction.Size = new System.Drawing.Size(188, 47);
-            this.buttonFindAndPerformAllAction.TabIndex = 5;
-            this.buttonFindAndPerformAllAction.Text = "Найти и выполнить все действия";
-            this.buttonFindAndPerformAllAction.UseVisualStyleBackColor = true;
-            this.buttonFindAndPerformAllAction.Click += new System.EventHandler(this.FindAndPerformThisActionButton_Click);
+            this.buttonFindAndPerformAllSequenceElement.Location = new System.Drawing.Point(5, 36);
+            this.buttonFindAndPerformAllSequenceElement.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonFindAndPerformAllSequenceElement.Name = "buttonFindAndPerformAllSequenceElement";
+            this.buttonFindAndPerformAllSequenceElement.Size = new System.Drawing.Size(188, 47);
+            this.buttonFindAndPerformAllSequenceElement.TabIndex = 5;
+            this.buttonFindAndPerformAllSequenceElement.Text = "Найти и выполнить все действия";
+            this.buttonFindAndPerformAllSequenceElement.UseVisualStyleBackColor = true;
+            this.buttonFindAndPerformAllSequenceElement.Click += new System.EventHandler(this.FindAndPerformThisActionButton_Click);
             // 
             // TestButton
             // 
@@ -614,54 +618,54 @@
             this.comboBoxForSelectAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxForSelectAction.FormattingEnabled = true;
-            this.comboBoxForSelectAction.Location = new System.Drawing.Point(219, 10);
+            this.comboBoxForSelectAction.Location = new System.Drawing.Point(222, 33);
             this.comboBoxForSelectAction.Name = "comboBoxForSelectAction";
             this.comboBoxForSelectAction.Size = new System.Drawing.Size(351, 21);
             this.comboBoxForSelectAction.TabIndex = 26;
             this.comboBoxForSelectAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxForSelectAction_SelectedIndexChanged);
             // 
-            // buttonFindAndPerformThisAction
+            // buttonFindAndPerformThisSequenceElement
             // 
-            this.buttonFindAndPerformThisAction.Location = new System.Drawing.Point(5, 92);
-            this.buttonFindAndPerformThisAction.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonFindAndPerformThisAction.Name = "buttonFindAndPerformThisAction";
-            this.buttonFindAndPerformThisAction.Size = new System.Drawing.Size(188, 47);
-            this.buttonFindAndPerformThisAction.TabIndex = 27;
-            this.buttonFindAndPerformThisAction.Text = "Найти и выполнить это действие";
-            this.buttonFindAndPerformThisAction.UseVisualStyleBackColor = true;
-            this.buttonFindAndPerformThisAction.Click += new System.EventHandler(this.ButtonFindAndPerformThisAction_Click);
+            this.buttonFindAndPerformThisSequenceElement.Location = new System.Drawing.Point(5, 92);
+            this.buttonFindAndPerformThisSequenceElement.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonFindAndPerformThisSequenceElement.Name = "buttonFindAndPerformThisSequenceElement";
+            this.buttonFindAndPerformThisSequenceElement.Size = new System.Drawing.Size(188, 47);
+            this.buttonFindAndPerformThisSequenceElement.TabIndex = 27;
+            this.buttonFindAndPerformThisSequenceElement.Text = "Найти и выполнить это действие";
+            this.buttonFindAndPerformThisSequenceElement.UseVisualStyleBackColor = true;
+            this.buttonFindAndPerformThisSequenceElement.Click += new System.EventHandler(this.ButtonFindAndPerformThisAction_Click);
             // 
-            // buttonPrevAction
+            // buttonPrevSequenceElement
             // 
-            this.buttonPrevAction.Location = new System.Drawing.Point(5, 170);
-            this.buttonPrevAction.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonPrevAction.Name = "buttonPrevAction";
-            this.buttonPrevAction.Size = new System.Drawing.Size(89, 40);
-            this.buttonPrevAction.TabIndex = 29;
-            this.buttonPrevAction.Text = "Назад";
-            this.buttonPrevAction.UseVisualStyleBackColor = true;
-            this.buttonPrevAction.Click += new System.EventHandler(this.ButtonPrevAction_Click);
+            this.buttonPrevSequenceElement.Location = new System.Drawing.Point(5, 170);
+            this.buttonPrevSequenceElement.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonPrevSequenceElement.Name = "buttonPrevSequenceElement";
+            this.buttonPrevSequenceElement.Size = new System.Drawing.Size(89, 40);
+            this.buttonPrevSequenceElement.TabIndex = 29;
+            this.buttonPrevSequenceElement.Text = "Назад";
+            this.buttonPrevSequenceElement.UseVisualStyleBackColor = true;
+            this.buttonPrevSequenceElement.Click += new System.EventHandler(this.ButtonPrevAction_Click);
             // 
-            // buttonNextAction
+            // buttonNextSequenceElement
             // 
-            this.buttonNextAction.Location = new System.Drawing.Point(98, 170);
-            this.buttonNextAction.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonNextAction.Name = "buttonNextAction";
-            this.buttonNextAction.Size = new System.Drawing.Size(89, 40);
-            this.buttonNextAction.TabIndex = 28;
-            this.buttonNextAction.Text = "Вперед";
-            this.buttonNextAction.UseVisualStyleBackColor = true;
-            this.buttonNextAction.Click += new System.EventHandler(this.ButtonNextAction_Click);
+            this.buttonNextSequenceElement.Location = new System.Drawing.Point(98, 170);
+            this.buttonNextSequenceElement.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonNextSequenceElement.Name = "buttonNextSequenceElement";
+            this.buttonNextSequenceElement.Size = new System.Drawing.Size(89, 40);
+            this.buttonNextSequenceElement.TabIndex = 28;
+            this.buttonNextSequenceElement.Text = "Вперед";
+            this.buttonNextSequenceElement.UseVisualStyleBackColor = true;
+            this.buttonNextSequenceElement.Click += new System.EventHandler(this.ButtonNextAction_Click);
             // 
-            // buttonAddAction
+            // buttonAddSequenceElement
             // 
-            this.buttonAddAction.Location = new System.Drawing.Point(5, 232);
-            this.buttonAddAction.Name = "buttonAddAction";
-            this.buttonAddAction.Size = new System.Drawing.Size(89, 41);
-            this.buttonAddAction.TabIndex = 30;
-            this.buttonAddAction.Text = "Добавить действие";
-            this.buttonAddAction.UseVisualStyleBackColor = true;
-            this.buttonAddAction.Click += new System.EventHandler(this.ButtonAddAction_Click);
+            this.buttonAddSequenceElement.Location = new System.Drawing.Point(5, 232);
+            this.buttonAddSequenceElement.Name = "buttonAddSequenceElement";
+            this.buttonAddSequenceElement.Size = new System.Drawing.Size(89, 41);
+            this.buttonAddSequenceElement.TabIndex = 30;
+            this.buttonAddSequenceElement.Text = "Добавить действие";
+            this.buttonAddSequenceElement.UseVisualStyleBackColor = true;
+            this.buttonAddSequenceElement.Click += new System.EventHandler(this.ButtonAddAction_Click);
             // 
             // labelNumberOfSearchAndAction
             // 
@@ -676,7 +680,7 @@
             // labelWaitAfterThisAction
             // 
             this.labelWaitAfterThisAction.AutoSize = true;
-            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(6, 38);
+            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(368, 142);
             this.labelWaitAfterThisAction.Name = "labelWaitAfterThisAction";
             this.labelWaitAfterThisAction.Size = new System.Drawing.Size(205, 13);
             this.labelWaitAfterThisAction.TabIndex = 32;
@@ -684,7 +688,7 @@
             // 
             // numericUpDownWaitAfterThisAction
             // 
-            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(5, 54);
+            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(367, 158);
             this.numericUpDownWaitAfterThisAction.Name = "numericUpDownWaitAfterThisAction";
             this.numericUpDownWaitAfterThisAction.Size = new System.Drawing.Size(203, 20);
             this.numericUpDownWaitAfterThisAction.TabIndex = 26;
@@ -792,25 +796,25 @@
             this.textBoxNameOfLisActions.Text = "Default list search and action.";
             this.textBoxNameOfLisActions.TextChanged += new System.EventHandler(this.TextBoxNameOfLisActions_TextChanged);
             // 
-            // buttonCloneThisAction
+            // buttonCloneThisSequenceElement
             // 
-            this.buttonCloneThisAction.Location = new System.Drawing.Point(100, 231);
-            this.buttonCloneThisAction.Name = "buttonCloneThisAction";
-            this.buttonCloneThisAction.Size = new System.Drawing.Size(89, 41);
-            this.buttonCloneThisAction.TabIndex = 35;
-            this.buttonCloneThisAction.Text = "Клонировать действие";
-            this.buttonCloneThisAction.UseVisualStyleBackColor = true;
-            this.buttonCloneThisAction.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
+            this.buttonCloneThisSequenceElement.Location = new System.Drawing.Point(100, 231);
+            this.buttonCloneThisSequenceElement.Name = "buttonCloneThisSequenceElement";
+            this.buttonCloneThisSequenceElement.Size = new System.Drawing.Size(89, 41);
+            this.buttonCloneThisSequenceElement.TabIndex = 35;
+            this.buttonCloneThisSequenceElement.Text = "Клонировать действие";
+            this.buttonCloneThisSequenceElement.UseVisualStyleBackColor = true;
+            this.buttonCloneThisSequenceElement.Click += new System.EventHandler(this.ButtonCloneThisAction_Click);
             // 
-            // buttonDeleteAction
+            // buttonDeleteSequenceElement
             // 
-            this.buttonDeleteAction.Location = new System.Drawing.Point(5, 279);
-            this.buttonDeleteAction.Name = "buttonDeleteAction";
-            this.buttonDeleteAction.Size = new System.Drawing.Size(89, 41);
-            this.buttonDeleteAction.TabIndex = 36;
-            this.buttonDeleteAction.Text = "Удалить действие";
-            this.buttonDeleteAction.UseVisualStyleBackColor = true;
-            this.buttonDeleteAction.Click += new System.EventHandler(this.ButtonDeleteAction_Click);
+            this.buttonDeleteSequenceElement.Location = new System.Drawing.Point(5, 279);
+            this.buttonDeleteSequenceElement.Name = "buttonDeleteSequenceElement";
+            this.buttonDeleteSequenceElement.Size = new System.Drawing.Size(89, 41);
+            this.buttonDeleteSequenceElement.TabIndex = 36;
+            this.buttonDeleteSequenceElement.Text = "Удалить действие";
+            this.buttonDeleteSequenceElement.UseVisualStyleBackColor = true;
+            this.buttonDeleteSequenceElement.Click += new System.EventHandler(this.ButtonDeleteAction_Click);
             // 
             // generalTabControlOfConfiguration
             // 
@@ -886,6 +890,10 @@
             // tabPageConfigurationOfAction
             // 
             this.tabPageConfigurationOfAction.BackColor = System.Drawing.Color.Thistle;
+            this.tabPageConfigurationOfAction.Controls.Add(this.label4);
+            this.tabPageConfigurationOfAction.Controls.Add(this.buttonDeleteAction);
+            this.tabPageConfigurationOfAction.Controls.Add(this.buttonAddAction);
+            this.tabPageConfigurationOfAction.Controls.Add(this.listBoxForListOfActions);
             this.tabPageConfigurationOfAction.Controls.Add(this.richTextBoxForExemplarOfAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.comboBoxTypeOfAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.labelWaitAfterThisAction);
@@ -898,25 +906,64 @@
             this.tabPageConfigurationOfAction.TabIndex = 1;
             this.tabPageConfigurationOfAction.Text = "Настройки действий";
             // 
-            // comboBoxTypeOfAction
+            // buttonDeleteAction
             // 
-            this.comboBoxTypeOfAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTypeOfAction.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxTypeOfAction.FormattingEnabled = true;
-            this.comboBoxTypeOfAction.Location = new System.Drawing.Point(5, 10);
-            this.comboBoxTypeOfAction.Name = "comboBoxTypeOfAction";
-            this.comboBoxTypeOfAction.Size = new System.Drawing.Size(203, 21);
-            this.comboBoxTypeOfAction.TabIndex = 33;
-            this.comboBoxTypeOfAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTypeOfAction_SelectedIndexChanged);
+            this.buttonDeleteAction.Location = new System.Drawing.Point(113, 123);
+            this.buttonDeleteAction.Name = "buttonDeleteAction";
+            this.buttonDeleteAction.Size = new System.Drawing.Size(103, 45);
+            this.buttonDeleteAction.TabIndex = 37;
+            this.buttonDeleteAction.Text = "Удалить действие";
+            this.buttonDeleteAction.UseVisualStyleBackColor = true;
+            this.buttonDeleteAction.Click += new System.EventHandler(this.ButtonDeleteAction_Click_1);
+            // 
+            // buttonAddAction
+            // 
+            this.buttonAddAction.Location = new System.Drawing.Point(6, 123);
+            this.buttonAddAction.Name = "buttonAddAction";
+            this.buttonAddAction.Size = new System.Drawing.Size(103, 45);
+            this.buttonAddAction.TabIndex = 36;
+            this.buttonAddAction.Text = "Добавить действие";
+            this.buttonAddAction.UseVisualStyleBackColor = true;
+            this.buttonAddAction.Click += new System.EventHandler(this.ButtonAddAction_Click_1);
+            // 
+            // listBoxForListOfActions
+            // 
+            this.listBoxForListOfActions.BackColor = System.Drawing.Color.Azure;
+            this.listBoxForListOfActions.Location = new System.Drawing.Point(6, 22);
+            this.listBoxForListOfActions.Name = "listBoxForListOfActions";
+            this.listBoxForListOfActions.Size = new System.Drawing.Size(210, 95);
+            this.listBoxForListOfActions.TabIndex = 35;
+            this.listBoxForListOfActions.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ListBoxForListOfActions_DrawItem);
+            this.listBoxForListOfActions.SelectedIndexChanged += new System.EventHandler(this.ListBoxForListOfActions_SelectedIndexChanged);
             // 
             // richTextBoxForExemplarOfAction
             // 
-            this.richTextBoxForExemplarOfAction.Location = new System.Drawing.Point(6, 112);
+            this.richTextBoxForExemplarOfAction.Location = new System.Drawing.Point(6, 184);
             this.richTextBoxForExemplarOfAction.Name = "richTextBoxForExemplarOfAction";
             this.richTextBoxForExemplarOfAction.Size = new System.Drawing.Size(564, 102);
             this.richTextBoxForExemplarOfAction.TabIndex = 34;
             this.richTextBoxForExemplarOfAction.Text = "";
             this.richTextBoxForExemplarOfAction.TextChanged += new System.EventHandler(this.RichTextBoxForExemplarOfAction_TextChanged);
+            // 
+            // comboBoxTypeOfAction
+            // 
+            this.comboBoxTypeOfAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTypeOfAction.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTypeOfAction.FormattingEnabled = true;
+            this.comboBoxTypeOfAction.Location = new System.Drawing.Point(222, 6);
+            this.comboBoxTypeOfAction.Name = "comboBoxTypeOfAction";
+            this.comboBoxTypeOfAction.Size = new System.Drawing.Size(351, 21);
+            this.comboBoxTypeOfAction.TabIndex = 33;
+            this.comboBoxTypeOfAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTypeOfAction_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 6);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(94, 13);
+            this.label4.TabIndex = 39;
+            this.label4.Text = "Список действий";
             // 
             // MyLittleMonion
             // 
@@ -925,18 +972,18 @@
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(784, 454);
             this.Controls.Add(this.generalTabControlOfConfiguration);
-            this.Controls.Add(this.buttonDeleteAction);
-            this.Controls.Add(this.buttonCloneThisAction);
+            this.Controls.Add(this.buttonDeleteSequenceElement);
+            this.Controls.Add(this.buttonCloneThisSequenceElement);
             this.Controls.Add(this.labelNameOfLisActions);
             this.Controls.Add(this.textBoxNameOfLisActions);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.labelNumberOfSearchAndAction);
-            this.Controls.Add(this.buttonAddAction);
-            this.Controls.Add(this.buttonPrevAction);
-            this.Controls.Add(this.buttonNextAction);
-            this.Controls.Add(this.buttonFindAndPerformThisAction);
+            this.Controls.Add(this.buttonAddSequenceElement);
+            this.Controls.Add(this.buttonPrevSequenceElement);
+            this.Controls.Add(this.buttonNextSequenceElement);
+            this.Controls.Add(this.buttonFindAndPerformThisSequenceElement);
             this.Controls.Add(this.TestButton);
-            this.Controls.Add(this.buttonFindAndPerformAllAction);
+            this.Controls.Add(this.buttonFindAndPerformAllSequenceElement);
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -983,7 +1030,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button buttonNextForColorsForIgnor;
         private System.Windows.Forms.Button buttonPreviousForColorsForIgnor;
-        private System.Windows.Forms.Button buttonFindAndPerformAllAction;
+        private System.Windows.Forms.Button buttonFindAndPerformAllSequenceElement;
         private System.Windows.Forms.Button TestButton;
         private System.Windows.Forms.Label labelForNameForIgnorColor;
         private System.Windows.Forms.Label label2;
@@ -1008,10 +1055,10 @@
         private System.Windows.Forms.Label labelPercentageComplianceWithModel;
         private System.Windows.Forms.NumericUpDown numericUpDownPercentageComplianceWithModel;
         private System.Windows.Forms.ComboBox comboBoxForSelectAction;
-        private System.Windows.Forms.Button buttonFindAndPerformThisAction;
-        private System.Windows.Forms.Button buttonPrevAction;
-        private System.Windows.Forms.Button buttonNextAction;
-        private System.Windows.Forms.Button buttonAddAction;
+        private System.Windows.Forms.Button buttonFindAndPerformThisSequenceElement;
+        private System.Windows.Forms.Button buttonPrevSequenceElement;
+        private System.Windows.Forms.Button buttonNextSequenceElement;
+        private System.Windows.Forms.Button buttonAddSequenceElement;
         private System.Windows.Forms.Label labelNumberOfSearchAndAction;
         private System.Windows.Forms.Label labelWaitAfterThisAction;
         private System.Windows.Forms.NumericUpDown numericUpDownWaitAfterThisAction;
@@ -1025,14 +1072,14 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Label labelNameOfLisActions;
         private System.Windows.Forms.TextBox textBoxNameOfLisActions;
-        private System.Windows.Forms.Button buttonCloneThisAction;
+        private System.Windows.Forms.Button buttonCloneThisSequenceElement;
         private System.Windows.Forms.NumericUpDown numericUpDownCountSecondForAddIgnorColor;
         private System.Windows.Forms.Label labelCountSecondForAddIgnorColor;
         private System.Windows.Forms.Button buttonCorrectModelForSearch;
         private System.Windows.Forms.CheckBox checkBoxShowNotCorrectModel;
         private System.Windows.Forms.ToolStripMenuItem инструкцияToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem создатьToolStripMenuItem;
-        private System.Windows.Forms.Button buttonDeleteAction;
+        private System.Windows.Forms.Button buttonDeleteSequenceElement;
         private System.Windows.Forms.Button buttonSelectSearchAreaOnScreen;
         private System.Windows.Forms.NumericUpDown numericUpDownCountOfThreads;
         private System.Windows.Forms.NumericUpDown numericUpDownYEnd;
@@ -1049,6 +1096,10 @@
         private System.Windows.Forms.TabPage tabPageConfigurationOfAction;
         private System.Windows.Forms.ComboBox comboBoxTypeOfAction;
         private System.Windows.Forms.RichTextBox richTextBoxForExemplarOfAction;
+        private System.Windows.Forms.ListBox listBoxForListOfActions;
+        private System.Windows.Forms.Button buttonDeleteAction;
+        private System.Windows.Forms.Button buttonAddAction;
+        private System.Windows.Forms.Label label4;
     }
 }
 
