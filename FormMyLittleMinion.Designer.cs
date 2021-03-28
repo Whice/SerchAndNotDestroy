@@ -183,7 +183,6 @@
             // 
             // TestButton
             // 
-            this.TestButton.Enabled = false;
             this.TestButton.Location = new System.Drawing.Point(5, 392);
             this.TestButton.Margin = new System.Windows.Forms.Padding(2);
             this.TestButton.Name = "TestButton";

@@ -107,6 +107,7 @@
             this.buttonSetWhiteColorForFone.TabIndex = 5;
             this.buttonSetWhiteColorForFone.Text = "Установить белый цвет на фон";
             this.buttonSetWhiteColorForFone.UseVisualStyleBackColor = true;
+            this.buttonSetWhiteColorForFone.Visible = false;
             this.buttonSetWhiteColorForFone.Click += new System.EventHandler(this.ButtonSetWhiteColorForFone_Click);
             // 
             // DialogWindowForSetting

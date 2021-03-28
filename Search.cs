@@ -30,8 +30,10 @@ namespace MyLittleMinion
         public Search()
         {
             this.pictureSearchArea = null;
+            this.pictureSearchAreaByteArray = null;
             this.pictureModelForSearchPrivate = null;
             this.correctModelPrivate = null;
+            this.pictureCorrectModelForSearchByteArray = null;
             this.aimModelPrivate = new Point(0,0);
             this.foundPoints = null;
 
@@ -1479,7 +1481,7 @@ namespace MyLittleMinion
             else
                 cloneThisSearch.pictureSearchArea = null;
             cloneThisSearch.SearchAreaSize = this.SearchAreaSize;
-            cloneThisSearch.pictureSearchAreaByteArray = this.pictureSearchAreaByteArray.ToList<byte>().ToArray();
+            cloneThisSearch.pictureSearchAreaByteArray = this.pictureSearchAreaByteArray?.ToList<byte>().ToArray();//Если не null, то скпировать. А иначе зачем?
 
             cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
             cloneThisSearch.pointerOnActiveWindow = this.pointerOnActiveWindow;

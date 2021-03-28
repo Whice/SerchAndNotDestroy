@@ -27,11 +27,23 @@ namespace MyLittleMinion
         /// Списко класса действия.
         /// </summary>
         private List<ActionOfMinion> listOfActionsAfterSearchin;
+        private string nameOfListOfSearchingAndActionsPrivate;
         /// <summary>
         /// Имя принадлежащее этому экземпляру списка поисков и действий.
         /// По умолчанию Default list search and action.
-        /// </summary>
-        public string nameOfListOfSearchingAndActions { get; set; }
+        /// Если подается пустая строка, то устанавливается имя по умолчанию.
+        /// </summary>private
+        public string nameOfListOfSearchingAndActions
+        {
+            get { return this.nameOfListOfSearchingAndActionsPrivate; }
+            set
+            {
+                if (value.Replace(" ", "") == "")//Потому что только одни пробелы тоже можно считать пустотой, ну разве это название?!
+                    this.nameOfListOfSearchingAndActionsPrivate = "Default list search and action";
+                else
+                    this.nameOfListOfSearchingAndActionsPrivate = value;
+            }
+        }
         /// <summary>
         /// Внутренний номер пары, указывающий, какую именно пару можно спользовать.
         /// Номер не должен быть меньше 0 и больше длинны списка.
@@ -65,8 +77,6 @@ namespace MyLittleMinion
         /// <summary>
         /// Добавляет объекты Search и ActionOfMinion в концы соответсвующих очередей этого экземпляра.
         /// </summary>
-        /// <param name="SearchingForAdding"></param>
-        /// <param name="ActionsAfterSearchinForAdding"></param>
         public void Add(Search SearchingForAdding, ActionOfMinion ActionsAfterSearchinForAdding)
         {
             this.listOfSearching.Add(SearchingForAdding);
@@ -74,12 +84,10 @@ namespace MyLittleMinion
             this.numberSearchAndActionInList = this.listOfSearching.Count - 1;
             if (listOfSearching.Count < 1)
                 this.nameOfListOfSearchingAndActions = "Default list search and action";
-
         }
         /// <summary>
         /// Возвращает длину списка.
         /// </summary>
-        /// <returns></returns>
         public int GetSizeOfListOfSearchAndActionsOfMinion()
         {
             return this.listOfSearching.Count;
@@ -87,7 +95,6 @@ namespace MyLittleMinion
         /// <summary>
         /// Возвращает экземпляр поиска соотвествующий установленому номеру списка.
         /// </summary>
-        /// <returns></returns>
         public Search GetThisExemplarSearch()
         {
             return this.listOfSearching[numberSearchAndActionInList];
@@ -95,7 +102,6 @@ namespace MyLittleMinion
         /// <summary>
         /// Возвращает экземпляр действия, соотвествующий установленому номеру списка.
         /// </summary>
-        /// <returns></returns>
         public ActionOfMinion GetThisExemplarActionOfMinion()
         {
             return this.listOfActionsAfterSearchin[numberSearchAndActionInList];
@@ -104,7 +110,6 @@ namespace MyLittleMinion
         /// Удаляет экземпляры действия и поиска, соотвествующие установленому номеру списка.
         /// Счетчик движется назад. Если осталось одно действие в списке, то оно стирается и добавлется действие по умолчанию.
         /// </summary>
-        /// <returns></returns>
         public void RemoveThisExemplarSearchingAndAction()
         {
             if(listOfSearching.Count ==1)
@@ -122,9 +127,7 @@ namespace MyLittleMinion
         /// <summary>
         /// Сохраняет список в ПЗУ по указанному в settingOfMinion адресу.
         /// </summary>
-        /// <param name="settingOfMinion"></param>
-        /// <returns></returns>
-        public bool SaveAs(SettingOfMinion settingOfMinion)
+        public bool Save(SettingOfMinion settingOfMinion)
         {
             if(this.nameOfListOfSearchingAndActions=="")
                 this.nameOfListOfSearchingAndActions = "Default list search and action";
@@ -135,10 +138,44 @@ namespace MyLittleMinion
             return true;
         }
         /// <summary>
+        /// Предоставлят диалоговое окно, где можно выбрать путь для сохранения и назание файла.
+        /// После сохраняет список в ПЗУ по указанному адресу.
+        /// </summary>
+        public bool SaveAs(SettingOfMinion settingOfMinion)
+        {
+            string nameOpenFile = "";
+            SaveFileDialog save_dialog = new SaveFileDialog();
+            save_dialog.Filter = "My little minion files (*.MLM)|*.MLM*"; //формат загружаемого файла
+
+            if (this.nameOfListOfSearchingAndActions == "")
+                this.nameOfListOfSearchingAndActions = "Default list search and action";
+            save_dialog.FileName = this.nameOfListOfSearchingAndActions;
+            int countCopies = 1;
+            string tempFileName = save_dialog.FileName;
+            while (File.Exists(settingOfMinion.pathForSaveOfList + "\\" + tempFileName + ".MLM"))
+            {
+                tempFileName = save_dialog.FileName + " (" + countCopies.ToString() + ")";
+                countCopies++;
+            }
+            save_dialog.FileName = tempFileName;
+            save_dialog.FileName +=".MLM";
+
+            save_dialog.InitialDirectory = settingOfMinion.pathForSaveOfList;
+            if (save_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream(save_dialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, this);
+                stream.Close();
+            }
+
+            
+            
+            return true;
+        }
+        /// <summary>
         /// Открывает список из ПЗУ по указанному пользователем адресу.
         /// </summary>
-        /// <param name="settingOfMinion"></param>
-        /// <returns></returns>
         public bool Open(SettingOfMinion settingOfMinion)
         {
             string nameOpenFile = "";

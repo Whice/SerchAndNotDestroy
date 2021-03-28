@@ -84,7 +84,6 @@ namespace MyLittleMinion
         {
             labelMousePosiotonView.Text = "Mouse position: " + Convert.ToString(Cursor.Position.X) + "; " + Convert.ToString(Cursor.Position.Y) + ";";
 
-           
         }
         
         private void TestButton_Click(object sender, EventArgs e)
@@ -671,12 +670,14 @@ namespace MyLittleMinion
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            exemplarsOfLAM[numberLOEOLAM].SaveAs(settingOfMinion);
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            exemplarsOfLAM[numberLOEOLAM].SaveAs(settingOfMinion);
+            exemplarsOfLAM[numberLOEOLAM].Save(settingOfMinion);
 
         }
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
