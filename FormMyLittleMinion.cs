@@ -66,7 +66,7 @@ namespace MyLittleMinion
             SetImageModelConfig();
 
 
-            FillVariantsOfActionsForComboBoxForSelectAction();
+            FillVariantsOfTypeForComboBoxForTyepOfAction();
         }
         private void MyLittleMonion_Load(object sender, EventArgs e)
         {
@@ -105,9 +105,6 @@ namespace MyLittleMinion
 
             textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions;
 
-            if (comboBoxForSelectAction.SelectedIndex >= 0)//призагрузке формы имеет значение -1 и отказывается принимать другие. В работе уже все нормально.
-                comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
-            numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond;
 
             numericUpDownCountOfThreads.Enabled = false;
             if (exemplarOfSearch.multyThreadSearch == 0)
@@ -135,6 +132,13 @@ namespace MyLittleMinion
 
             checkBoxForColorsForIgnor.Checked = exemplarOfSearch.UseIgnorColors;
             UpdateContentPanelOfColorsForIgnor();
+
+            if (comboBoxTypeOfAction.SelectedIndex >= 0)//призагрузке формы имеет значение -1 и отказывается принимать другие. В работе уже все нормально.
+                comboBoxTypeOfAction.SelectedIndex = exemplarOfActionOfMinion.typeOfAction;
+            if (comboBoxForSelectAction.SelectedIndex >= 0)//призагрузке формы имеет значение -1 и отказывается принимать другие. В работе уже все нормально.
+                FillVariantsOfActionsForComboBoxForSelectAction();
+            numericUpDownWaitAfterThisAction.Value = exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond;
+            richTextBoxForExemplarOfAction.Text = exemplarOfActionOfMinion.textForAction;
         }
         /// <summary>
         /// Считывает из интерфейса инормацию в список поисков и действий.
@@ -142,9 +146,6 @@ namespace MyLittleMinion
         void FillExemplarsOfListOfSearchAndActionDataFromUI()
         {
             exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
-
-            exemplarOfActionOfMinion.numberOfAction = (ushort)comboBoxForSelectAction.SelectedIndex;
-            exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond = (int)numericUpDownWaitAfterThisAction.Value;
 
             exemplarOfSearch.multyThreadSearch = -1;
             if (checkBoxParallelSearch.Checked)
@@ -171,6 +172,10 @@ namespace MyLittleMinion
             }
 
             exemplarOfSearch.UseIgnorColors = checkBoxForColorsForIgnor.Checked;
+
+            exemplarOfActionOfMinion.typeOfAction = (byte)comboBoxTypeOfAction.SelectedIndex;
+            exemplarOfActionOfMinion.numberOfAction = (ushort)comboBoxForSelectAction.SelectedIndex;
+            exemplarOfActionOfMinion.timeOfWaitingAfterActionInSecond = (int)numericUpDownWaitAfterThisAction.Value;
         }
         private void MyLittleMonion_Move(object sender, EventArgs e)
         {
@@ -200,6 +205,12 @@ namespace MyLittleMinion
             comboBoxForSelectAction.Size = new Size(
                 (parenControl.Width - 5) - comboBoxForSelectAction.Location.X,
                 comboBoxForSelectAction.Height);
+
+            parenControl = richTextBoxForExemplarOfAction.Parent;
+            richTextBoxForExemplarOfAction.Size = new Size(
+                (parenControl.Width - 5) - richTextBoxForExemplarOfAction.Location.X,
+                richTextBoxForExemplarOfAction.Height);
+
         }
 
         #endregion/// Вспомогательные функции КОНЕЦ
@@ -212,7 +223,7 @@ namespace MyLittleMinion
             SearchingModelOnScreen();
         }
         /// <summary>
-        /// Нужен для выбора запуска поиска. Послежовательный, или многопоточный.
+        /// Нужен для выбора запуска поиска. Последовательный или многопоточный.
         /// </summary>
         /// <returns></returns>
         delegate bool srPerSearchModelInArea();
@@ -642,14 +653,34 @@ namespace MyLittleMinion
 
         #region///Конфигурация действий НАЧАЛО
 
+        private void FillVariantsOfTypeForComboBoxForTyepOfAction()
+        {
+            comboBoxTypeOfAction.Items.Add("Мышь");
+            comboBoxTypeOfAction.Items.Add("Клавиатура");
+            comboBoxTypeOfAction.SelectedIndex = 0;
 
+        }
+        private void ComboBoxTypeOfAction_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            FillVariantsOfActionsForComboBoxForSelectAction();
+        }
         private void FillVariantsOfActionsForComboBoxForSelectAction()
         {
-            comboBoxForSelectAction.Items.Add("Щелчек левой кнопкой");
-            comboBoxForSelectAction.SelectedIndex = 0;
-            comboBoxForSelectAction.Items.Add("Двойной щелчек левой кнопкой");
-            comboBoxForSelectAction.Items.Add("Вставить из буфера");
+            //Заполняется каждый раз заново в соответствии с указанным типом действия
+            comboBoxForSelectAction.Items.Clear();
+            foreach (string nameOfAction in ActionOfMinion.listNameOfMauseAction[exemplarOfActionOfMinion.typeOfAction])
+                comboBoxForSelectAction.Items.Add(nameOfAction);
 
+            comboBoxForSelectAction.SelectedIndex = exemplarOfActionOfMinion.numberOfAction;
+        }
+        private void ComboBoxForSelectAction_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+        }
+        private void RichTextBoxForExemplarOfAction_TextChanged(object sender, EventArgs e)
+        {
+            exemplarOfActionOfMinion.textForAction = richTextBoxForExemplarOfAction.Text;
         }
 
         #endregion///Конфигурация действий КОНЕЦ
@@ -763,7 +794,7 @@ namespace MyLittleMinion
                 FillUINewDataFromListSearchAndAction();
                 FindAndPerformThisAction();
 
-                //Каждый пятый раз запускаю очистку памяти, чтобы не кушать много.
+                //Каждый пятый раз запускать очистку памяти, чтобы не кушать много.
                 if (i % 5 == 0)
                     GC.Collect();
             }
@@ -804,6 +835,9 @@ namespace MyLittleMinion
             FillUINewDataFromListSearchAndAction();
 
         }
+
+
+
 
 
 

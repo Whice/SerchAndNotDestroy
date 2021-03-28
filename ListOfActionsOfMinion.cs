@@ -143,13 +143,15 @@ namespace MyLittleMinion
         /// </summary>
         public bool SaveAs(SettingOfMinion settingOfMinion)
         {
-            string nameOpenFile = "";
             SaveFileDialog save_dialog = new SaveFileDialog();
             save_dialog.Filter = "My little minion files (*.MLM)|*.MLM*"; //формат загружаемого файла
 
+            //Пустое имя не хррошо. Путь будет хотя бы по умолчанию.
             if (this.nameOfListOfSearchingAndActions == "")
                 this.nameOfListOfSearchingAndActions = "Default list search and action";
             save_dialog.FileName = this.nameOfListOfSearchingAndActions;
+
+            //Проверка на существующие
             int countCopies = 1;
             string tempFileName = save_dialog.FileName;
             while (File.Exists(settingOfMinion.pathForSaveOfList + "\\" + tempFileName + ".MLM"))
@@ -157,12 +159,14 @@ namespace MyLittleMinion
                 tempFileName = save_dialog.FileName + " (" + countCopies.ToString() + ")";
                 countCopies++;
             }
+            //Когда насчет существующих было выяснено, можно запомнить конечное название и добавить расширение.
             save_dialog.FileName = tempFileName;
             save_dialog.FileName +=".MLM";
 
             save_dialog.InitialDirectory = settingOfMinion.pathForSaveOfList;
             if (save_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
             {
+
                 IFormatter formatter = new BinaryFormatter();
                 Stream stream = new FileStream(save_dialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
                 formatter.Serialize(stream, this);

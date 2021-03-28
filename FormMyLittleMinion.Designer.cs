@@ -98,6 +98,8 @@
             this.tabPageMainConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageAdditionalConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageConfigurationOfAction = new System.Windows.Forms.TabPage();
+            this.comboBoxTypeOfAction = new System.Windows.Forms.ComboBox();
+            this.richTextBoxForExemplarOfAction = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -612,10 +614,11 @@
             this.comboBoxForSelectAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxForSelectAction.FormattingEnabled = true;
-            this.comboBoxForSelectAction.Location = new System.Drawing.Point(5, 10);
+            this.comboBoxForSelectAction.Location = new System.Drawing.Point(219, 10);
             this.comboBoxForSelectAction.Name = "comboBoxForSelectAction";
-            this.comboBoxForSelectAction.Size = new System.Drawing.Size(565, 21);
+            this.comboBoxForSelectAction.Size = new System.Drawing.Size(351, 21);
             this.comboBoxForSelectAction.TabIndex = 26;
+            this.comboBoxForSelectAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxForSelectAction_SelectedIndexChanged);
             // 
             // buttonFindAndPerformThisAction
             // 
@@ -883,6 +886,8 @@
             // tabPageConfigurationOfAction
             // 
             this.tabPageConfigurationOfAction.BackColor = System.Drawing.Color.Thistle;
+            this.tabPageConfigurationOfAction.Controls.Add(this.richTextBoxForExemplarOfAction);
+            this.tabPageConfigurationOfAction.Controls.Add(this.comboBoxTypeOfAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.labelWaitAfterThisAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.comboBoxForSelectAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.numericUpDownWaitAfterThisAction);
@@ -892,6 +897,26 @@
             this.tabPageConfigurationOfAction.Size = new System.Drawing.Size(576, 388);
             this.tabPageConfigurationOfAction.TabIndex = 1;
             this.tabPageConfigurationOfAction.Text = "Настройки действий";
+            // 
+            // comboBoxTypeOfAction
+            // 
+            this.comboBoxTypeOfAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTypeOfAction.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTypeOfAction.FormattingEnabled = true;
+            this.comboBoxTypeOfAction.Location = new System.Drawing.Point(5, 10);
+            this.comboBoxTypeOfAction.Name = "comboBoxTypeOfAction";
+            this.comboBoxTypeOfAction.Size = new System.Drawing.Size(203, 21);
+            this.comboBoxTypeOfAction.TabIndex = 33;
+            this.comboBoxTypeOfAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTypeOfAction_SelectedIndexChanged);
+            // 
+            // richTextBoxForExemplarOfAction
+            // 
+            this.richTextBoxForExemplarOfAction.Location = new System.Drawing.Point(6, 112);
+            this.richTextBoxForExemplarOfAction.Name = "richTextBoxForExemplarOfAction";
+            this.richTextBoxForExemplarOfAction.Size = new System.Drawing.Size(564, 102);
+            this.richTextBoxForExemplarOfAction.TabIndex = 34;
+            this.richTextBoxForExemplarOfAction.Text = "";
+            this.richTextBoxForExemplarOfAction.TextChanged += new System.EventHandler(this.RichTextBoxForExemplarOfAction_TextChanged);
             // 
             // MyLittleMonion
             // 
@@ -1022,6 +1047,8 @@
         private System.Windows.Forms.TabPage tabPageMainConfiguration;
         private System.Windows.Forms.TabPage tabPageAdditionalConfiguration;
         private System.Windows.Forms.TabPage tabPageConfigurationOfAction;
+        private System.Windows.Forms.ComboBox comboBoxTypeOfAction;
+        private System.Windows.Forms.RichTextBox richTextBoxForExemplarOfAction;
     }
 }
 
