@@ -82,6 +82,7 @@ namespace MyLittleMinion
         {
             GetFullPathOfExeMinion();
             this.pathForSaveOfList = this.fullPathOfExeOfMinion;
+            this.pathForEthalonDefaultFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonPictures);
         }
         /// <summary>
         /// Получает адресс, по которому находиться исполняемый файл.
@@ -100,6 +101,8 @@ namespace MyLittleMinion
         /// Хранит путь, по которому надо сохранять списки поиска и действий.
         /// </summary>
         public string pathForSaveOfList { get; set; }
+
+        public string pathForEthalonDefaultFolder { get; set; }
 
         public Color colorForBackColorMainForm { get; set; }
     }

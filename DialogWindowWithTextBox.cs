@@ -32,6 +32,7 @@ namespace MyLittleMinion
             OpenSettingOfMinion();
             setting = this.settingInDialog;
             textBoxOfPathForSaveFile.Text = settingInDialog.pathForSaveOfList;
+            textBoxEthalonPath.Text = settingInDialog.pathForEthalonDefaultFolder;
         }
 
         private void ButtonSaveChanges_Click(object sender, EventArgs e)
@@ -95,6 +96,17 @@ namespace MyLittleMinion
         {
             this.settingInDialog.colorForBackColorMainForm = Color.FromArgb(255, 255, 255);
         }
+
+        private void ButtonChangeEthalonPath_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog selectPathOfFolder = new FolderBrowserDialog();
+            if (selectPathOfFolder.ShowDialog() == DialogResult.OK)
+            {
+                textBoxEthalonPath.Text = selectPathOfFolder.SelectedPath;
+            }
+        }
+
+
 
         /// <summary>
         /// Помещает в fullPathOfExeOfMinion экземпляра путь к exe помощника.

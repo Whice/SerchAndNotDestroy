@@ -390,6 +390,7 @@ namespace MyLittleMinion
             using (OpenFileDialog open_dialog = new OpenFileDialog())
             {//создание диалогового окна для выбора файла
                 open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
+                open_dialog.InitialDirectory = settingOfMinion.pathForEthalonDefaultFolder;//Выбор папки, которую открывет диалоговое окно
                 if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
                 {
                     try
@@ -431,7 +432,8 @@ namespace MyLittleMinion
             using (OpenFileDialog open_dialog = new OpenFileDialog())
             {//создание диалогового окна для выбора файла
                 open_dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*"; //формат загружаемого файла
-                open_dialog.Multiselect = true;
+                open_dialog.InitialDirectory = settingOfMinion.pathForEthalonDefaultFolder;//Выбор папки, которую открывет диалоговое окно
+                open_dialog.Multiselect = true;//Добавление выбора нескольких файлов в диалоговом окне
                 if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
                 {
                     try

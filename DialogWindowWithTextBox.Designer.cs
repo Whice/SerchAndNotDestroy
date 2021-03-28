@@ -34,6 +34,8 @@
             this.buttonCancelChanges = new System.Windows.Forms.Button();
             this.buttonSetDefaultSettings = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.buttonChangeEthalonPath = new System.Windows.Forms.Button();
+            this.textBoxEthalonPath = new System.Windows.Forms.TextBox();
             this.buttonSetWhiteColorForFone = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -88,6 +90,8 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Goldenrod;
+            this.panel2.Controls.Add(this.buttonChangeEthalonPath);
+            this.panel2.Controls.Add(this.textBoxEthalonPath);
             this.panel2.Controls.Add(this.buttonSetWhiteColorForFone);
             this.panel2.Controls.Add(this.buttonChangePathForSaveFile);
             this.panel2.Controls.Add(this.buttonSetDefaultSettings);
@@ -99,9 +103,26 @@
             this.panel2.Size = new System.Drawing.Size(811, 192);
             this.panel2.TabIndex = 5;
             // 
+            // buttonChangeEthalonPath
+            // 
+            this.buttonChangeEthalonPath.Location = new System.Drawing.Point(669, 52);
+            this.buttonChangeEthalonPath.Name = "buttonChangeEthalonPath";
+            this.buttonChangeEthalonPath.Size = new System.Drawing.Size(123, 23);
+            this.buttonChangeEthalonPath.TabIndex = 7;
+            this.buttonChangeEthalonPath.Text = "Путь эталона";
+            this.buttonChangeEthalonPath.UseVisualStyleBackColor = true;
+            this.buttonChangeEthalonPath.Click += new System.EventHandler(this.ButtonChangeEthalonPath_Click);
+            // 
+            // textBoxEthalonPath
+            // 
+            this.textBoxEthalonPath.Location = new System.Drawing.Point(17, 52);
+            this.textBoxEthalonPath.Name = "textBoxEthalonPath";
+            this.textBoxEthalonPath.Size = new System.Drawing.Size(646, 20);
+            this.textBoxEthalonPath.TabIndex = 6;
+            // 
             // buttonSetWhiteColorForFone
             // 
-            this.buttonSetWhiteColorForFone.Location = new System.Drawing.Point(17, 42);
+            this.buttonSetWhiteColorForFone.Location = new System.Drawing.Point(17, 130);
             this.buttonSetWhiteColorForFone.Name = "buttonSetWhiteColorForFone";
             this.buttonSetWhiteColorForFone.Size = new System.Drawing.Size(130, 34);
             this.buttonSetWhiteColorForFone.TabIndex = 5;
@@ -136,5 +157,7 @@
         private System.Windows.Forms.Button buttonSetDefaultSettings;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button buttonSetWhiteColorForFone;
+        private System.Windows.Forms.Button buttonChangeEthalonPath;
+        private System.Windows.Forms.TextBox textBoxEthalonPath;
     }
 }
