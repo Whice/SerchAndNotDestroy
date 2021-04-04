@@ -9,12 +9,12 @@ namespace MyLittleMinion
 {
     [Serializable]
     /// <summary>
-    /// Это класс списка поисков и действий.
+    /// Это класс последовательности поисков и действий.
     /// Он объединяет в пару поиск-действие два класса, позволяя использовать их экемпляры вместе.
     /// Внутри задается и храниться номер пары, указывающий, какую именно пару можно спользовать.
     /// Этот класс можно сериализовать.
     /// </summary>
-    class ListOfActionsOfMinion
+    class SequenceOfSearchesAndActions
     {
         /// <summary>
         /// Список класса поиска.
@@ -23,53 +23,53 @@ namespace MyLittleMinion
         /// <summary>
         /// Списки класса действия.
         /// </summary>
-        private List<ListActionOfMinion> listsOfActionsAfterSearchin;
-        private string nameOfListOfSearchingAndActionsPrivate;
+        private List<ListActionOfMinion> listsOfActionsAfterSearching;
+        private string nameOfSequenceOfSearchesAndActionsPrivate;
         /// <summary>
         /// Имя принадлежащее этому экземпляру списка поисков и действий.
         /// По умолчанию Default list search and action.
         /// Если подается пустая строка, то устанавливается имя по умолчанию.
         /// </summary>private
-        public string nameOfListOfSearchingAndActions
+        public string nameOfSequenceOfSearchesAndActions
         {
-            get { return this.nameOfListOfSearchingAndActionsPrivate; }
+            get { return this.nameOfSequenceOfSearchesAndActionsPrivate; }
             set
             {
                 if (value.Replace(" ", "") == "")//Потому что только одни пробелы тоже можно считать пустотой, ну разве это название?!
-                    this.nameOfListOfSearchingAndActionsPrivate = "Default list search and action";
+                    this.nameOfSequenceOfSearchesAndActionsPrivate = "Default list search and action";
                 else
-                    this.nameOfListOfSearchingAndActionsPrivate = value;
+                    this.nameOfSequenceOfSearchesAndActionsPrivate = value;
             }
         }
         /// <summary>
         /// Внутренний номер пары, указывающий, какую именно пару можно спользовать.
         /// Номер не должен быть меньше 0 и больше длинны списка.
         /// </summary>
-        private int numberSearchAndActionInListPrivate;
+        private int numberSearchAndActionInSequencePrivate;
         /// <summary>
         /// Задает и возвращает номер пары, указывающий, какую именно пару можно спользовать.
         /// Номер не может быть меньше 0 и больше длинны списка.
         /// </summary>
-        public int numberSearchAndActionInList
+        public int numberSearchAndActionInSequence
         {
-            get { return this.numberSearchAndActionInListPrivate; }
+            get { return this.numberSearchAndActionInSequencePrivate; }
             set
             {
                 if (value <= 0)
-                    this.numberSearchAndActionInListPrivate = 0;
+                    this.numberSearchAndActionInSequencePrivate = 0;
                 else if(value > this.listOfSearching.Count - 1)
-                    this.numberSearchAndActionInListPrivate = this.listOfSearching.Count - 1;
+                    this.numberSearchAndActionInSequencePrivate = this.listOfSearching.Count - 1;
                 else
-                    this.numberSearchAndActionInListPrivate = value;
+                    this.numberSearchAndActionInSequencePrivate = value;
             }
         }
         /// <summary>
         /// Инициализирует списки и добавляет первые экзепляры поиска и действия со стандарными значениями.
         /// </summary>
-        public ListOfActionsOfMinion()
+        public SequenceOfSearchesAndActions()
         {
             this.listOfSearching = new List<Search>();
-            this.listsOfActionsAfterSearchin = new List<ListActionOfMinion>();
+            this.listsOfActionsAfterSearching = new List<ListActionOfMinion>();
             this.Add(new Search(), new ListActionOfMinion(this));
         }
 
@@ -79,10 +79,10 @@ namespace MyLittleMinion
         public void Add(Search SearchingForAdding, ListActionOfMinion ActionsAfterSearchinForAdding)
         {
             if (listOfSearching.Count < 1)
-                this.nameOfListOfSearchingAndActions = "Default list search and action";
+                this.nameOfSequenceOfSearchesAndActions = "Default list search and action";
             this.listOfSearching.Add(SearchingForAdding);
-            this.numberSearchAndActionInList = GetSizeOfListOfSearchAndActionsOfMinion() - 1;
-            this.listsOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
+            this.numberSearchAndActionInSequence = GetSizeOfListOfSearchAndActionsOfMinion() - 1;
+            this.listsOfActionsAfterSearching.Add(ActionsAfterSearchinForAdding);
         }
         /// <summary>
         /// Возвращает длину списка.
@@ -96,14 +96,14 @@ namespace MyLittleMinion
         /// </summary>
         public Search GetThisExemplarSearch()
         {
-            return this.listOfSearching[numberSearchAndActionInList];
+            return this.listOfSearching[numberSearchAndActionInSequence];
         }
         /// <summary>
         /// Возвращает экземпляр действия, соотвествующий установленому номеру списка.
         /// </summary>
         public ListActionOfMinion GetThisExemplarListActionsOfMinion()
         {
-            return this.listsOfActionsAfterSearchin[numberSearchAndActionInList];
+            return this.listsOfActionsAfterSearching[numberSearchAndActionInSequence];
         }
         /// <summary>
         /// Удаляет экземпляры действия и поиска, соотвествующие установленому номеру списка.
@@ -114,15 +114,15 @@ namespace MyLittleMinion
             if (listOfSearching.Count == 1)
             {
                 this.listOfSearching = new List<Search>();
-                this.listsOfActionsAfterSearchin = new List<ListActionOfMinion>();
+                this.listsOfActionsAfterSearching = new List<ListActionOfMinion>();
                 this.Add(new Search(), new ListActionOfMinion(this));
             }
             else
             {
-                this.listOfSearching.RemoveAt(numberSearchAndActionInList);
-                this.listsOfActionsAfterSearchin.RemoveAt(numberSearchAndActionInList);
-                if (this.numberSearchAndActionInList > 0)
-                    this.numberSearchAndActionInList--;
+                this.listOfSearching.RemoveAt(numberSearchAndActionInSequence);
+                this.listsOfActionsAfterSearching.RemoveAt(numberSearchAndActionInSequence);
+                if (this.numberSearchAndActionInSequence > 0)
+                    this.numberSearchAndActionInSequence--;
             }
 
         }
@@ -131,10 +131,10 @@ namespace MyLittleMinion
         /// </summary>
         public bool Save(SettingOfMinion settingOfMinion)
         {
-            if(this.nameOfListOfSearchingAndActions=="")
-                this.nameOfListOfSearchingAndActions = "Default list search and action";
+            if(this.nameOfSequenceOfSearchesAndActions=="")
+                this.nameOfSequenceOfSearchesAndActions = "Default list search and action";
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(settingOfMinion.pathForSaveOfList + "\\" + this.nameOfListOfSearchingAndActions + ".MLM", FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream(settingOfMinion.pathForSaveOfList + "\\" + this.nameOfSequenceOfSearchesAndActions + ".MLM", FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this);
             stream.Close();
             return true;
@@ -149,9 +149,9 @@ namespace MyLittleMinion
             save_dialog.Filter = "My little minion files (*.MLM)|*.MLM*"; //формат загружаемого файла
 
             //Пустое имя не хррошо. Путь будет хотя бы по умолчанию.
-            if (this.nameOfListOfSearchingAndActions == "")
-                this.nameOfListOfSearchingAndActions = "Default list search and action";
-            save_dialog.FileName = this.nameOfListOfSearchingAndActions;
+            if (this.nameOfSequenceOfSearchesAndActions == "")
+                this.nameOfSequenceOfSearchesAndActions = "Default list search and action";
+            save_dialog.FileName = this.nameOfSequenceOfSearchesAndActions;
 
             //Проверка на существующие
             int countCopies = 1;
@@ -197,17 +197,17 @@ namespace MyLittleMinion
             {
                 IFormatter formatter = new BinaryFormatter();
                 Stream stream = new FileStream(nameOpenFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-                ListOfActionsOfMinion loadFileListOfActionsOfMinion = (ListOfActionsOfMinion)formatter.Deserialize(stream);
+                SequenceOfSearchesAndActions loadFileListOfActionsOfMinion = (SequenceOfSearchesAndActions)formatter.Deserialize(stream);
                 stream.Close();
                 nameOpenFile = nameOpenFile.Replace(nameOpenFile.Replace(open_dialog.SafeFileName, ""), "");
                 nameOpenFile = nameOpenFile.Replace(".MLM" , "");
 
 
                 this.listOfSearching = loadFileListOfActionsOfMinion.listOfSearching;
-                this.listsOfActionsAfterSearchin = loadFileListOfActionsOfMinion.listsOfActionsAfterSearchin;
+                this.listsOfActionsAfterSearching = loadFileListOfActionsOfMinion.listsOfActionsAfterSearching;
                 UpdatePointersOnParentForNestedInstances();
-                this.nameOfListOfSearchingAndActions = nameOpenFile;
-                this.numberSearchAndActionInList = 0;
+                this.nameOfSequenceOfSearchesAndActions = nameOpenFile;
+                this.numberSearchAndActionInSequence = 0;
 
                 return true;
             }
@@ -218,13 +218,13 @@ namespace MyLittleMinion
         }
         private void UpdatePointersOnParentForNestedInstances()
         {
-            for (int i = 0; i < this.listsOfActionsAfterSearchin.Count; i++)
+            for (int i = 0; i < this.listsOfActionsAfterSearching.Count; i++)
             {
-                this.listsOfActionsAfterSearchin[i].pointerOnInstanceParent = this;
-                List<ActionOfMinion> actionsOfMinion = this.listsOfActionsAfterSearchin[i].GetListActions();
+                this.listsOfActionsAfterSearching[i].pointerOnInstanceParent = this;
+                List<ActionOfMinion> actionsOfMinion = this.listsOfActionsAfterSearching[i].GetListActions();
                 for (int j = 0; j < actionsOfMinion.Count; j++)
                 {
-                    actionsOfMinion[j].pointerOnInstanceParent = this.listsOfActionsAfterSearchin[i];
+                    actionsOfMinion[j].pointerOnInstanceParent = this.listsOfActionsAfterSearching[i];
                 }
             }
         }

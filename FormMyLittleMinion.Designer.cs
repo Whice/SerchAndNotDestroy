@@ -89,6 +89,7 @@
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.инструкцияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.логиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelNameOfLisActions = new System.Windows.Forms.Label();
             this.textBoxNameOfLisActions = new System.Windows.Forms.TextBox();
             this.buttonCloneThisSequenceElement = new System.Windows.Forms.Button();
@@ -107,7 +108,6 @@
             this.listBoxForListOfActions = new System.Windows.Forms.ListBox();
             this.richTextBoxForExemplarOfAction = new System.Windows.Forms.RichTextBox();
             this.comboBoxTypeOfAction = new System.Windows.Forms.ComboBox();
-            this.логиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -790,6 +790,13 @@
             this.инструкцияToolStripMenuItem.Text = "Инструкция";
             this.инструкцияToolStripMenuItem.Click += new System.EventHandler(this.ИнструкцияToolStripMenuItem_Click);
             // 
+            // логиToolStripMenuItem
+            // 
+            this.логиToolStripMenuItem.Name = "логиToolStripMenuItem";
+            this.логиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.логиToolStripMenuItem.Text = "Логи";
+            this.логиToolStripMenuItem.Click += new System.EventHandler(this.ЛогиToolStripMenuItem_Click);
+            // 
             // labelNameOfLisActions
             // 
             this.labelNameOfLisActions.AutoSize = true;
@@ -1004,12 +1011,6 @@
             this.comboBoxTypeOfAction.Size = new System.Drawing.Size(351, 21);
             this.comboBoxTypeOfAction.TabIndex = 33;
             this.comboBoxTypeOfAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTypeOfAction_SelectedIndexChanged);
-            // 
-            // логиToolStripMenuItem
-            // 
-            this.логиToolStripMenuItem.Name = "логиToolStripMenuItem";
-            this.логиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.логиToolStripMenuItem.Text = "Логи";
             // 
             // MyLittleMonion
             // 

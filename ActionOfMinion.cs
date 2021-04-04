@@ -36,18 +36,18 @@ namespace MyLittleMinion
         /// <summary>
         /// Указывает на экземпляр объекта, который содержит этот экземпляр объекта.
         /// </summary>
-        public ListOfActionsOfMinion pointerOnInstanceParent { get; set; }
-        public ListActionOfMinion( ListOfActionsOfMinion pointerOnInstanceParent)
+        public SequenceOfSearchesAndActions pointerOnInstanceParent { get; set; }
+        public ListActionOfMinion( SequenceOfSearchesAndActions pointerOnInstanceParent)
         {
             //Во время создания запоминается родитель.
             this.pointerOnInstanceParent = pointerOnInstanceParent;
 
-            actionsOfMinion = new List<ActionOfMinion>();
+            this.actionsOfMinion = new List<ActionOfMinion>();
 
-            actionsOfMinion.Add(new ActionOfMinion(this));
+            this.actionsOfMinion.Add(new ActionOfMinion(this));
         }
         public ListActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn,
-            string textForActionIn,  ListOfActionsOfMinion pointerOnInstanceParent)
+            string textForActionIn,  SequenceOfSearchesAndActions pointerOnInstanceParent)
         {
             //Во время создания запоминается родитель.
             this.pointerOnInstanceParent = pointerOnInstanceParent;
@@ -59,7 +59,7 @@ namespace MyLittleMinion
             }
             
         }
-        public ListActionOfMinion(ActionOfMinion newActionOfMinion,  ListOfActionsOfMinion pointerOnInstanceParent)
+        public ListActionOfMinion(ActionOfMinion newActionOfMinion,  SequenceOfSearchesAndActions pointerOnInstanceParent)
         {
             //Во время создания запоминается родитель.
             this.pointerOnInstanceParent = pointerOnInstanceParent;
@@ -176,14 +176,14 @@ namespace MyLittleMinion
         /// </summary>
         public int timeOfWaitingAfterActionInSecond { get; set; }
         public string textForAction { get; set; }
-        public ActionOfMinion( ListActionOfMinion pointerOnInstanceParent)
+        public ActionOfMinion(ListActionOfMinion pointerOnInstanceParent)
         {
             this.cursorPosition = new Point(0, 0);
 
             //Из-за того, что numberOfAction работает с созданным списком, его надо объявить сразу.
             for (int i = 0; i < listNameOfMauseAction.Length; i++)
                 listNameOfMauseAction[i] = new List<string>();
-            this.typeOfAction = 0;
+            this.typeOfAction = 2;
             this.numberOfAction = 0;
             FillMassiveOfListsOfNames();
 
@@ -191,13 +191,13 @@ namespace MyLittleMinion
             this.pointerOnInstanceParent = pointerOnInstanceParent;
 
             this.NumberOfTimesGoTo = 0;
-            this.GoToNumberOfSequence = this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInList;
+            this.GoToNumberOfSequence = this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInSequence;
 
             this.timeOfWaitingAfterActionInSecond = 1;
             this.textForAction = "";
         }
         public ActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn,
-            string textForActionIn,  ListActionOfMinion pointerOnInstanceParent)
+            string textForActionIn, ListActionOfMinion pointerOnInstanceParent)
         {
             this.cursorPosition = cursorPositionIn;
 
@@ -213,7 +213,7 @@ namespace MyLittleMinion
             this.pointerOnInstanceParent = pointerOnInstanceParent;
 
             this.NumberOfTimesGoTo = 0;
-            this.GoToNumberOfSequence = this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInList;
+            this.GoToNumberOfSequence = this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInSequence;
 
             this.timeOfWaitingAfterActionInSecond = timeOfWaitingAfterActionInSecondIn;
             this.textForAction = textForActionIn;
@@ -433,7 +433,7 @@ namespace MyLittleMinion
             {
                 //Т.к. после будет выполнен переход на следующее действие, надо телепортироваться на предыдущее к нему.
                 // Если мы хотим телепортироваться на действие номер 5, надо отправиться на действие номер 4, и тогда переключение на следующее действие приземлит нас на действие номер 5.
-                this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInList = this.GoToNumberOfSequence - 1;
+                this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInSequence = this.GoToNumberOfSequence - 1;
                 this.NumberOfTimesGoTo--;
             }
         }

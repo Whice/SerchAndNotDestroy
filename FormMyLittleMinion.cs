@@ -23,7 +23,7 @@ namespace MyLittleMinion
         /// <summary>
         /// Список действий.(Вообще список списка, но пока только тут только один список.)
         /// </summary>
-        List<ListOfActionsOfMinion> exemplarsOfLAM = new List<ListOfActionsOfMinion>();
+        List<SequenceOfSearchesAndActions> exemplarsOfLAM = new List<SequenceOfSearchesAndActions>();
         /// <summary>
         /// Номер списка действий в общем списке. Пока что все время 0, т.к. список действий один.
         /// </summary>
@@ -41,6 +41,7 @@ namespace MyLittleMinion
         /// Сообщает была ил загружена форма.
         /// </summary>
         bool FormIsLoad = false;
+        FormForLogs formForLogs;
         public MyLittleMonion()
         {
             InitializeComponent();
@@ -49,7 +50,7 @@ namespace MyLittleMinion
             dialogWindowForSetting.Close();
 
 
-            exemplarsOfLAM.Add(new ListOfActionsOfMinion());
+            exemplarsOfLAM.Add(new SequenceOfSearchesAndActions());
 
             FillUINewDataFromListSearchAndAction();
 
@@ -104,7 +105,7 @@ namespace MyLittleMinion
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
             exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
 
-            textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions;
+            textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfSequenceOfSearchesAndActions;
 
             //По умолчанию на форме
             numericUpDownCountOfThreads.Enabled = false;
@@ -156,7 +157,7 @@ namespace MyLittleMinion
         /// </summary>
         void FillExemplarsOfListOfSearchAndActionDataFromUI()
         {
-            exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
+            exemplarsOfLAM[numberLOEOLAM].nameOfSequenceOfSearchesAndActions = textBoxNameOfLisActions.Text;
 
             exemplarOfSearch.multyThreadSearch = -1;
             if (checkBoxParallelSearch.Checked)
@@ -690,7 +691,7 @@ namespace MyLittleMinion
             comboBoxTypeOfAction.Items.Add("Мышь");
             comboBoxTypeOfAction.Items.Add("Клавиатура");
             comboBoxTypeOfAction.Items.Add("Дополнительно");
-            comboBoxTypeOfAction.SelectedIndex = 0;
+            comboBoxTypeOfAction.SelectedIndex = exemplarOfListActionsOfMinion.GetAction().typeOfAction;
 
         }
         private void ComboBoxTypeOfAction_SelectedIndexChanged(object sender, EventArgs e)
@@ -751,6 +752,11 @@ namespace MyLittleMinion
 
         #region///Верхнее меню НАЧАЛО
 
+        private void ЛогиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            formForLogs = new FormForLogs();
+            formForLogs.Show();
+        }
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // MessageBox.Show("Помощник - хороший мальчик!");
@@ -781,7 +787,7 @@ namespace MyLittleMinion
             exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
             FillUINewDataFromListSearchAndAction();
 
-            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence);
         }
         /// <summary>
         /// Обновляет данные в конфигарации при перемещении окна.
@@ -800,7 +806,7 @@ namespace MyLittleMinion
         #region///Информация о списке, с которым сейчас идет работа НАЧАЛО
         private void TextBoxNameOfLisActions_TextChanged(object sender, EventArgs e)
         {
-            exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions = textBoxNameOfLisActions.Text;
+            exemplarsOfLAM[numberLOEOLAM].nameOfSequenceOfSearchesAndActions = textBoxNameOfLisActions.Text;
         }
 
         private void ButtonAddAction_Click(object sender, EventArgs e)
@@ -814,19 +820,19 @@ namespace MyLittleMinion
             FillUINewDataFromListSearchAndAction();
 
 
-            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence);
         }
 
         private void ButtonPrevAction_Click(object sender, EventArgs e)
         {
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList > 0)//если есть куда назад
+            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence > 0)//если есть куда назад
             {
-                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList--;
+                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence--;
                 exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
                 exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
 
-                labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+                labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence);
             }
             FillUINewDataFromListSearchAndAction();
         }
@@ -835,13 +841,13 @@ namespace MyLittleMinion
         {
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             //Если есть куда вперед
-            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion() - 1)
+            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion() - 1)
             {
-                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
+                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence++;
                 exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
                 exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
 
-                labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+                labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence);
             }
             FillUINewDataFromListSearchAndAction();
         }
@@ -852,22 +858,29 @@ namespace MyLittleMinion
         }
         private void FindAndPerformThisActionButton_Click(object sender, EventArgs e)
         {
-            ListOfActionsOfMinion originalListOfActionsOfMinion = AdditionalFunctions.CloneOfObject(exemplarsOfLAM[numberLOEOLAM]);
 
+            this.Enabled = false;
             int countTimesInWhile = 0;
-            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList = 0;
+
+            //Запомнить последние внесенные изменения, перемотать на начало, обновить все и начать все по порядку.
+            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            SequenceOfSearchesAndActions originalListOfActionsOfMinion = AdditionalFunctions.CloneOfObject(exemplarsOfLAM[numberLOEOLAM]);
+            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence = 0;
+            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
+            exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
+            FillUINewDataFromListSearchAndAction();
 
             //Условия выхода проверяются внутри цикла
-            while(true)
+            while (true)
             {
 
                 FindAndPerformThisAction();
-
-                int checkNumber = exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList;
-                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
+                //formForLogs.WriteTextInLogs(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence.ToString());
+                int checkNumber = exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence;
+                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence++;
                 FillUINewDataFromListSearchAndAction();
                 //Если номер в последовательности не изменяется после увеличения, то он достиг максимума и надо выйти.
-                if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList == checkNumber)
+                if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence == checkNumber)
                     break;
                 //Каждый пятый раз запускать очистку памяти, чтобы не кушать много.
                 countTimesInWhile++;
@@ -876,6 +889,7 @@ namespace MyLittleMinion
             }
             exemplarsOfLAM[numberLOEOLAM] = originalListOfActionsOfMinion;
             FillUINewDataFromListSearchAndAction();
+            this.Enabled = true;
         }
         /// <summary>
         /// Выполняет поиск, действие и ждёт согласно всем настройкам.
@@ -904,7 +918,7 @@ namespace MyLittleMinion
             exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
             FillUINewDataFromListSearchAndAction();
 
-            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
+            labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence);
 
         }
 
@@ -920,8 +934,9 @@ namespace MyLittleMinion
 
 
 
+
         #endregion///Информация о списке, с которым сейчас идет работа КОНЕЦ
 
-        
+       
     }       
 }
