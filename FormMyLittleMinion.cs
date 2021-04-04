@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 
 namespace MyLittleMinion
@@ -49,8 +41,6 @@ namespace MyLittleMinion
         /// Сообщает была ил загружена форма.
         /// </summary>
         bool FormIsLoad = false;
-
-
         public MyLittleMonion()
         {
             InitializeComponent();
@@ -67,6 +57,7 @@ namespace MyLittleMinion
 
 
             FillVariantsOfTypeForComboBoxForTyepOfAction();
+
         }
         private void MyLittleMonion_Load(object sender, EventArgs e)
         {
@@ -88,6 +79,16 @@ namespace MyLittleMinion
 
         private void TestButton_Click(object sender, EventArgs e)
         {
+            
+            /*ListOfActionsOfMinion loaom = exemplarsOfLAM[numberLOEOLAM];
+            loaom.GetThisExemplarListActionsOfMinion().AddAction();
+            loaom.Add(loaom.GetThisExemplarSearch().Clone(), loaom.GetThisExemplarListActionsOfMinion().Clone());
+            loaom.Add(loaom.GetThisExemplarSearch().Clone(), loaom.GetThisExemplarListActionsOfMinion().Clone());
+            loaom.nameOfListOfSearchingAndActions = "kuku";
+            loaom.numberSearchAndActionInList = 2;
+
+            ListOfActionsOfMinion loaom2 = loaom.GetThisExemplarListActionsOfMinion().GetAction().pointerOnInstanceParent.pointerOnInstanceParent;*/
+
             // MessageBox.Show(Convert.ToString(comboBoxForSelectAction.SelectedIndex));
             /*Thread.Sleep(2000);
             ActionOfMinion aMinion = new ActionOfMinion();
@@ -105,8 +106,11 @@ namespace MyLittleMinion
 
             textBoxNameOfLisActions.Text = exemplarsOfLAM[numberLOEOLAM].nameOfListOfSearchingAndActions;
 
-
+            //По умолчанию на форме
             numericUpDownCountOfThreads.Enabled = false;
+            checkBoxCountOfThreads.Checked = false;
+            numericUpDownCountOfThreads.Text = "1";
+            //После выставленых по умочанию, можно  изменять, если требуется
             if (exemplarOfSearch.multyThreadSearch == 0)
                 checkBoxParallelSearch.Checked = true;
             else if (exemplarOfSearch.multyThreadSearch > 0)
@@ -144,6 +148,8 @@ namespace MyLittleMinion
                 FillVariantsOfActionsForComboBoxForSelectAction();
             numericUpDownWaitAfterThisAction.Value = exemplarOfListActionsOfMinion.GetAction().timeOfWaitingAfterActionInSecond;
             richTextBoxForExemplarOfAction.Text = exemplarOfListActionsOfMinion.GetAction().textForAction;
+            numericUpDownGoToNumberOfSequence.Value = exemplarOfListActionsOfMinion.GetAction().GoToNumberOfSequence;
+            numericUpDownnNumberOfTimesGoTo.Value = exemplarOfListActionsOfMinion.GetAction().NumberOfTimesGoTo;
         }
         /// <summary>
         /// Считывает из интерфейса инормацию в список поисков и действий.
@@ -181,6 +187,9 @@ namespace MyLittleMinion
             exemplarOfListActionsOfMinion.GetAction().typeOfAction = (byte)comboBoxTypeOfAction.SelectedIndex;
             exemplarOfListActionsOfMinion.GetAction().numberOfAction = (ushort)comboBoxForSelectAction.SelectedIndex;
             exemplarOfListActionsOfMinion.GetAction().timeOfWaitingAfterActionInSecond = (int)numericUpDownWaitAfterThisAction.Value;
+            exemplarOfListActionsOfMinion.GetAction().GoToNumberOfSequence = (int)numericUpDownGoToNumberOfSequence.Value;
+            exemplarOfListActionsOfMinion.GetAction().NumberOfTimesGoTo = (int)numericUpDownnNumberOfTimesGoTo.Value;
+
         }
         private void MyLittleMonion_Move(object sender, EventArgs e)
         {
@@ -216,6 +225,22 @@ namespace MyLittleMinion
                 (parenControl.Width - 5) - richTextBoxForExemplarOfAction.Location.X,
                 richTextBoxForExemplarOfAction.Height);
 
+            parenControl = comboBoxTypeOfAction.Parent;
+            comboBoxTypeOfAction.Size = new Size(
+                (parenControl.Width - 5) - comboBoxTypeOfAction.Location.X,
+                comboBoxTypeOfAction.Height);
+
+            parenControl = numericUpDownWaitAfterThisAction.Parent;
+            numericUpDownWaitAfterThisAction.Size = new Size(
+                (parenControl.Width - 5) - numericUpDownWaitAfterThisAction.Location.X,
+                numericUpDownWaitAfterThisAction.Height);
+
+
+
+        }
+        private void GeneralTabControlOfConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ResizeUI();
         }
 
         #endregion/// Вспомогательные функции КОНЕЦ
@@ -252,6 +277,7 @@ namespace MyLittleMinion
             else
                 srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInArea());
 
+
             if (srPerSearchModelInArea1())
             {
                 //MessageBox.Show("Нашел!");
@@ -261,8 +287,8 @@ namespace MyLittleMinion
             }
             else
             {
-                labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
-                MessageBox.Show("No!");
+                labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch) + " Эталон не найден!";
+                //MessageBox.Show("No!");
             }
             pictureBoxForModelForSearch.Visible = true;
         }
@@ -660,15 +686,19 @@ namespace MyLittleMinion
 
         private void FillVariantsOfTypeForComboBoxForTyepOfAction()
         {
+
             comboBoxTypeOfAction.Items.Add("Мышь");
             comboBoxTypeOfAction.Items.Add("Клавиатура");
+            comboBoxTypeOfAction.Items.Add("Дополнительно");
             comboBoxTypeOfAction.SelectedIndex = 0;
 
         }
         private void ComboBoxTypeOfAction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            exemplarOfListActionsOfMinion.GetAction().typeOfAction = (byte)comboBoxTypeOfAction.SelectedIndex;
+            //FillExemplarsOfListOfSearchAndActionDataFromUI();
             FillVariantsOfActionsForComboBoxForSelectAction();
+            //comboBoxForSelectAction.DrawItem += ListBoxForListOfActions_DrawItem;
         }
         private void FillVariantsOfActionsForComboBoxForSelectAction()
         {
@@ -676,12 +706,12 @@ namespace MyLittleMinion
             comboBoxForSelectAction.Items.Clear();
             foreach (string nameOfAction in ActionOfMinion.listNameOfMauseAction[exemplarOfListActionsOfMinion.GetAction().typeOfAction])
                 comboBoxForSelectAction.Items.Add(nameOfAction);
-
+            
             comboBoxForSelectAction.SelectedIndex = exemplarOfListActionsOfMinion.GetAction().numberOfAction;
         }
         private void ComboBoxForSelectAction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillExemplarsOfListOfSearchAndActionDataFromUI();
+            exemplarOfListActionsOfMinion.GetAction().numberOfAction = (ushort)comboBoxForSelectAction.SelectedIndex;
         }
         private void RichTextBoxForExemplarOfAction_TextChanged(object sender, EventArgs e)
         {
@@ -689,7 +719,7 @@ namespace MyLittleMinion
         }
         private void ButtonAddAction_Click_1(object sender, EventArgs e)
         {
-            exemplarOfListActionsOfMinion.Add(new ActionOfMinion());
+            exemplarOfListActionsOfMinion.AddAction();
             FillUINewDataFromListSearchAndAction();
         }
         private void ButtonDeleteAction_Click_1(object sender, EventArgs e)
@@ -704,15 +734,15 @@ namespace MyLittleMinion
         }
         private void ListBoxForListOfActions_DrawItem(object sender, DrawItemEventArgs e)
         {
-           /* e.DrawBackground();
+            e.DrawBackground();
             string text = ((ListBox)sender).Items[exemplarOfListActionsOfMinion.numberActionInList].ToString();
             Color color = Color.White;
-            if (text == "Действие №1")
+           // if (text == "Действие №1")
                 color = Color.Green;
             e.Graphics.FillRectangle(new SolidBrush(color), e.Bounds);
             e.Graphics.DrawString(text,
                     e.Font, Brushes.Black, e.Bounds, StringFormat.GenericDefault);
-            e.DrawFocusRectangle();*/
+            e.DrawFocusRectangle();
         }
 
 
@@ -777,7 +807,8 @@ namespace MyLittleMinion
         {
 
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            exemplarsOfLAM[numberLOEOLAM].Add(new Search(), new ListActionOfMinion());
+            //var thisForRef = exemplarsOfLAM[numberLOEOLAM];
+            exemplarsOfLAM[numberLOEOLAM].Add(new Search(), new ListActionOfMinion(exemplarsOfLAM[numberLOEOLAM]));
             exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
             exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
             FillUINewDataFromListSearchAndAction();
@@ -794,10 +825,10 @@ namespace MyLittleMinion
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList--;
                 exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
                 exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
-                FillUINewDataFromListSearchAndAction();
 
                 labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
             }
+            FillUINewDataFromListSearchAndAction();
         }
 
         private void ButtonNextAction_Click(object sender, EventArgs e)
@@ -809,10 +840,10 @@ namespace MyLittleMinion
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
                 exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
                 exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
-                FillUINewDataFromListSearchAndAction();
 
                 labelNumberOfSearchAndAction.Text = "Номер действия: " + Convert.ToString(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList);
             }
+            FillUINewDataFromListSearchAndAction();
         }
 
         private void ButtonFindAndPerformThisAction_Click(object sender, EventArgs e)
@@ -821,16 +852,30 @@ namespace MyLittleMinion
         }
         private void FindAndPerformThisActionButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion(); i++)
+            ListOfActionsOfMinion originalListOfActionsOfMinion = AdditionalFunctions.CloneOfObject(exemplarsOfLAM[numberLOEOLAM]);
+
+            int countTimesInWhile = 0;
+            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList = 0;
+
+            //Условия выхода проверяются внутри цикла
+            while(true)
             {
-                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList = i;
-                FillUINewDataFromListSearchAndAction();
+
                 FindAndPerformThisAction();
 
+                int checkNumber = exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList;
+                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList++;
+                FillUINewDataFromListSearchAndAction();
+                //Если номер в последовательности не изменяется после увеличения, то он достиг максимума и надо выйти.
+                if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInList == checkNumber)
+                    break;
                 //Каждый пятый раз запускать очистку памяти, чтобы не кушать много.
-                if (i % 5 == 0)
+                countTimesInWhile++;
+                if (countTimesInWhile % 5 == 0)
                     GC.Collect();
             }
+            exemplarsOfLAM[numberLOEOLAM] = originalListOfActionsOfMinion;
+            FillUINewDataFromListSearchAndAction();
         }
         /// <summary>
         /// Выполняет поиск, действие и ждёт согласно всем настройкам.
@@ -841,7 +886,6 @@ namespace MyLittleMinion
             for (int i = 0; i < exemplarOfListActionsOfMinion.count; i++)
             {
                 exemplarOfListActionsOfMinion.GetAction().RealizeAction();
-                Thread.Sleep(Convert.ToInt32(exemplarOfListActionsOfMinion.GetAction().timeOfWaitingAfterActionInSecond) * 1000);//Надо умножать на 1000, чтобы из получить ожидание в секундах
                 exemplarOfListActionsOfMinion.numberActionInList++;
             }
         }
@@ -878,5 +922,6 @@ namespace MyLittleMinion
 
         #endregion///Информация о списке, с которым сейчас идет работа КОНЕЦ
 
+        
     }       
 }

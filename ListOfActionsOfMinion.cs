@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
@@ -58,8 +55,10 @@ namespace MyLittleMinion
             get { return this.numberSearchAndActionInListPrivate; }
             set
             {
-                if (value <= 0 || value > this.listOfSearching.Count - 1)
+                if (value <= 0)
                     this.numberSearchAndActionInListPrivate = 0;
+                else if(value > this.listOfSearching.Count - 1)
+                    this.numberSearchAndActionInListPrivate = this.listOfSearching.Count - 1;
                 else
                     this.numberSearchAndActionInListPrivate = value;
             }
@@ -71,7 +70,7 @@ namespace MyLittleMinion
         {
             this.listOfSearching = new List<Search>();
             this.listsOfActionsAfterSearchin = new List<ListActionOfMinion>();
-            this.Add(new Search(), new ListActionOfMinion());
+            this.Add(new Search(), new ListActionOfMinion(this));
         }
 
         /// <summary>
@@ -79,11 +78,11 @@ namespace MyLittleMinion
         /// </summary>
         public void Add(Search SearchingForAdding, ListActionOfMinion ActionsAfterSearchinForAdding)
         {
-            this.listOfSearching.Add(SearchingForAdding);
-            this.listsOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
-            this.numberSearchAndActionInList = this.listOfSearching.Count - 1;
             if (listOfSearching.Count < 1)
                 this.nameOfListOfSearchingAndActions = "Default list search and action";
+            this.listOfSearching.Add(SearchingForAdding);
+            this.numberSearchAndActionInList = GetSizeOfListOfSearchAndActionsOfMinion() - 1;
+            this.listsOfActionsAfterSearchin.Add(ActionsAfterSearchinForAdding);
         }
         /// <summary>
         /// Возвращает длину списка.
@@ -112,16 +111,19 @@ namespace MyLittleMinion
         /// </summary>
         public void RemoveThisExemplarSearchingAndActions()
         {
-            if(listOfSearching.Count ==1)
+            if (listOfSearching.Count == 1)
             {
                 this.listOfSearching = new List<Search>();
                 this.listsOfActionsAfterSearchin = new List<ListActionOfMinion>();
-                this.Add(new Search(), new ListActionOfMinion());
+                this.Add(new Search(), new ListActionOfMinion(this));
             }
-            this.listOfSearching.RemoveAt(numberSearchAndActionInList);
-            this.listsOfActionsAfterSearchin.RemoveAt(numberSearchAndActionInList);
-            if (this.numberSearchAndActionInList > 0)
-                this.numberSearchAndActionInList--;
+            else
+            {
+                this.listOfSearching.RemoveAt(numberSearchAndActionInList);
+                this.listsOfActionsAfterSearchin.RemoveAt(numberSearchAndActionInList);
+                if (this.numberSearchAndActionInList > 0)
+                    this.numberSearchAndActionInList--;
+            }
 
         }
         /// <summary>
@@ -199,8 +201,11 @@ namespace MyLittleMinion
                 stream.Close();
                 nameOpenFile = nameOpenFile.Replace(nameOpenFile.Replace(open_dialog.SafeFileName, ""), "");
                 nameOpenFile = nameOpenFile.Replace(".MLM" , "");
+
+
                 this.listOfSearching = loadFileListOfActionsOfMinion.listOfSearching;
                 this.listsOfActionsAfterSearchin = loadFileListOfActionsOfMinion.listsOfActionsAfterSearchin;
+                UpdatePointersOnParentForNestedInstances();
                 this.nameOfListOfSearchingAndActions = nameOpenFile;
                 this.numberSearchAndActionInList = 0;
 
@@ -209,6 +214,18 @@ namespace MyLittleMinion
             else
             {
                 return false;
+            }
+        }
+        private void UpdatePointersOnParentForNestedInstances()
+        {
+            for (int i = 0; i < this.listsOfActionsAfterSearchin.Count; i++)
+            {
+                this.listsOfActionsAfterSearchin[i].pointerOnInstanceParent = this;
+                List<ActionOfMinion> actionsOfMinion = this.listsOfActionsAfterSearchin[i].GetListActions();
+                for (int j = 0; j < actionsOfMinion.Count; j++)
+                {
+                    actionsOfMinion[j].pointerOnInstanceParent = this.listsOfActionsAfterSearchin[i];
+                }
             }
         }
 

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyLittleMonion));
             this.FindButton = new System.Windows.Forms.Button();
             this.pictureBoxForModelForSearch = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -98,12 +99,15 @@
             this.tabPageMainConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageAdditionalConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageConfigurationOfAction = new System.Windows.Forms.TabPage();
+            this.numericUpDownnNumberOfTimesGoTo = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownGoToNumberOfSequence = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.buttonDeleteAction = new System.Windows.Forms.Button();
             this.buttonAddAction = new System.Windows.Forms.Button();
             this.listBoxForListOfActions = new System.Windows.Forms.ListBox();
             this.richTextBoxForExemplarOfAction = new System.Windows.Forms.RichTextBox();
             this.comboBoxTypeOfAction = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.логиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -123,6 +127,8 @@
             this.tabPageMainConfiguration.SuspendLayout();
             this.tabPageAdditionalConfiguration.SuspendLayout();
             this.tabPageConfigurationOfAction.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownnNumberOfTimesGoTo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGoToNumberOfSequence)).BeginInit();
             this.SuspendLayout();
             // 
             // FindButton
@@ -689,6 +695,11 @@
             // numericUpDownWaitAfterThisAction
             // 
             this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(367, 158);
+            this.numericUpDownWaitAfterThisAction.Maximum = new decimal(new int[] {
+            268435455,
+            1042612833,
+            542101086,
+            0});
             this.numericUpDownWaitAfterThisAction.Name = "numericUpDownWaitAfterThisAction";
             this.numericUpDownWaitAfterThisAction.Size = new System.Drawing.Size(203, 20);
             this.numericUpDownWaitAfterThisAction.TabIndex = 26;
@@ -706,7 +717,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1210, 24);
             this.menuStrip1.TabIndex = 34;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -765,7 +776,8 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.инструкцияToolStripMenuItem});
+            this.инструкцияToolStripMenuItem,
+            this.логиToolStripMenuItem});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
             this.aboutToolStripMenuItem.Text = "О программе";
@@ -774,7 +786,7 @@
             // инструкцияToolStripMenuItem
             // 
             this.инструкцияToolStripMenuItem.Name = "инструкцияToolStripMenuItem";
-            this.инструкцияToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.инструкцияToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.инструкцияToolStripMenuItem.Text = "Инструкция";
             this.инструкцияToolStripMenuItem.Click += new System.EventHandler(this.ИнструкцияToolStripMenuItem_Click);
             // 
@@ -823,8 +835,9 @@
             this.generalTabControlOfConfiguration.Location = new System.Drawing.Point(198, 36);
             this.generalTabControlOfConfiguration.Name = "generalTabControlOfConfiguration";
             this.generalTabControlOfConfiguration.SelectedIndex = 0;
-            this.generalTabControlOfConfiguration.Size = new System.Drawing.Size(584, 414);
+            this.generalTabControlOfConfiguration.Size = new System.Drawing.Size(1012, 625);
             this.generalTabControlOfConfiguration.TabIndex = 37;
+            this.generalTabControlOfConfiguration.SelectedIndexChanged += new System.EventHandler(this.GeneralTabControlOfConfiguration_SelectedIndexChanged);
             // 
             // tabPageConfigurationOfSearch
             // 
@@ -833,7 +846,7 @@
             this.tabPageConfigurationOfSearch.Location = new System.Drawing.Point(4, 22);
             this.tabPageConfigurationOfSearch.Name = "tabPageConfigurationOfSearch";
             this.tabPageConfigurationOfSearch.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageConfigurationOfSearch.Size = new System.Drawing.Size(576, 388);
+            this.tabPageConfigurationOfSearch.Size = new System.Drawing.Size(1004, 599);
             this.tabPageConfigurationOfSearch.TabIndex = 0;
             this.tabPageConfigurationOfSearch.Text = "Настройки поиска";
             // 
@@ -844,7 +857,7 @@
             this.tabControlConfigurationOfSearch.Location = new System.Drawing.Point(6, 6);
             this.tabControlConfigurationOfSearch.Name = "tabControlConfigurationOfSearch";
             this.tabControlConfigurationOfSearch.SelectedIndex = 0;
-            this.tabControlConfigurationOfSearch.Size = new System.Drawing.Size(566, 376);
+            this.tabControlConfigurationOfSearch.Size = new System.Drawing.Size(992, 587);
             this.tabControlConfigurationOfSearch.TabIndex = 0;
             // 
             // tabPageMainConfiguration
@@ -869,7 +882,7 @@
             this.tabPageMainConfiguration.Location = new System.Drawing.Point(4, 22);
             this.tabPageMainConfiguration.Name = "tabPageMainConfiguration";
             this.tabPageMainConfiguration.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMainConfiguration.Size = new System.Drawing.Size(558, 350);
+            this.tabPageMainConfiguration.Size = new System.Drawing.Size(984, 561);
             this.tabPageMainConfiguration.TabIndex = 0;
             this.tabPageMainConfiguration.Text = "Основные настройки";
             // 
@@ -883,13 +896,15 @@
             this.tabPageAdditionalConfiguration.Location = new System.Drawing.Point(4, 22);
             this.tabPageAdditionalConfiguration.Name = "tabPageAdditionalConfiguration";
             this.tabPageAdditionalConfiguration.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdditionalConfiguration.Size = new System.Drawing.Size(558, 350);
+            this.tabPageAdditionalConfiguration.Size = new System.Drawing.Size(984, 561);
             this.tabPageAdditionalConfiguration.TabIndex = 1;
             this.tabPageAdditionalConfiguration.Text = "Дополнительные настройки";
             // 
             // tabPageConfigurationOfAction
             // 
             this.tabPageConfigurationOfAction.BackColor = System.Drawing.Color.Thistle;
+            this.tabPageConfigurationOfAction.Controls.Add(this.numericUpDownnNumberOfTimesGoTo);
+            this.tabPageConfigurationOfAction.Controls.Add(this.numericUpDownGoToNumberOfSequence);
             this.tabPageConfigurationOfAction.Controls.Add(this.label4);
             this.tabPageConfigurationOfAction.Controls.Add(this.buttonDeleteAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.buttonAddAction);
@@ -902,9 +917,42 @@
             this.tabPageConfigurationOfAction.Location = new System.Drawing.Point(4, 22);
             this.tabPageConfigurationOfAction.Name = "tabPageConfigurationOfAction";
             this.tabPageConfigurationOfAction.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageConfigurationOfAction.Size = new System.Drawing.Size(576, 388);
+            this.tabPageConfigurationOfAction.Size = new System.Drawing.Size(1004, 599);
             this.tabPageConfigurationOfAction.TabIndex = 1;
             this.tabPageConfigurationOfAction.Text = "Настройки действий";
+            // 
+            // numericUpDownnNumberOfTimesGoTo
+            // 
+            this.numericUpDownnNumberOfTimesGoTo.Location = new System.Drawing.Point(222, 105);
+            this.numericUpDownnNumberOfTimesGoTo.Name = "numericUpDownnNumberOfTimesGoTo";
+            this.numericUpDownnNumberOfTimesGoTo.Size = new System.Drawing.Size(81, 20);
+            this.numericUpDownnNumberOfTimesGoTo.TabIndex = 41;
+            this.numericUpDownnNumberOfTimesGoTo.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownGoToNumberOfSequence
+            // 
+            this.numericUpDownGoToNumberOfSequence.Location = new System.Drawing.Point(222, 79);
+            this.numericUpDownGoToNumberOfSequence.Name = "numericUpDownGoToNumberOfSequence";
+            this.numericUpDownGoToNumberOfSequence.Size = new System.Drawing.Size(81, 20);
+            this.numericUpDownGoToNumberOfSequence.TabIndex = 40;
+            this.numericUpDownGoToNumberOfSequence.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 6);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(94, 13);
+            this.label4.TabIndex = 39;
+            this.label4.Text = "Список действий";
             // 
             // buttonDeleteAction
             // 
@@ -929,6 +977,7 @@
             // listBoxForListOfActions
             // 
             this.listBoxForListOfActions.BackColor = System.Drawing.Color.Azure;
+            this.listBoxForListOfActions.ForeColor = System.Drawing.SystemColors.WindowText;
             this.listBoxForListOfActions.Location = new System.Drawing.Point(6, 22);
             this.listBoxForListOfActions.Name = "listBoxForListOfActions";
             this.listBoxForListOfActions.Size = new System.Drawing.Size(210, 95);
@@ -956,21 +1005,18 @@
             this.comboBoxTypeOfAction.TabIndex = 33;
             this.comboBoxTypeOfAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTypeOfAction_SelectedIndexChanged);
             // 
-            // label4
+            // логиToolStripMenuItem
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 6);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 13);
-            this.label4.TabIndex = 39;
-            this.label4.Text = "Список действий";
+            this.логиToolStripMenuItem.Name = "логиToolStripMenuItem";
+            this.логиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.логиToolStripMenuItem.Text = "Логи";
             // 
             // MyLittleMonion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
-            this.ClientSize = new System.Drawing.Size(784, 454);
+            this.ClientSize = new System.Drawing.Size(1210, 662);
             this.Controls.Add(this.generalTabControlOfConfiguration);
             this.Controls.Add(this.buttonDeleteSequenceElement);
             this.Controls.Add(this.buttonCloneThisSequenceElement);
@@ -985,6 +1031,7 @@
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.buttonFindAndPerformAllSequenceElement);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MyLittleMonion";
@@ -1018,6 +1065,8 @@
             this.tabPageAdditionalConfiguration.PerformLayout();
             this.tabPageConfigurationOfAction.ResumeLayout(false);
             this.tabPageConfigurationOfAction.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownnNumberOfTimesGoTo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGoToNumberOfSequence)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1100,6 +1149,9 @@
         private System.Windows.Forms.Button buttonDeleteAction;
         private System.Windows.Forms.Button buttonAddAction;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericUpDownnNumberOfTimesGoTo;
+        private System.Windows.Forms.NumericUpDown numericUpDownGoToNumberOfSequence;
+        private System.Windows.Forms.ToolStripMenuItem логиToolStripMenuItem;
     }
 }
 

@@ -97,6 +97,12 @@
     <Compile Include="DialogWindowWithTextBox.Designer.cs">
       <DependentUpon>DialogWindowWithTextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormForLogs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormForLogs.Designer.cs">
+      <DependentUpon>FormForLogs.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMyLittleMinion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +127,9 @@
     </Compile>
     <EmbeddedResource Include="DialogWindowWithTextBox.resx">
       <DependentUpon>DialogWindowWithTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormForLogs.resx">
+      <DependentUpon>FormForLogs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMyLittleMinion.resx">
       <DependentUpon>FormMyLittleMinion.cs</DependentUpon>

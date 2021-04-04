@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Drawing.Imaging;
 
 namespace MyLittleMinion
@@ -986,6 +984,16 @@ namespace MyLittleMinion
             }
         }
 
+        /// <summary>
+        /// делегаь для EventAfterSearch
+        /// </summary>
+        public delegate void delegateAfterSearch();
+        /// <summary>
+        /// Подписавшись на это событие, можно выполнить подписаный метод после окончания поиска.
+        /// </summary>
+        public event delegateAfterSearch EventAfterSearch;
+
+
         #endregion///Выполнение поиска КОНЕЦ
 
 
@@ -1470,14 +1478,14 @@ namespace MyLittleMinion
             cloneThisSearch.UsePlaceForSearch = this.UsePlaceForSearch;
             cloneThisSearch.locationOfPlaceForSearchPrivate = this.locationOfPlaceForSearchPrivate;
             cloneThisSearch.numberIgnorColorInListPrivate = this.numberIgnorColorInListPrivate;
-            cloneThisSearch.pictureModelForSearchPrivate = (Bitmap)this.pictureModelForSearchPrivate.Clone();
-            cloneThisSearch.correctModelPrivate = (Bitmap)this.correctModelPrivate.Clone();
-            if(this.pictureCorrectModelForSearchByteArray!=null)
+            cloneThisSearch.pictureModelForSearchPrivate = (Bitmap)AdditionalFunctions.CloneOfObject(this.pictureModelForSearchPrivate);//this.pictureModelForSearchPrivate.Clone();
+            cloneThisSearch.correctModelPrivate = (Bitmap)AdditionalFunctions.CloneOfObject(this.correctModelPrivate);//this.correctModelPrivate.Clone();
+            if (this.pictureCorrectModelForSearchByteArray!=null)
                 cloneThisSearch.pictureCorrectModelForSearchByteArray = this.pictureCorrectModelForSearchByteArray.ToList<byte>().ToArray();
             cloneThisSearch.aimModelPrivate = this.aimModelPrivate;
 
             if (this.pictureSearchArea != null)
-                cloneThisSearch.pictureSearchArea = (Bitmap)this.pictureSearchArea.Clone();
+                cloneThisSearch.pictureSearchArea = (Bitmap)AdditionalFunctions.CloneOfObject(this.pictureSearchArea);//this.pictureSearchArea.Clone();
             else
                 cloneThisSearch.pictureSearchArea = null;
             cloneThisSearch.SearchAreaSize = this.SearchAreaSize;
@@ -1533,6 +1541,8 @@ namespace MyLittleMinion
                 }
             return smallPicture;
         }
+
+        
         #endregion 
     }
 }

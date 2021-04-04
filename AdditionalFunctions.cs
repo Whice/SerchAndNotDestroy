@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MyLittleMinion
 {
@@ -69,7 +63,32 @@ namespace MyLittleMinion
                 colorForChange = Color.FromArgb(colorForChange.R - 1, colorForChange.G, colorForChange.B);
             return colorForChange;
         }
+        /// <summary>
+        /// Выполняет глубокое копирование объекта.
+        /// </summary>
+        public static T CloneOfObject<T>(T source)
+        {
+            if (!typeof(T).IsSerializable)
+            {
+                throw new ArgumentException("Тип объекта должен поддерживать сериализацию/The type must be serializable.", nameof(source));
+            }
 
+            // Don't serialize a null object, simply return the default for that object
+            //Нельзя сериализовать не инициализированный объект, просто возвращается значение по умолчанию этого объекста
+            if (Object.ReferenceEquals(source, null))
+            {
+                return default(T);
+            }
+
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            System.IO.Stream stream = new System.IO.MemoryStream();
+            using (stream)
+            {
+                formatter.Serialize(stream, source);
+                stream.Seek(0, System.IO.SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
+        }
     }
 
     [Serializable()]

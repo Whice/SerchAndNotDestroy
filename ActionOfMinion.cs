@@ -33,20 +33,37 @@ namespace MyLittleMinion
                     this.numberActionInListPrivate = value;
             }
         }
+        /// <summary>
+        /// Указывает на экземпляр объекта, который содержит этот экземпляр объекта.
+        /// </summary>
+        public ListOfActionsOfMinion pointerOnInstanceParent { get; set; }
+        public ListActionOfMinion( ListOfActionsOfMinion pointerOnInstanceParent)
+        {
+            //Во время создания запоминается родитель.
+            this.pointerOnInstanceParent = pointerOnInstanceParent;
 
-        public ListActionOfMinion()
-        {
             actionsOfMinion = new List<ActionOfMinion>();
-            actionsOfMinion.Add(new ActionOfMinion());
+
+            actionsOfMinion.Add(new ActionOfMinion(this));
         }
-        public ListActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn, string textForActionIn)
+        public ListActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn,
+            string textForActionIn,  ListOfActionsOfMinion pointerOnInstanceParent)
         {
+            //Во время создания запоминается родитель.
+            this.pointerOnInstanceParent = pointerOnInstanceParent;
+
             actionsOfMinion = new List<ActionOfMinion>();
             if (actionsOfMinion.Count == 0)
-                actionsOfMinion.Add(new ActionOfMinion(cursorPositionIn, typeOfActionIn, numberOfActionIn, timeOfWaitingAfterActionInSecondIn, textForActionIn));
+            {
+                actionsOfMinion.Add(new ActionOfMinion(cursorPositionIn, typeOfActionIn, numberOfActionIn, timeOfWaitingAfterActionInSecondIn, textForActionIn, this));
+            }
+            
         }
-        public ListActionOfMinion(ActionOfMinion newActionOfMinion)
+        public ListActionOfMinion(ActionOfMinion newActionOfMinion,  ListOfActionsOfMinion pointerOnInstanceParent)
         {
+            //Во время создания запоминается родитель.
+            this.pointerOnInstanceParent = pointerOnInstanceParent;
+
             actionsOfMinion = new List<ActionOfMinion>();
             actionsOfMinion.Add(newActionOfMinion);
         }
@@ -66,12 +83,22 @@ namespace MyLittleMinion
         }
         /// <summary>
         /// Добавить новый экземпляр действия.
+        /// Новому экзмплеру объекта действия нужно указать родительский объект.
         /// </summary>
         /// <param name="newActionOfMinion"></param>
         public void Add(ActionOfMinion newActionOfMinion)
         {
             actionsOfMinion.Add(newActionOfMinion);
         }
+        /// <summary>
+        /// Добавить новый экземпляр действия.
+        /// Указатель на родительский объект указывает на этот жкземпляр списка.
+        /// </summary>
+        public void AddAction()
+        {
+            actionsOfMinion.Add(new ActionOfMinion(this));
+        }
+
         /// <summary>
         /// Удаляет нынешний экземпляр действия.
         /// </summary>
@@ -90,7 +117,7 @@ namespace MyLittleMinion
         /// <returns></returns>
         public ListActionOfMinion Clone()
         {
-            ListActionOfMinion cloneListActionOfMinion = new ListActionOfMinion(this.actionsOfMinion[0].Clone());
+            ListActionOfMinion cloneListActionOfMinion = new ListActionOfMinion(this.actionsOfMinion[0].Clone(), this.pointerOnInstanceParent);
             for (int i = 1; i < this.actionsOfMinion.Count; i++)
                 cloneListActionOfMinion.Add(this.actionsOfMinion[i].Clone());
 
@@ -107,9 +134,9 @@ namespace MyLittleMinion
     class ActionOfMinion
     {
         /// <summary>
-        /// Списки действий. 0 - Мышь, 1 - Клавиатура.
+        /// Списки действий. 0 - Мышь, 1 - Клавиатура, 2 - Дополнительно.
         /// </summary>
-        static public List<string>[] listNameOfMauseAction = new List<string>[2];
+        static public List<string>[] listNameOfMauseAction = new List<string>[3];
         /// <summary>
         /// Задает и получает свойство местонахождения курсора. Используется для указания точки, к которой должны быть применены действия.
         /// </summary>
@@ -149,23 +176,28 @@ namespace MyLittleMinion
         /// </summary>
         public int timeOfWaitingAfterActionInSecond { get; set; }
         public string textForAction { get; set; }
-        public ActionOfMinion()
+        public ActionOfMinion( ListActionOfMinion pointerOnInstanceParent)
         {
             this.cursorPosition = new Point(0, 0);
 
             //Из-за того, что numberOfAction работает с созданным списком, его надо объявить сразу.
-            listNameOfMauseAction = new List<string>[2];
             for (int i = 0; i < listNameOfMauseAction.Length; i++)
                 listNameOfMauseAction[i] = new List<string>();
             this.typeOfAction = 0;
             this.numberOfAction = 0;
             FillMassiveOfListsOfNames();
 
+            //Во время создания запоминается родитель.
+            this.pointerOnInstanceParent = pointerOnInstanceParent;
+
+            this.NumberOfTimesGoTo = 0;
+            this.GoToNumberOfSequence = this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInList;
 
             this.timeOfWaitingAfterActionInSecond = 1;
             this.textForAction = "";
         }
-        public ActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn, string textForActionIn)
+        public ActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn,
+            string textForActionIn,  ListActionOfMinion pointerOnInstanceParent)
         {
             this.cursorPosition = cursorPositionIn;
 
@@ -177,15 +209,17 @@ namespace MyLittleMinion
             this.numberOfAction = numberOfActionIn;
             FillMassiveOfListsOfNames();
 
+            //Во время создания запоминается родитель.
+            this.pointerOnInstanceParent = pointerOnInstanceParent;
+
+            this.NumberOfTimesGoTo = 0;
+            this.GoToNumberOfSequence = this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInList;
 
             this.timeOfWaitingAfterActionInSecond = timeOfWaitingAfterActionInSecondIn;
             this.textForAction = textForActionIn;
         }
         private void FillMassiveOfListsOfNames()
         {
-            listNameOfMauseAction = new List<string>[2];
-            for (int i = 0; i < listNameOfMauseAction.Length; i++)
-                listNameOfMauseAction[i] = new List<string>();
             //Заполнение списка для мыша
             listNameOfMauseAction[0].Add("Щелчек левой кнопкой");
             listNameOfMauseAction[0].Add("Двойной щелчек левой кнопкой");
@@ -198,6 +232,11 @@ namespace MyLittleMinion
             listNameOfMauseAction[1].Add("Скопировать в буфер");
             listNameOfMauseAction[1].Add("Напечатать указаный текст");
             listNameOfMauseAction[1].Add("Напечатать текст из буфера");
+
+            //Заполнение списка для дополнительно
+            listNameOfMauseAction[2].Add("Ничего не делать");
+            listNameOfMauseAction[2].Add("Отправиться к действию по номеру заданое количество раз");
+
         }
 
         /// <summary>
@@ -206,7 +245,7 @@ namespace MyLittleMinion
         /// <returns></returns>
         public ActionOfMinion Clone()
         {
-            ActionOfMinion cloneOfActionOfMinion = new ActionOfMinion();
+            ActionOfMinion cloneOfActionOfMinion = new ActionOfMinion(this.pointerOnInstanceParent);
 
             cloneOfActionOfMinion.cursorPosition = this.cursorPosition ;
             cloneOfActionOfMinion.typeOfAction = this.typeOfActionPrivate;
@@ -249,6 +288,16 @@ namespace MyLittleMinion
                 else if (this.numberOfAction == 3)
                     TypingTextFromBuffer();
             }
+            if (typeOfAction == 2)
+            {
+                //при 0 выборе надо ничего не делать.
+                if (this.numberOfAction == 1)
+                    GoToNumberOfListOfActionsMinion();
+            }
+                //Для "очеловечивания" добавляется разброс в 20%
+                Random spreading = new Random();
+            int countOfMilliseconds = spreading.Next(800, 1200);
+            Thread.Sleep((this.timeOfWaitingAfterActionInSecond) * countOfMilliseconds);//Надо умножать на 1000, чтобы из получить ожидание в секундах
         }
 
         #region//Методы реализующие дейcтвия мыши
@@ -367,6 +416,26 @@ namespace MyLittleMinion
             textForAction = Clipboard.GetText();
             TypingText();
             textForAction = fieldForMemorizationTextForAction;
+        }
+        #endregion
+
+        #region//Методы реализующие дополнительные дейcтвия
+        public int NumberOfTimesGoTo { get; set; }
+        public int GoToNumberOfSequence { get; set; }
+        /// <summary>
+        /// Указывает на экземпляр объекта, который содержит этот экземпляр объекта.
+        /// </summary>
+        public ListActionOfMinion pointerOnInstanceParent { get; set; } 
+        private void GoToNumberOfListOfActionsMinion()
+        {
+            //Если выполнилось нужное количство раз, то ничего не делать и просто продолжить выполнение в штатном режиме.
+            if (this.NumberOfTimesGoTo > 0)
+            {
+                //Т.к. после будет выполнен переход на следующее действие, надо телепортироваться на предыдущее к нему.
+                // Если мы хотим телепортироваться на действие номер 5, надо отправиться на действие номер 4, и тогда переключение на следующее действие приземлит нас на действие номер 5.
+                this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInList = this.GoToNumberOfSequence - 1;
+                this.NumberOfTimesGoTo--;
+            }
         }
         #endregion
 
