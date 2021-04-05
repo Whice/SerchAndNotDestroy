@@ -89,18 +89,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionOfMinion.cs" />
-    <Compile Include="AdditionalFunctions.cs" />
-    <Compile Include="DialogWindowWithTextBox.cs">
+    <Compile Include="Classes\ActionOfMinion.cs" />
+    <Compile Include="Classes\AdditionalFunctions.cs" />
+    <Compile Include="Classes\ListActionOfMinion.cs" />
+    <Compile Include="Forms\DialogWindowWithTextBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DialogWindowWithTextBox.Designer.cs">
+    <Compile Include="Forms\DialogWindowWithTextBox.Designer.cs">
       <DependentUpon>DialogWindowWithTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormForLogs.cs">
+    <Compile Include="Forms\FormForLogs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormForLogs.Designer.cs">
+    <Compile Include="Forms\FormForLogs.Designer.cs">
       <DependentUpon>FormForLogs.cs</DependentUpon>
     </Compile>
     <Compile Include="FormMyLittleMinion.cs">
@@ -109,32 +110,32 @@
     <Compile Include="FormMyLittleMinion.Designer.cs">
       <DependentUpon>FormMyLittleMinion.cs</DependentUpon>
     </Compile>
-    <Compile Include="InstructionFrom.cs">
+    <Compile Include="Forms\InstructionFrom.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InstructionFrom.Designer.cs">
+    <Compile Include="Forms\InstructionFrom.Designer.cs">
       <DependentUpon>InstructionFrom.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListOfActionsOfMinion.cs" />
+    <Compile Include="Classes\SequenceOfSearchesAndActions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search.cs" />
-    <Compile Include="FormForSelectionFilm.cs">
+    <Compile Include="Classes\Search.cs" />
+    <Compile Include="Forms\FormForSelectionFilm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormForSelectionFilm.Designer.cs">
+    <Compile Include="Forms\FormForSelectionFilm.Designer.cs">
       <DependentUpon>FormForSelectionFilm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="DialogWindowWithTextBox.resx">
+    <EmbeddedResource Include="Forms\DialogWindowWithTextBox.resx">
       <DependentUpon>DialogWindowWithTextBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormForLogs.resx">
+    <EmbeddedResource Include="Forms\FormForLogs.resx">
       <DependentUpon>FormForLogs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMyLittleMinion.resx">
       <DependentUpon>FormMyLittleMinion.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InstructionFrom.resx">
+    <EmbeddedResource Include="Forms\InstructionFrom.resx">
       <DependentUpon>InstructionFrom.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -146,7 +147,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FormForSelectionFilm.resx">
+    <EmbeddedResource Include="Forms\FormForSelectionFilm.resx">
       <DependentUpon>FormForSelectionFilm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">

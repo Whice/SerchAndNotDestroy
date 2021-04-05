@@ -216,6 +216,9 @@ namespace MyLittleMinion
                 return false;
             }
         }
+        /// <summary>
+        /// Обновление ссылок на родительские классы для внутренних.
+        /// </summary>
         private void UpdatePointersOnParentForNestedInstances()
         {
             for (int i = 0; i < this.listsOfActionsAfterSearching.Count; i++)
