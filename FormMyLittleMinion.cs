@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO;
-
+using System.Collections;
 
 namespace MyLittleMinion
 {
@@ -80,7 +80,6 @@ namespace MyLittleMinion
 
         private void TestButton_Click(object sender, EventArgs e)
         {
-            
             /*ListOfActionsOfMinion loaom = exemplarsOfLAM[numberLOEOLAM];
             loaom.GetThisExemplarListActionsOfMinion().AddAction();
             loaom.Add(loaom.GetThisExemplarSearch().Clone(), loaom.GetThisExemplarListActionsOfMinion().Clone());
@@ -153,17 +152,17 @@ namespace MyLittleMinion
             numericUpDownnNumberOfTimesGoTo.Value = exemplarOfListActionsOfMinion.GetAction().NumberOfTimesGoTo;
         }
         /// <summary>
-        /// Считывает из интерфейса инормацию в список поисков и действий.
+        /// Считывает из интерфейса информацию в список поисков и действий.
         /// </summary>
         void FillExemplarsOfListOfSearchAndActionDataFromUI()
         {
             exemplarsOfLAM[numberLOEOLAM].nameOfSequenceOfSearchesAndActions = textBoxNameOfLisActions.Text;
 
-            exemplarOfSearch.multyThreadSearch = -1;
+            exemplarOfSearch.multyThreadSearch = 0;
             if (checkBoxParallelSearch.Checked)
                 exemplarOfSearch.multyThreadSearch = 0;
             if (checkBoxCountOfThreads.Checked)
-                exemplarOfSearch.multyThreadSearch = Convert.ToInt32(numericUpDownCountOfThreads.Text);
+                exemplarOfSearch.multyThreadSearch = Convert.ToUInt32(numericUpDownCountOfThreads.Value);
 
             exemplarOfSearch.percentageComplianceWithModel = Convert.ToByte(numericUpDownPercentageComplianceWithModel.Value);
             exemplarOfSearch.stopSearchingAfterFirstPointFound = checkBoxFirstFoundModelIsEnd.Checked;
@@ -190,7 +189,6 @@ namespace MyLittleMinion
             exemplarOfListActionsOfMinion.GetAction().timeOfWaitingAfterActionInSecond = (int)numericUpDownWaitAfterThisAction.Value;
             exemplarOfListActionsOfMinion.GetAction().GoToNumberOfSequence = (int)numericUpDownGoToNumberOfSequence.Value;
             exemplarOfListActionsOfMinion.GetAction().NumberOfTimesGoTo = (int)numericUpDownnNumberOfTimesGoTo.Value;
-
         }
         private void MyLittleMonion_Move(object sender, EventArgs e)
         {
@@ -268,23 +266,14 @@ namespace MyLittleMinion
             labelForStatus.Text = "Выполняется поиск...";
 
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            exemplarOfSearch.CreateScreenShot();
-
-            srPerSearchModelInArea srPerSearchModelInArea1;
-            if (checkBoxCountOfThreads.Checked)
-                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInAreaInMultyThreads(Convert.ToInt32(numericUpDownCountOfThreads.Text)));
-            else if (checkBoxParallelSearch.Checked)
-                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInAreaInFourThreads());
-            else
-                srPerSearchModelInArea1 = (() => exemplarOfSearch.SearchModelInArea());
 
 
-            if (srPerSearchModelInArea1())
+            if (exemplarOfSearch.SearchModel())
             {
                 //MessageBox.Show("Нашел!");
                 Cursor.Position = exemplarOfSearch.foundPoints[0];
                 //MouseClickLeftButton(RememberCursorPoisition);
-                labelForStatus.Text = "Поиск завершен за " + Convert.ToString(DateTime.Now - testTimeOfSearch);
+                labelForStatus.Text = "Поиск завершен за " + Convert.ToString(exemplarOfSearch.searchTime);
             }
             else
             {
@@ -721,6 +710,8 @@ namespace MyLittleMinion
         private void ButtonAddAction_Click_1(object sender, EventArgs e)
         {
             exemplarOfListActionsOfMinion.AddAction();
+            exemplarOfListActionsOfMinion.numberActionInList = (ushort)(exemplarOfListActionsOfMinion.count - 1);
+            listBoxForListOfActions.SelectedIndex = listBoxForListOfActions.Items.Count - 1;
             FillUINewDataFromListSearchAndAction();
         }
         private void ButtonDeleteAction_Click_1(object sender, EventArgs e)
@@ -745,7 +736,12 @@ namespace MyLittleMinion
                     e.Font, Brushes.Black, e.Bounds, StringFormat.GenericDefault);
             e.DrawFocusRectangle();
         }
-
+        private void CheckBoxListActionForLuckSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            exemplarOfListActionsOfMinion.isFound = checkBoxListActionForLuckSearch.Checked;
+            FillVariantsOfActionsForComboBoxForSelectAction();
+            listBoxForListOfActions.SelectedIndex = 0;
+        }
 
         #endregion///Конфигурация действий КОНЕЦ
 
@@ -803,7 +799,7 @@ namespace MyLittleMinion
         #endregion///Верхнее меню КОНЕЦ
 
 
-        #region///Информация о списке, с которым сейчас идет работа НАЧАЛО
+        #region// Действия с последовательностью. Информация о списке, с которым сейчас идет работа НАЧАЛО
         private void TextBoxNameOfLisActions_TextChanged(object sender, EventArgs e)
         {
             exemplarsOfLAM[numberLOEOLAM].nameOfSequenceOfSearchesAndActions = textBoxNameOfLisActions.Text;
@@ -854,10 +850,14 @@ namespace MyLittleMinion
 
         private void ButtonFindAndPerformThisAction_Click(object sender, EventArgs e)
         {
+            //Смещение мыша, чтобы не жал на кнопку в случае, если ничего не найдет и действие будет "нажать на ЛКМ"
+            Cursor.Position = new Point(this.Location.X+10, this.Location.Y+5);
             FindAndPerformThisAction();
         }
         private void FindAndPerformThisActionButton_Click(object sender, EventArgs e)
         {
+            //Смещение мыша, чтобы не жал на кнопку в случае, если ничего не найдет и действие будет "нажать на ЛКМ"
+            Cursor.Position = new Point(this.Location.X + 10, this.Location.Y + 5);
 
             this.Enabled = false;
             int countTimesInWhile = 0;
@@ -896,12 +896,9 @@ namespace MyLittleMinion
         /// </summary>
         void FindAndPerformThisAction()
         {
-            SearchingModelOnScreen();
-            for (int i = 0; i < exemplarOfListActionsOfMinion.count; i++)
-            {
-                exemplarOfListActionsOfMinion.GetAction().RealizeAction();
-                exemplarOfListActionsOfMinion.numberActionInList++;
-            }
+            exemplarsOfLAM[0].SearchAndPerformThisAction();
+
+            labelForStatus.Text = "Поиск завершен за " + Convert.ToString(exemplarOfSearch.searchTime);
         }
 
 
@@ -930,6 +927,7 @@ namespace MyLittleMinion
             FillUINewDataFromListSearchAndAction();
 
         }
+        
 
 
 
@@ -937,6 +935,6 @@ namespace MyLittleMinion
 
         #endregion///Информация о списке, с которым сейчас идет работа КОНЕЦ
 
-       
+
     }       
 }

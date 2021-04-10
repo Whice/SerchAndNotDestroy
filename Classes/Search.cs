@@ -46,10 +46,11 @@ namespace MyLittleMinion
             this.numberIgnorColorInListPrivate = 0;
             this.isIgnorColorsPrivate = false;
 
-            this.isEnableFourThreadsPrivate = false;
+            this.isEnableMultyThreadsPrivate = false;
 
             this.percentageComplianceWithModelPivate = 100;
             this.stopSearchingAfterFirstPointFound = true;
+            this.searchTimePrivate = DateTime.MaxValue - DateTime.MinValue;
 
             this.SetPlaceForSearchForFullMonitor();
             this.CreateBitmapForEmptyModel();
@@ -73,7 +74,7 @@ namespace MyLittleMinion
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
         public static extern int BitBlt(IntPtr hDC, int leftUpX, int leftUpY, int rightBottomX, int rightBottomY, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
         /// <summary>
-        /// Создание скришота и запоминание его в pictureSearchArea. Ширина и высота скришота соответствует ширине и высоте параметра pictureSearchArea.
+        /// Создание скришота и запоминание его в pictureSearchArea. Ширина и высота скришота соответствует ширине и высоте параметра SearchAreaSize.
         /// Точка отсчета соотвествует точке отсчета запомненой экземляром. По умочанию равна 0,0. Узнать значение можно через свойство locationOfPlaceForSearch.
         /// </summary>
         public void CreateScreenShot()
@@ -741,6 +742,12 @@ namespace MyLittleMinion
         #region ///Выполнение поиска НАЧАЛО
 
         /// <summary>
+        /// Время, которое было затрачено на поиск.
+        /// По умолчанию DateTime.MaxValue.
+        /// </summary>
+        public TimeSpan searchTime { get { return searchTimePrivate; } }
+        private TimeSpan searchTimePrivate;
+        /// <summary>
         /// Определяет выполнятеся ли поиск до первого найденого элемента.
         /// </summary>
         public bool stopSearchingAfterFirstPointFound { get; set; }
@@ -845,10 +852,9 @@ namespace MyLittleMinion
         }
 
         /// <summary>
-        /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра. 
-        /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
+        /// Выполняет последовательный поиск эталона.
         /// </summary>
-        public bool SearchModelInArea()
+        private bool SearchModelInAreaSingleThread()
         {
             //Смешно подумать о таком, но...
             //Если эталон больше области поиска, его не стоит в ней искать.
@@ -946,7 +952,7 @@ namespace MyLittleMinion
                     }
                 }
             //Стоит обнулить скриншот, чтобы сэкономить память.
-            this.pictureSearchArea = null;
+            RemoveScreenshot();
 
             //Если точки были найдены, то их верность корректируется и сообщается об удаче поиска.
             if (listFoundPoints != null)
@@ -992,7 +998,74 @@ namespace MyLittleMinion
         /// Подписавшись на это событие, можно выполнить подписаный метод после окончания поиска.
         /// </summary>
         public event delegateAfterSearch EventAfterSearch;
+        /// <summary>
+        /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в массив foundPoints нынешнего экземпляра. 
+        /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
+        /// Выполнение поиска в многопоточном режиме можно настроить через свойства: isEnableMultyThreads и multyThreadSearch.
+        /// Можно подписаться на EventAfterSearch, чтобы выполнить какую-либо функцию после поиска.
+        /// </summary>
+        /// <returns>
+        /// Возвращает true, если поиск был удачен.
+        /// </returns>
+        public bool SearchModel()
+        {
+            CreateScreenShot();
+            bool result;
+            DateTime searchduration = DateTime.Now;
+            //если многопоточнй поиск
+            if (this.isEnableMultyThreadsPrivate)
+            {
+                //если потоков указано больше 0, то использовать алгоритм множества потоков
+                if (multyThreadSearch > 0)
+                    result = SearchModelInAreaInMultyThreads((int)multyThreadSearch);
+                else//если 0, то выполнить на четырех потоках по углам
+                    result = SearchModelInAreaInFourThreads();
+            }
+            else//последовательный поиск
+                result = SearchModelInAreaSingleThread();
 
+            //Запомнить длительность поиска.
+            this.searchTimePrivate = (DateTime.Now - searchduration);
+
+            //Выполнение всех подписанных на ивент функций.
+            EventAfterSearch?.Invoke();
+            //расказать наконец-то получилось ли!
+            return result;
+        }
+        /// <summary>
+        /// Не делает скриншот перед поиском.
+        /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в массив foundPoints нынешнего экземпляра. 
+        /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
+        /// Выполнение поиска в многопоточном режиме можно настроить через свойства: isEnableMultyThreads и multyThreadSearch.
+        /// Можно подписаться на EventAfterSearch, чтобы выполнить какую-либо функцию после поиска.
+        /// </summary>
+        /// <returns>
+        /// Возвращает true, если поиск был удачен.
+        /// </returns>
+        public bool SearchModelWithoutCreatingScreenshot()
+        {
+            bool result;
+            DateTime searchduration = DateTime.Now;
+            //если многопоточнй поиск
+            if (this.isEnableMultyThreadsPrivate)
+            {
+                //если потоков указано больше 0, то использовать алгоритм множества потоков
+                if (multyThreadSearch > 0)
+                    result = SearchModelInAreaInMultyThreads((int)multyThreadSearch);
+                else//если 0, то выполнить на четырех потоках по углам
+                    result = SearchModelInAreaInFourThreads();
+            }
+            else//последовательный поиск
+                result = SearchModelInAreaSingleThread();
+
+            //Запомнить длительность поиска.
+            this.searchTimePrivate = (DateTime.Now - searchduration);
+
+            //Выполнение всех подписанных на ивент функций.
+            EventAfterSearch?.Invoke();
+            //расказать наконец-то получилось ли!
+            return result;
+        }
 
         #endregion///Выполнение поиска КОНЕЦ
 
@@ -1001,20 +1074,19 @@ namespace MyLittleMinion
         #region ///Выполнение поиска с использованием потоков НАЧАЛО
 
         /// <summary>
-        /// Использование многопоточности во время поиска. 0 - Четыре потока для четвертей по углам. 1 или больше, число становиться количеством потоков: область поиска делиться потоками на столбцы.
+        /// Использование многопоточности во время поиска. 0 - Четыре потока для четвертей по углам.
+        /// 1 или больше, число становиться количеством потоков: область поиска делиться потоками на столбцы.
         /// </summary>
-        public int multyThreadSearch { get; set; }
-
-
+        public uint multyThreadSearch { get; set; }
         /// <summary>
         /// Хранит информацию о том, идет ли выполнение многопоточного поиска
         /// </summary>
         /// <param name="listFoundPointsIn"></param>
-        private bool isEnableFourThreadsPrivate;
+        private bool isEnableMultyThreadsPrivate;
         /// <summary>
         /// Предоставляет информацию о том, идет ли выполнение многопоточного поиска
         /// </summary>
-        public bool isEnableFourThreads { get { return this.isEnableFourThreadsPrivate; } }
+        public bool isEnableMultyThreads { get { return this.isEnableMultyThreadsPrivate; } }
         
         /// <summary>
         /// Сигнатура делегата для суммирования и погружения методов в потоки
@@ -1026,18 +1098,18 @@ namespace MyLittleMinion
         /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра.
         /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
         /// </summary>
-        public bool SearchModelInAreaInFourThreads()
+        private bool SearchModelInAreaInFourThreads()
         {
             //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
             //Поэтому в случае слишком большого рамера ширины или высоты эталона стоит выполнять последовательный поиск.
             if ((this.pictureSearchArea.Width / 2 < correctModelPrivate.Width) ||
                 (this.pictureSearchArea.Height / 2 < correctModelPrivate.Height))
             {
-                return SearchModelInArea();
+                return SearchModelInAreaSingleThread();
             }
 
             //Здесь начинается параллельный расчет
-            this.isEnableFourThreadsPrivate = true;
+            this.isEnableMultyThreadsPrivate = true;
 
             //Если игнорируемых цветов нет в эталоне, то их надо исключить из спика игнорируемых, 
             //т.к. они в любом случае будут проигнорированы из-за отсутсвия в эталоне.
@@ -1071,7 +1143,7 @@ namespace MyLittleMinion
                     halfWidthPSA + this.correctModelPrivate.Width, halfHeightPSA + this.correctModelPrivate.Height
                     ));
                 fourSearchsForThreadPrivate[0].CreateScreenShot();
-                fourSearchsForThreadPrivate[0].SearchModelInArea();
+                fourSearchsForThreadPrivate[0].SearchModelInAreaSingleThread();
             });
 
 
@@ -1090,7 +1162,7 @@ namespace MyLittleMinion
                     this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                     ));
                 fourSearchsForThreadPrivate[1].CreateScreenShot();
-                fourSearchsForThreadPrivate[1].SearchModelInArea();
+                fourSearchsForThreadPrivate[1].SearchModelInAreaSingleThread();
             });
 
 
@@ -1109,7 +1181,7 @@ namespace MyLittleMinion
                     halfHeightPSA + this.correctModelPrivate.Height//Выполнить поиск с небольшим нахлестом, чтобы точно найти все точки.
                     ));
                 fourSearchsForThreadPrivate[2].CreateScreenShot();
-                fourSearchsForThreadPrivate[2].SearchModelInArea();
+                fourSearchsForThreadPrivate[2].SearchModelInAreaSingleThread();
             });
 
 
@@ -1127,7 +1199,7 @@ namespace MyLittleMinion
                     this.pictureSearchArea.Height - halfHeightPSA//Лучше отнять предыдущую половину, т.к. не известно куда округлит, в большую или меньшую.
                     ));
                 fourSearchsForThreadPrivate[3].CreateScreenShot();
-                fourSearchsForThreadPrivate[3].SearchModelInArea();
+                fourSearchsForThreadPrivate[3].SearchModelInAreaSingleThread();
             });
 
 
@@ -1164,7 +1236,7 @@ namespace MyLittleMinion
             }
             
             //Здесь параллельный расчет считается законченым
-            this.isEnableFourThreadsPrivate = false;
+            this.isEnableMultyThreadsPrivate = false;
             this.pictureSearchArea = null;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
@@ -1185,17 +1257,17 @@ namespace MyLittleMinion
         /// Выполняет поиск эталона с учетом указанных параметров поиска и записывает в поле foundPoints нынешнего экземпляра.
         /// Если stopSearchingAfterFirstPointFound = true, то ищет только до первой попавшейся точки.
         /// </summary>
-        public bool SearchModelInAreaInMultyThreads(int countOfThreads)
+        private bool SearchModelInAreaInMultyThreads(int countOfThreads)
         {
             //Если эталон слишком велик для области подсчета в потоке и не влезает в него, то может пострадать точность.
             //Поэтому в случае слишком большого рамера ширины эталона стоит выполнять последовательный поиск.
             if (this.pictureSearchArea.Width / countOfThreads < correctModelPrivate.Width)
             {
-                return SearchModelInArea();
+                return SearchModelInAreaSingleThread();
             }
 
             //Здесь начинается параллельный расчет
-            this.isEnableFourThreadsPrivate = true;
+            this.isEnableMultyThreadsPrivate = true;
 
             //Если игнорируемых цветов нет в эталоне, то их надо исключить из спика игнорируемых, 
             //т.к. они в любом случае будут проигнорированы из-за отсутсвия в эталоне.
@@ -1245,7 +1317,7 @@ namespace MyLittleMinion
                             thispictureSearchArea.Height
                             ));
                 muchSearchsForThreadPrivate[countOfThreads - 1].CreateScreenShot();
-                muchSearchsForThreadPrivate[countOfThreads - 1].SearchModelInArea();
+                muchSearchsForThreadPrivate[countOfThreads - 1].SearchModelInAreaSingleThread();
             });
 
             //Ожидание завершения выполнения всех потоков
@@ -1282,7 +1354,7 @@ namespace MyLittleMinion
             }
 
             //Здесь параллельный расчет считается законченым
-            this.isEnableFourThreadsPrivate = false;
+            this.isEnableMultyThreadsPrivate = false;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
             if (listFoundPointsInFourThread == null)
@@ -1321,7 +1393,7 @@ namespace MyLittleMinion
                     thispictureSearchAreaHeight
                     ));
                 searchExemplarClone.CreateScreenShot();
-                searchExemplarClone.SearchModelInArea();
+                searchExemplarClone.SearchModelInAreaSingleThread();
             });
             return searchExemplarClone;
         }
@@ -1462,7 +1534,8 @@ namespace MyLittleMinion
         {
             Search cloneThisSearch = new Search();
             cloneThisSearch.foundPoints = this.foundPoints;
-            cloneThisSearch.isEnableFourThreadsPrivate = this.isEnableFourThreadsPrivate;
+            cloneThisSearch.searchTimePrivate = this.searchTimePrivate;
+            cloneThisSearch.isEnableMultyThreadsPrivate = this.isEnableMultyThreadsPrivate;
             cloneThisSearch.isIgnorColorsPrivate = this.isIgnorColorsPrivate;
             cloneThisSearch.UseIgnorColors = this.UseIgnorColors;
 

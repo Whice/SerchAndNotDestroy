@@ -16,6 +16,8 @@ namespace MyLittleMinion
     /// </summary>
     class SequenceOfSearchesAndActions
     {
+        #region//Поля и свойства послеовательности
+
         /// <summary>
         /// Список класса поиска.
         /// </summary>
@@ -24,6 +26,7 @@ namespace MyLittleMinion
         /// Списки класса действия.
         /// </summary>
         private List<ListActionOfMinion> listsOfActionsAfterSearching;
+
         private string nameOfSequenceOfSearchesAndActionsPrivate;
         /// <summary>
         /// Имя принадлежащее этому экземпляру списка поисков и действий.
@@ -63,6 +66,9 @@ namespace MyLittleMinion
                     this.numberSearchAndActionInSequencePrivate = value;
             }
         }
+
+        #endregion
+
         /// <summary>
         /// Инициализирует списки и добавляет первые экзепляры поиска и действия со стандарными значениями.
         /// </summary>
@@ -72,6 +78,8 @@ namespace MyLittleMinion
             this.listsOfActionsAfterSearching = new List<ListActionOfMinion>();
             this.Add(new Search(), new ListActionOfMinion(this));
         }
+
+        #region//Действия редактирования/запроса данных последовательности
 
         /// <summary>
         /// Добавляет объекты Search и ActionOfMinion в концы соответсвующих очередей этого экземпляра.
@@ -126,6 +134,63 @@ namespace MyLittleMinion
             }
 
         }
+
+        #endregion
+
+        #region//Выполнение последовательности
+
+        /// <summary>
+        /// Выполняет поиск, список действий согласно всем настройкам, для указанного номером последовательности элемента.
+        /// </summary>
+        public bool SearchAndPerformThisAction()
+        {
+            //Упростить имена:
+            Search thisSearch = this.listOfSearching[numberSearchAndActionInSequence];
+            ListActionOfMinion thisActions = this.listsOfActionsAfterSearching[numberSearchAndActionInSequence];
+
+
+            bool result = false;
+            //выполнить поиск
+            result = thisSearch.SearchModel();
+            //Указать успешность поиска
+            thisActions.isFound = result;
+            //Если поиск не успешен, то точек не будет, значит местоположение курсора не должно измениться для последующих действий
+            if (!result)
+            {
+                thisSearch.foundPoints = new System.Drawing.Point[1];
+                thisSearch.foundPoints[0] = Cursor.Position;
+            }
+            //Выполнение действий
+            for (int i = 0; i < thisActions.count; i++)
+            {
+                //Выполнить действие для всех найденых точек, кроме последней без ожидания.
+                for (int numPoint = 0; numPoint < thisSearch.foundPoints.Length-1; numPoint++)
+                {
+                    thisActions.GetAction().cursorPosition = thisSearch.foundPoints[numPoint];
+                    thisActions.GetAction().RealizeAction();
+                }
+                //А для последней точки сделать действие с ожиданием
+                thisActions.GetAction().cursorPosition = thisSearch.foundPoints[thisSearch.foundPoints.Length - 1];
+                thisActions.GetAction().RealizeActionWithWaiting();
+
+                thisActions.numberActionInList++;
+            }
+
+            return result;
+        }
+        /// <summary>
+        /// Устанавливает номер на один меньше, чем указаный, чтобы к нему можно было переместиться после выполнения действия.
+        /// </summary>
+        public void GoToNumber(int number)
+        {
+            this.numberSearchAndActionInSequence = number;
+            this.numberSearchAndActionInSequencePrivate--;
+        }
+
+        #endregion
+
+        #region//Сохранение/загрузка послеовательности
+
         /// <summary>
         /// Сохраняет список в ПЗУ по указанному в settingOfMinion адресу.
         /// </summary>
@@ -216,6 +281,11 @@ namespace MyLittleMinion
                 return false;
             }
         }
+
+        #endregion
+
+        #region//Дополнительные функции или методы
+
         /// <summary>
         /// Обновление ссылок на родительские классы для внутренних.
         /// </summary>
@@ -232,7 +302,6 @@ namespace MyLittleMinion
             }
         }
 
+        #endregion
     }
-
-
 }

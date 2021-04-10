@@ -8,9 +8,36 @@ namespace MyLittleMinion
     class ListActionOfMinion
     {
         /// <summary>
-        /// Список действий
+        /// Общий список действий
         /// </summary>
         private List<ActionOfMinion> actionsOfMinion;
+        /// <summary>
+        /// Список действий для неудачного поиска
+        /// </summary>
+        private List<ActionOfMinion> actionsOfMinionForNotFound;
+        /// <summary>
+        /// Список действий для удачного поиска
+        /// </summary>
+        private List<ActionOfMinion> actionsOfMinionForFound;
+        /// <summary>
+        /// Хранит значение, какой список используется: для удачного поиска или нет.
+        /// При изменении начения, меняет и список.
+        /// </summary>
+        public bool isFound
+        {
+            get { return this.isFoundPrivate; }
+            set
+            {
+                this.isFoundPrivate = value;
+                this.numberActionInListPrivate = 0;
+                //после получения значения, общему списку назначается нужный из конекретных.
+                if (this.isFoundPrivate)
+                    actionsOfMinion = actionsOfMinionForFound;
+                else
+                    actionsOfMinion = actionsOfMinionForNotFound;
+            }
+        }
+        private bool isFoundPrivate;
         /// <summary>
         /// Количество действий в списке.
         /// </summary>
@@ -31,38 +58,67 @@ namespace MyLittleMinion
             }
         }
         /// <summary>
-        /// Указывает на экземпляр объекта, который содержит этот экземпляр объекта.
+        /// Указатель на экземпляр последовательности, который будет считатьтся родительским контейнером для этого экземпляра.
         /// </summary>
         public SequenceOfSearchesAndActions pointerOnInstanceParent { get; set; }
+        /// <summary>
+        /// Создает новый экземпляр списка действий, с первым дествием созданным по умолчанию.
+        /// Принимает на вход указатель на экземпляр последовательности, который буде считатьтся родительским контейнером.
+        /// </summary>
+        /// <param name="pointerOnInstanceParent">Указатель на экземпляр последовательности, который будет считатьтся родительским контейнером для этого экземпляра.</param>
         public ListActionOfMinion(SequenceOfSearchesAndActions pointerOnInstanceParent)
         {
             //Во время создания запоминается родитель.
             this.pointerOnInstanceParent = pointerOnInstanceParent;
 
-            this.actionsOfMinion = new List<ActionOfMinion>();
+            this.actionsOfMinionForNotFound = new List<ActionOfMinion>();
+            this.actionsOfMinionForFound = new List<ActionOfMinion>();
 
-            this.actionsOfMinion.Add(new ActionOfMinion(this));
+            this.actionsOfMinionForNotFound.Add(new ActionOfMinion(this));
+            this.actionsOfMinionForFound.Add(new ActionOfMinion(this));
+
+            this.isFound = true;
         }
+        /// <summary>
+        /// Создает новый экземпляр списка действий. Принимая на вход параметры для создания первого действия не по умолчанию.
+        /// Принимает на вход указатель на экземпляр последовательности, который буде считатьтся родительским контейнером.
+        /// </summary>
+        /// <param name="pointerOnInstanceParent">Указатель на экземпляр последовательности, который будет считатьтся родительским контейнером для этого экземпляра.</param>
         public ListActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn,
             string textForActionIn, SequenceOfSearchesAndActions pointerOnInstanceParent)
         {
             //Во время создания запоминается родитель.
             this.pointerOnInstanceParent = pointerOnInstanceParent;
 
-            actionsOfMinion = new List<ActionOfMinion>();
-            if (actionsOfMinion.Count == 0)
-            {
-                actionsOfMinion.Add(new ActionOfMinion(cursorPositionIn, typeOfActionIn, numberOfActionIn, timeOfWaitingAfterActionInSecondIn, textForActionIn, this));
-            }
+            ActionOfMinion newActionOfMinion = new ActionOfMinion(cursorPositionIn, typeOfActionIn, numberOfActionIn, timeOfWaitingAfterActionInSecondIn, textForActionIn, this);
 
+            this.actionsOfMinionForNotFound = new List<ActionOfMinion>();
+            this.actionsOfMinionForFound = new List<ActionOfMinion>();
+
+            this.actionsOfMinionForNotFound.Add(newActionOfMinion);
+            this.actionsOfMinionForFound.Add(newActionOfMinion);
+
+            this.isFound = true;
         }
-        public ListActionOfMinion(ActionOfMinion newActionOfMinion, SequenceOfSearchesAndActions pointerOnInstanceParent)
+        /// <summary>
+        /// Создает новый экземпляр списка действий, с первыми действиями предоставленными для списков в качестве параметра.
+        /// Принимает на вход указатель на экземпляр последовательности, который буде считатьтся родительским контейнером.
+        /// </summary>
+        /// <param name="newActionOfMinionForNotFoundList">Экземпляр действия для списка, который будет зайдествован, если указан НЕудачный поиск.</param>
+        /// <param name="newActionOfMinionForFoundList">Экземпляр действия для списка, который будет зайдествован, если указан удачный поиск.</param>
+        /// <param name="pointerOnInstanceParent">Указатель на экземпляр последовательности, который будет считатьтся родительским контейнером для этого экземпляра.</param>
+        public ListActionOfMinion(ActionOfMinion newActionOfMinionForNotFoundList, ActionOfMinion newActionOfMinionForFoundList, SequenceOfSearchesAndActions pointerOnInstanceParent)
         {
             //Во время создания запоминается родитель.
             this.pointerOnInstanceParent = pointerOnInstanceParent;
 
-            actionsOfMinion = new List<ActionOfMinion>();
-            actionsOfMinion.Add(newActionOfMinion);
+            this.actionsOfMinionForNotFound = new List<ActionOfMinion>();
+            this.actionsOfMinionForFound = new List<ActionOfMinion>();
+
+            this.actionsOfMinionForNotFound.Add(newActionOfMinionForNotFoundList);
+            this.actionsOfMinionForFound.Add(newActionOfMinionForFoundList);
+
+            this.isFound = true;
         }
         /// <summary>
         /// Возвращает экземпляр ActionOfMinion соответсвующий нынешнему номеру.
@@ -89,7 +145,7 @@ namespace MyLittleMinion
         }
         /// <summary>
         /// Добавить новый экземпляр действия.
-        /// Указатель на родительский объект указывает на этот жкземпляр списка.
+        /// Указатель на родительский объект указывает на этот же кземпляр списка.
         /// </summary>
         public void AddAction()
         {
@@ -114,9 +170,24 @@ namespace MyLittleMinion
         /// <returns></returns>
         public ListActionOfMinion Clone()
         {
-            ListActionOfMinion cloneListActionOfMinion = new ListActionOfMinion(this.actionsOfMinion[0].Clone(), this.pointerOnInstanceParent);
+            //Запомнить выбранный из списков
+            bool selectedActionList = this.isFound;
+            //Создать новый список и передать туда два первых действия
+            ListActionOfMinion cloneListActionOfMinion = 
+                new ListActionOfMinion(this.actionsOfMinionForNotFound[0].Clone(), this.actionsOfMinionForFound[0].Clone(), this.pointerOnInstanceParent);
+            //Установить фокус на список с найденым эталоном и передать действия 
+            this.isFound = true;
+            cloneListActionOfMinion.isFound = true;
             for (int i = 1; i < this.actionsOfMinion.Count; i++)
                 cloneListActionOfMinion.Add(this.actionsOfMinion[i].Clone());
+            //Установить фокус на список с не найденым эталоном и передать действия 
+            this.isFound = false;
+            cloneListActionOfMinion.isFound = false;
+            for (int i = 1; i < this.actionsOfMinion.Count; i++)
+                cloneListActionOfMinion.Add(this.actionsOfMinion[i].Clone());
+            //Установить изначальный выбор списка
+            this.isFound = selectedActionList;
+            cloneListActionOfMinion.isFound = selectedActionList;
 
             return cloneListActionOfMinion;
         }

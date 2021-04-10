@@ -100,6 +100,8 @@
             this.tabPageMainConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageAdditionalConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageConfigurationOfAction = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.numericUpDownnNumberOfTimesGoTo = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownGoToNumberOfSequence = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -108,8 +110,7 @@
             this.listBoxForListOfActions = new System.Windows.Forms.ListBox();
             this.richTextBoxForExemplarOfAction = new System.Windows.Forms.RichTextBox();
             this.comboBoxTypeOfAction = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.checkBoxListActionForLuckSearch = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -626,7 +627,7 @@
             this.comboBoxForSelectAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxForSelectAction.ForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxForSelectAction.FormattingEnabled = true;
-            this.comboBoxForSelectAction.Location = new System.Drawing.Point(222, 33);
+            this.comboBoxForSelectAction.Location = new System.Drawing.Point(219, 61);
             this.comboBoxForSelectAction.Name = "comboBoxForSelectAction";
             this.comboBoxForSelectAction.Size = new System.Drawing.Size(351, 21);
             this.comboBoxForSelectAction.TabIndex = 26;
@@ -688,7 +689,7 @@
             // labelWaitAfterThisAction
             // 
             this.labelWaitAfterThisAction.AutoSize = true;
-            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(368, 142);
+            this.labelWaitAfterThisAction.Location = new System.Drawing.Point(365, 170);
             this.labelWaitAfterThisAction.Name = "labelWaitAfterThisAction";
             this.labelWaitAfterThisAction.Size = new System.Drawing.Size(205, 13);
             this.labelWaitAfterThisAction.TabIndex = 32;
@@ -696,7 +697,7 @@
             // 
             // numericUpDownWaitAfterThisAction
             // 
-            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(367, 158);
+            this.numericUpDownWaitAfterThisAction.Location = new System.Drawing.Point(364, 186);
             this.numericUpDownWaitAfterThisAction.Maximum = new decimal(new int[] {
             268435455,
             1042612833,
@@ -912,6 +913,7 @@
             // tabPageConfigurationOfAction
             // 
             this.tabPageConfigurationOfAction.BackColor = System.Drawing.Color.Thistle;
+            this.tabPageConfigurationOfAction.Controls.Add(this.checkBoxListActionForLuckSearch);
             this.tabPageConfigurationOfAction.Controls.Add(this.label6);
             this.tabPageConfigurationOfAction.Controls.Add(this.label5);
             this.tabPageConfigurationOfAction.Controls.Add(this.numericUpDownnNumberOfTimesGoTo);
@@ -932,9 +934,27 @@
             this.tabPageConfigurationOfAction.TabIndex = 1;
             this.tabPageConfigurationOfAction.Text = "Настройки действий";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(219, 135);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(144, 13);
+            this.label6.TabIndex = 43;
+            this.label6.Text = "Сколько раз отправляться";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(220, 89);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(276, 13);
+            this.label5.TabIndex = 42;
+            this.label5.Text = "На какой элемент последовательности отправиться";
+            // 
             // numericUpDownnNumberOfTimesGoTo
             // 
-            this.numericUpDownnNumberOfTimesGoTo.Location = new System.Drawing.Point(222, 123);
+            this.numericUpDownnNumberOfTimesGoTo.Location = new System.Drawing.Point(219, 151);
             this.numericUpDownnNumberOfTimesGoTo.Name = "numericUpDownnNumberOfTimesGoTo";
             this.numericUpDownnNumberOfTimesGoTo.Size = new System.Drawing.Size(81, 20);
             this.numericUpDownnNumberOfTimesGoTo.TabIndex = 41;
@@ -946,7 +966,7 @@
             // 
             // numericUpDownGoToNumberOfSequence
             // 
-            this.numericUpDownGoToNumberOfSequence.Location = new System.Drawing.Point(222, 79);
+            this.numericUpDownGoToNumberOfSequence.Location = new System.Drawing.Point(219, 107);
             this.numericUpDownGoToNumberOfSequence.Name = "numericUpDownGoToNumberOfSequence";
             this.numericUpDownGoToNumberOfSequence.Size = new System.Drawing.Size(81, 20);
             this.numericUpDownGoToNumberOfSequence.TabIndex = 40;
@@ -998,7 +1018,7 @@
             // 
             // richTextBoxForExemplarOfAction
             // 
-            this.richTextBoxForExemplarOfAction.Location = new System.Drawing.Point(6, 184);
+            this.richTextBoxForExemplarOfAction.Location = new System.Drawing.Point(3, 212);
             this.richTextBoxForExemplarOfAction.Name = "richTextBoxForExemplarOfAction";
             this.richTextBoxForExemplarOfAction.Size = new System.Drawing.Size(564, 102);
             this.richTextBoxForExemplarOfAction.TabIndex = 34;
@@ -1010,29 +1030,24 @@
             this.comboBoxTypeOfAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTypeOfAction.ForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxTypeOfAction.FormattingEnabled = true;
-            this.comboBoxTypeOfAction.Location = new System.Drawing.Point(222, 6);
+            this.comboBoxTypeOfAction.Location = new System.Drawing.Point(219, 34);
             this.comboBoxTypeOfAction.Name = "comboBoxTypeOfAction";
             this.comboBoxTypeOfAction.Size = new System.Drawing.Size(351, 21);
             this.comboBoxTypeOfAction.TabIndex = 33;
             this.comboBoxTypeOfAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTypeOfAction_SelectedIndexChanged);
             // 
-            // label5
+            // checkBoxListActionForLuckSearch
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(223, 61);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(276, 13);
-            this.label5.TabIndex = 42;
-            this.label5.Text = "На какой элемент последовательности отправиться";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(222, 107);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(144, 13);
-            this.label6.TabIndex = 43;
-            this.label6.Text = "Сколько раз отправляться";
+            this.checkBoxListActionForLuckSearch.AutoSize = true;
+            this.checkBoxListActionForLuckSearch.Checked = true;
+            this.checkBoxListActionForLuckSearch.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxListActionForLuckSearch.Location = new System.Drawing.Point(223, 11);
+            this.checkBoxListActionForLuckSearch.Name = "checkBoxListActionForLuckSearch";
+            this.checkBoxListActionForLuckSearch.Size = new System.Drawing.Size(221, 17);
+            this.checkBoxListActionForLuckSearch.TabIndex = 44;
+            this.checkBoxListActionForLuckSearch.Text = "Список действий для удачного поиска";
+            this.checkBoxListActionForLuckSearch.UseVisualStyleBackColor = true;
+            this.checkBoxListActionForLuckSearch.CheckedChanged += new System.EventHandler(this.CheckBoxListActionForLuckSearch_CheckedChanged);
             // 
             // MyLittleMonion
             // 
@@ -1177,6 +1192,7 @@
         private System.Windows.Forms.ToolStripMenuItem логиToolStripMenuItem;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox checkBoxListActionForLuckSearch;
     }
 }
 

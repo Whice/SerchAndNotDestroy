@@ -16,6 +16,8 @@ namespace MyLittleMinion
     /// </summary>
     class ActionOfMinion
     {
+        #region//Поля и свойства класса действия
+
         /// <summary>
         /// Списки действий. 0 - Мышь, 1 - Клавиатура, 2 - Дополнительно.
         /// </summary>
@@ -59,6 +61,14 @@ namespace MyLittleMinion
         /// </summary>
         public int timeOfWaitingAfterActionInSecond { get; set; }
         public string textForAction { get; set; }
+
+        #endregion
+
+        /// <summary>
+        /// Создает действие по умолчанию.
+        /// Принимает на вход указатель на экземпляр списка действий, который буде считатьтся родительским контейнером.
+        /// </summary>
+        /// <param name="pointerOnInstanceParent">Указатель на экземпляр списка действий, который будет считатьтся родительским контейнером для этого экземпляра.</param>
         public ActionOfMinion(ListActionOfMinion pointerOnInstanceParent)
         {
             this.cursorPosition = new Point(0, 0);
@@ -79,6 +89,11 @@ namespace MyLittleMinion
             this.timeOfWaitingAfterActionInSecond = 1;
             this.textForAction = "";
         }
+        /// <summary>
+        /// Создает действие не по умолчанию, с указанными параметрами.
+        /// Принимает на вход указатель на экземпляр списка действий, который буде считатьтся родительским контейнером.
+        /// </summary>
+        /// <param name="pointerOnInstanceParent">Указатель на экземпляр списка действий, который будет считатьтся родительским контейнером для этого экземпляра.</param>
         public ActionOfMinion(Point cursorPositionIn, byte typeOfActionIn, ushort numberOfActionIn, int timeOfWaitingAfterActionInSecondIn,
             string textForActionIn, ListActionOfMinion pointerOnInstanceParent)
         {
@@ -119,6 +134,8 @@ namespace MyLittleMinion
             //Заполнение списка для дополнительно
             listNameOfMauseAction[2].Add("Ничего не делать");
             listNameOfMauseAction[2].Add("Отправиться к действию по номеру заданое количество раз");
+            listNameOfMauseAction[2].Add("Вывести сообщение, что не удалось.(для тестов)");
+
 
         }
 
@@ -140,10 +157,11 @@ namespace MyLittleMinion
         }
 
         /// <summary>
-        /// Выполняет действие заданного ноемра.
+        /// Выполняет действие заданного номера без задержки.
         /// </summary>
         public void RealizeAction()
         {
+            Cursor.Position = this.cursorPosition;
             //Мышь
             if (typeOfAction == 0)
             {
@@ -176,9 +194,19 @@ namespace MyLittleMinion
                 //при 0 выборе надо ничего не делать.
                 if (this.numberOfAction == 1)
                     GoToNumberOfListOfActionsMinion();
+                else if(this.numberOfAction == 2)
+                    MessageBox.Show("Не получилось!");
+
             }
-                //Для "очеловечивания" добавляется разброс в 20%
-                Random spreading = new Random();
+        }
+        /// <summary>
+        /// Выполняет действие заданного номера с указаной в действии задержкой.
+        /// </summary>
+        public void RealizeActionWithWaiting()
+        {
+            RealizeAction();
+            //Для "очеловечивания" добавляется разброс в 20%
+            Random spreading = new Random();
             int countOfMilliseconds = spreading.Next(800, 1200);
             Thread.Sleep((this.timeOfWaitingAfterActionInSecond) * countOfMilliseconds);//Надо умножать на 1000, чтобы из получить ожидание в секундах
         }
@@ -314,9 +342,9 @@ namespace MyLittleMinion
             //Если выполнилось нужное количство раз, то ничего не делать и просто продолжить выполнение в штатном режиме.
             if (this.NumberOfTimesGoTo > 0)
             {
-                //Т.к. после будет выполнен переход на следующее действие, надо телепортироваться на предыдущее к нему.
-                // Если мы хотим телепортироваться на действие номер 5, надо отправиться на действие номер 4, и тогда переключение на следующее действие приземлит нас на действие номер 5.
-                this.pointerOnInstanceParent.pointerOnInstanceParent.numberSearchAndActionInSequence = this.GoToNumberOfSequence - 1;
+                //будет выполнен переход на предыдущий указаному номеру, после чего в последовательности,
+                //при переходе на следующий поиск, он будет увеличен.
+                this.pointerOnInstanceParent.pointerOnInstanceParent.GoToNumber(this.GoToNumberOfSequence);
                 this.NumberOfTimesGoTo--;
             }
         }
