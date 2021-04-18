@@ -72,10 +72,18 @@ namespace MyLittleMinion
         ///Счетчик, который после достижения определенной велечины позволит изменить цвет фона.
         /// </summary>
         int countTimerTickForChangeBackColor = 0;
+        bool executionIsInProgress = false;
         private void Timer1_Tick(object sender, EventArgs e)
         {
             labelMousePosiotonView.Text = "Mouse position: " + Convert.ToString(Cursor.Position.X) + "; " + Convert.ToString(Cursor.Position.Y) + ";";
 
+        }
+
+        void EnableUI(bool enable)
+        {
+            generalTabControlOfConfiguration.Enabled = enable;
+            panelForButtonSequence.Enabled = enable;
+            timer1.Enabled = enable;
         }
 
         private void TestButton_Click(object sender, EventArgs e)
@@ -160,11 +168,17 @@ namespace MyLittleMinion
 
             exemplarOfSearch.multyThreadSearch = 0;
             if (checkBoxParallelSearch.Checked)
+            {
                 exemplarOfSearch.multyThreadSearch = 0;
+                exemplarOfSearch.isEnableMultyThreads = true;
+            }
             if (checkBoxCountOfThreads.Checked)
+            {
                 exemplarOfSearch.multyThreadSearch = Convert.ToUInt32(numericUpDownCountOfThreads.Value);
+                exemplarOfSearch.isEnableMultyThreads = true;
+            }
 
-            exemplarOfSearch.percentageComplianceWithModel = Convert.ToByte(numericUpDownPercentageComplianceWithModel.Value);
+                exemplarOfSearch.percentageComplianceWithModel = Convert.ToByte(numericUpDownPercentageComplianceWithModel.Value);
             exemplarOfSearch.stopSearchingAfterFirstPointFound = checkBoxFirstFoundModelIsEnd.Checked;
 
             exemplarOfSearch.UsePlaceForSearch = checkBoxForPlaceOfSearch.Checked;
@@ -197,9 +211,12 @@ namespace MyLittleMinion
         }
         private void MyLittleMonion_SizeChanged(object sender, EventArgs e)
         {
-            FillExemplarsOfListOfSearchAndActionDataFromUI();
-            FillUINewDataFromListSearchAndAction();
-            ResizeUI();
+            if (!executionIsInProgress)
+            {
+                FillExemplarsOfListOfSearchAndActionDataFromUI();
+                FillUINewDataFromListSearchAndAction();
+                ResizeUI();
+            }
         }
         private void ResizeUI()
         {
@@ -587,19 +604,22 @@ namespace MyLittleMinion
         /// </summary>
         void SetImageModelConfig()
         {
-            if (checkBoxShowNotCorrectModel.Checked)
+            if (!executionIsInProgress)
             {
-                pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
-                pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
+                if (checkBoxShowNotCorrectModel.Checked)
+                {
+                    pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.pictureModelForSearch;
+                    pictureBoxForModelForSearch.Size = exemplarOfSearch.pictureModelForSearch.Size;
+                }
+                else
+                {
+                    pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.correctModel;
+                    pictureBoxForModelForSearch.Size = exemplarOfSearch.correctModel.Size;
+                }
+                imageForUpdateModelPicture = (Bitmap)pictureBoxForModelForSearch.Image;
+                imageForUpdateModelPicture = DrawAimOnModel((Bitmap)imageForUpdateModelPicture.Clone());
+                pictureBoxForModelForSearch.Image = (Image)imageForUpdateModelPicture;
             }
-            else
-            {
-                pictureBoxForModelForSearch.Image = (Image)exemplarOfSearch.correctModel;
-                pictureBoxForModelForSearch.Size = exemplarOfSearch.correctModel.Size;
-            }
-            imageForUpdateModelPicture = (Bitmap)pictureBoxForModelForSearch.Image;
-            imageForUpdateModelPicture = DrawAimOnModel((Bitmap)imageForUpdateModelPicture.Clone());
-            pictureBoxForModelForSearch.Image = (Image)imageForUpdateModelPicture;
         }
         private void CheckBoxParallelSearch_CheckedChanged(object sender, EventArgs e)
         {
@@ -712,6 +732,7 @@ namespace MyLittleMinion
             exemplarOfListActionsOfMinion.AddAction();
             exemplarOfListActionsOfMinion.numberActionInList = (ushort)(exemplarOfListActionsOfMinion.count - 1);
             listBoxForListOfActions.SelectedIndex = listBoxForListOfActions.Items.Count - 1;
+            labelListOfActions.Text = "Список действий. Выбрано действие " + (listBoxForListOfActions.Items.Count).ToString();
             FillUINewDataFromListSearchAndAction();
         }
         private void ButtonDeleteAction_Click_1(object sender, EventArgs e)
@@ -722,19 +743,8 @@ namespace MyLittleMinion
         private void ListBoxForListOfActions_SelectedIndexChanged(object sender, EventArgs e)
         {
             exemplarOfListActionsOfMinion.numberActionInList = (ushort)listBoxForListOfActions.SelectedIndex;
+            labelListOfActions.Text = "Список действий. Выбрано действие " + (listBoxForListOfActions.SelectedIndex+1).ToString();
             FillUINewDataFromListSearchAndAction();
-        }
-        private void ListBoxForListOfActions_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            e.DrawBackground();
-            string text = ((ListBox)sender).Items[exemplarOfListActionsOfMinion.numberActionInList].ToString();
-            Color color = Color.White;
-           // if (text == "Действие №1")
-                color = Color.Green;
-            e.Graphics.FillRectangle(new SolidBrush(color), e.Bounds);
-            e.Graphics.DrawString(text,
-                    e.Font, Brushes.Black, e.Bounds, StringFormat.GenericDefault);
-            e.DrawFocusRectangle();
         }
         private void CheckBoxListActionForLuckSearch_CheckedChanged(object sender, EventArgs e)
         {
@@ -837,7 +847,7 @@ namespace MyLittleMinion
         {
             FillExemplarsOfListOfSearchAndActionDataFromUI();
             //Если есть куда вперед
-            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence < exemplarsOfLAM[numberLOEOLAM].GetSizeOfListOfSearchAndActionsOfMinion() - 1)
+            if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence < exemplarsOfLAM[numberLOEOLAM].count - 1)
             {
                 exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence++;
                 exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
@@ -848,58 +858,53 @@ namespace MyLittleMinion
             FillUINewDataFromListSearchAndAction();
         }
 
-        private void ButtonFindAndPerformThisAction_Click(object sender, EventArgs e)
+        private async void ButtonFindAndPerformThisAction_Click(object sender, EventArgs e)
         {
+            executionIsInProgress = true;
             //Смещение мыша, чтобы не жал на кнопку в случае, если ничего не найдет и действие будет "нажать на ЛКМ"
             Cursor.Position = new Point(this.Location.X+10, this.Location.Y+5);
-            FindAndPerformThisAction();
+
+            labelForStatus.Text = "Идет поиск...";
+            EnableUI(false);
+            await FindAndPerformThisActionAsync();
+            EnableUI(true);
+            labelForStatus.Text = "Поиск завершен за " + Convert.ToString(exemplarOfSearch.searchTime);
+            executionIsInProgress = false;
         }
-        private void FindAndPerformThisActionButton_Click(object sender, EventArgs e)
+
+        private void FindAndPerformAllActionsButton_Click(object sender, EventArgs e)
         {
             //Смещение мыша, чтобы не жал на кнопку в случае, если ничего не найдет и действие будет "нажать на ЛКМ"
             Cursor.Position = new Point(this.Location.X + 10, this.Location.Y + 5);
 
             this.Enabled = false;
-            int countTimesInWhile = 0;
-
-            //Запомнить последние внесенные изменения, перемотать на начало, обновить все и начать все по порядку.
             FillExemplarsOfListOfSearchAndActionDataFromUI();
-            SequenceOfSearchesAndActions originalListOfActionsOfMinion = AdditionalFunctions.CloneOfObject(exemplarsOfLAM[numberLOEOLAM]);
-            exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence = 0;
-            exemplarOfSearch = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarSearch();
-            exemplarOfListActionsOfMinion = exemplarsOfLAM[numberLOEOLAM].GetThisExemplarListActionsOfMinion();
-            FillUINewDataFromListSearchAndAction();
 
-            //Условия выхода проверяются внутри цикла
-            while (true)
-            {
+            exemplarsOfLAM[numberLOEOLAM].PerformAllSearchesAndAllActions();
 
-                FindAndPerformThisAction();
-                //formForLogs.WriteTextInLogs(exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence.ToString());
-                int checkNumber = exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence;
-                exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence++;
-                FillUINewDataFromListSearchAndAction();
-                //Если номер в последовательности не изменяется после увеличения, то он достиг максимума и надо выйти.
-                if (exemplarsOfLAM[numberLOEOLAM].numberSearchAndActionInSequence == checkNumber)
-                    break;
-                //Каждый пятый раз запускать очистку памяти, чтобы не кушать много.
-                countTimesInWhile++;
-                if (countTimesInWhile % 5 == 0)
-                    GC.Collect();
-            }
-            exemplarsOfLAM[numberLOEOLAM] = originalListOfActionsOfMinion;
             FillUINewDataFromListSearchAndAction();
             this.Enabled = true;
+        }
+        /// <summary>
+        /// Выполняет асинхронный поиск, действие и ждёт согласно всем настройкам.
+        /// </summary>
+        async Task<bool> FindAndPerformThisActionAsync()
+        {
+            Task<bool> taskForInstance = Task.Run(() =>
+            {
+                return exemplarsOfLAM[0].PerformSearchAndThisAction();
+            });
+            await taskForInstance;
+            return taskForInstance.Result;
         }
         /// <summary>
         /// Выполняет поиск, действие и ждёт согласно всем настройкам.
         /// </summary>
         void FindAndPerformThisAction()
         {
-            exemplarsOfLAM[0].SearchAndPerformThisAction();
-
-            labelForStatus.Text = "Поиск завершен за " + Convert.ToString(exemplarOfSearch.searchTime);
+            exemplarsOfLAM[0].PerformSearchAndThisAction();
         }
+
 
 
         /// <summary>

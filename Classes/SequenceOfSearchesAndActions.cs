@@ -66,6 +66,10 @@ namespace MyLittleMinion
                     this.numberSearchAndActionInSequencePrivate = value;
             }
         }
+        /// <summary>
+        /// Возвращает длину последовательности.
+        /// </summary>
+        public int count { get { return listOfSearching.Count; } }
 
         #endregion
 
@@ -89,15 +93,8 @@ namespace MyLittleMinion
             if (listOfSearching.Count < 1)
                 this.nameOfSequenceOfSearchesAndActions = "Default list search and action";
             this.listOfSearching.Add(SearchingForAdding);
-            this.numberSearchAndActionInSequence = GetSizeOfListOfSearchAndActionsOfMinion() - 1;
+            this.numberSearchAndActionInSequence = count - 1;
             this.listsOfActionsAfterSearching.Add(ActionsAfterSearchinForAdding);
-        }
-        /// <summary>
-        /// Возвращает длину списка.
-        /// </summary>
-        public int GetSizeOfListOfSearchAndActionsOfMinion()
-        {
-            return this.listOfSearching.Count;
         }
         /// <summary>
         /// Возвращает экземпляр поиска соотвествующий установленому номеру списка.
@@ -142,12 +139,31 @@ namespace MyLittleMinion
         /// <summary>
         /// Выполняет поиск, список действий согласно всем настройкам, для указанного номером последовательности элемента.
         /// </summary>
-        public bool SearchAndPerformThisAction()
+        public bool PerformSearchAndThisAction()
         {
-            //Упростить имена:
-            Search thisSearch = this.listOfSearching[numberSearchAndActionInSequence];
-            ListActionOfMinion thisActions = this.listsOfActionsAfterSearching[numberSearchAndActionInSequence];
+            //Запомнить такими, какими они были молодыми.
+            Search thisSearchClone = AdditionalFunctions.CloneOfObject(this.GetThisExemplarSearch());
+            ListActionOfMinion thisActionsClone = AdditionalFunctions.CloneOfObject(this.GetThisExemplarListActionsOfMinion());
+            int thisNumber = this.numberSearchAndActionInSequencePrivate;
 
+            bool result = PerformSearchAndThisActionNotRememberOriginalConfig();
+
+            this.listOfSearching[thisNumber] = thisSearchClone;
+            this.listsOfActionsAfterSearching[thisNumber] = thisActionsClone;
+
+            return result;
+        }
+        /// <summary>
+        /// Выполняет поиск, список действий согласно всем настройкам, для указанного номером последовательности элемента.
+        /// Не запоминает настройки, которые могут измениться в результате выполнения.
+        /// </summary>
+        private bool PerformSearchAndThisActionNotRememberOriginalConfig()
+        {
+
+            //Упростить имя для поиска:
+            Search thisSearch = this.listOfSearching[numberSearchAndActionInSequence];
+            //Упростить имя для действия:
+            ListActionOfMinion thisActions = this.listsOfActionsAfterSearching[numberSearchAndActionInSequence];
 
             bool result = false;
             //выполнить поиск
@@ -160,24 +176,85 @@ namespace MyLittleMinion
                 thisSearch.foundPoints = new System.Drawing.Point[1];
                 thisSearch.foundPoints[0] = Cursor.Position;
             }
+
             //Выполнение действий
             for (int i = 0; i < thisActions.count; i++)
             {
-                //Выполнить действие для всех найденых точек, кроме последней без ожидания.
-                for (int numPoint = 0; numPoint < thisSearch.foundPoints.Length-1; numPoint++)
+                //Если поиск выполнялся до первой найденой, то только она и должна быть дана для выполнения действий
+                if (thisSearch.stopSearchingAfterFirstPointFound)
                 {
-                    thisActions.GetAction().cursorPosition = thisSearch.foundPoints[numPoint];
-                    thisActions.GetAction().RealizeAction();
+                    //Даэе если точек больше 1, то все равно первой считается первая в массиве
+                    thisActions.GetAction().cursorPosition = thisSearch.foundPoints[0];
+                    thisActions.GetAction().RealizeActionWithWaiting();
                 }
-                //А для последней точки сделать действие с ожиданием
-                thisActions.GetAction().cursorPosition = thisSearch.foundPoints[thisSearch.foundPoints.Length - 1];
-                thisActions.GetAction().RealizeActionWithWaiting();
+                else//если поиск не до первой, то прройтись по всем точкам и применить действие
+                {
+                    //Выполнить действие для всех найденых точек, кроме последней без ожидания.
+                    for (int numPoint = 0; numPoint < thisSearch.foundPoints.Length - 1; numPoint++)
+                    {
+                        thisActions.GetAction().cursorPosition = thisSearch.foundPoints[numPoint];
+                        thisActions.GetAction().RealizeAction();
+                    }
+                    //А для последней точки сделать действие с ожиданием
+                    thisActions.GetAction().cursorPosition = thisSearch.foundPoints[thisSearch.foundPoints.Length - 1];
+                    thisActions.GetAction().RealizeActionWithWaiting();
+                }
 
                 thisActions.numberActionInList++;
             }
 
             return result;
         }
+
+        /// <summary>
+        /// Выполнение всех действий. !!! Не работают переходы!!!
+        /// </summary>
+        public void PerformAllSearchesAndAllActions()
+        {
+            //Счетчик для очистки памяти
+            int countTimesInWhile = 0;
+
+            //Запомнить последние внесенные изменения, перемотать на начало, обновить все и начать все по порядку.
+            SequenceOfSearchesAndActions originalSequence = AdditionalFunctions.CloneOfObject(this);
+            //Установить номер на начало
+            this.numberSearchAndActionInSequence = 0;
+
+            //Условия выхода проверяются внутри цикла
+            while (true)
+            {
+
+                PerformSearchAndThisActionNotRememberOriginalConfig();
+
+                //Условия выхода:
+                if (this.numberSearchAndActionInSequence == this.count - 1)
+                {
+                    //Если это последнее действие и его счетчик перемещений равен нулю, т.е. никуда уже не надо перемещаться.
+                    ListActionOfMinion thisActions = this.listsOfActionsAfterSearching[numberSearchAndActionInSequence];
+                    List<ActionOfMinion> listActions = thisActions.GetListActions();
+                    bool needBreak = true;
+                    foreach (ActionOfMinion action in listActions)
+                        if (action.typeOfAction==2 && action.numberOfAction==1 && action.NumberOfTimesGoTo != 0)
+                        {
+                            needBreak = false;
+                        }
+                    if (needBreak)
+                        break;
+                }
+
+
+                //Следующий элемент последовательности
+                this.numberSearchAndActionInSequence++;
+
+                //Каждый пятый раз запускать очистку памяти, чтобы не кушать много.
+                countTimesInWhile++;
+                if (countTimesInWhile % 5 == 0)
+                    GC.Collect();
+            }
+
+            this.listOfSearching = originalSequence.listOfSearching;
+            this.listsOfActionsAfterSearching = originalSequence.listsOfActionsAfterSearching;
+        }
+
         /// <summary>
         /// Устанавливает номер на один меньше, чем указаный, чтобы к нему можно было переместиться после выполнения действия.
         /// </summary>

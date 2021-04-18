@@ -1086,7 +1086,12 @@ namespace MyLittleMinion
         /// <summary>
         /// Предоставляет информацию о том, идет ли выполнение многопоточного поиска
         /// </summary>
-        public bool isEnableMultyThreads { get { return this.isEnableMultyThreadsPrivate; } }
+        public bool isEnableMultyThreads
+        {
+            
+            get { return this.isEnableMultyThreadsPrivate; }
+            set { isEnableMultyThreadsPrivate = value; }
+        }
         
         /// <summary>
         /// Сигнатура делегата для суммирования и погружения методов в потоки
@@ -1236,7 +1241,6 @@ namespace MyLittleMinion
             }
             
             //Здесь параллельный расчет считается законченым
-            this.isEnableMultyThreadsPrivate = false;
             this.pictureSearchArea = null;
 
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
@@ -1354,8 +1358,6 @@ namespace MyLittleMinion
             }
 
             //Здесь параллельный расчет считается законченым
-            this.isEnableMultyThreadsPrivate = false;
-
             //Если точки так и не нашлись, надо вернуть ложь, иначе точки есть и возращается истина
             if (listFoundPointsInFourThread == null)
             {

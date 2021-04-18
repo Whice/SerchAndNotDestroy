@@ -100,17 +100,18 @@
             this.tabPageMainConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageAdditionalConfiguration = new System.Windows.Forms.TabPage();
             this.tabPageConfigurationOfAction = new System.Windows.Forms.TabPage();
+            this.checkBoxListActionForLuckSearch = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.numericUpDownnNumberOfTimesGoTo = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownGoToNumberOfSequence = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelListOfActions = new System.Windows.Forms.Label();
             this.buttonDeleteAction = new System.Windows.Forms.Button();
             this.buttonAddAction = new System.Windows.Forms.Button();
             this.listBoxForListOfActions = new System.Windows.Forms.ListBox();
             this.richTextBoxForExemplarOfAction = new System.Windows.Forms.RichTextBox();
             this.comboBoxTypeOfAction = new System.Windows.Forms.ComboBox();
-            this.checkBoxListActionForLuckSearch = new System.Windows.Forms.CheckBox();
+            this.panelForButtonSequence = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForModelForSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIgnorColor)).BeginInit();
             this.panelForColorsForIgnor.SuspendLayout();
@@ -132,6 +133,7 @@
             this.tabPageConfigurationOfAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownnNumberOfTimesGoTo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGoToNumberOfSequence)).BeginInit();
+            this.panelForButtonSequence.SuspendLayout();
             this.SuspendLayout();
             // 
             // FindButton
@@ -187,18 +189,18 @@
             // 
             // buttonFindAndPerformAllSequenceElement
             // 
-            this.buttonFindAndPerformAllSequenceElement.Location = new System.Drawing.Point(5, 36);
+            this.buttonFindAndPerformAllSequenceElement.Location = new System.Drawing.Point(3, 2);
             this.buttonFindAndPerformAllSequenceElement.Margin = new System.Windows.Forms.Padding(2);
             this.buttonFindAndPerformAllSequenceElement.Name = "buttonFindAndPerformAllSequenceElement";
             this.buttonFindAndPerformAllSequenceElement.Size = new System.Drawing.Size(188, 47);
             this.buttonFindAndPerformAllSequenceElement.TabIndex = 5;
             this.buttonFindAndPerformAllSequenceElement.Text = "Найти и выполнить все действия";
             this.buttonFindAndPerformAllSequenceElement.UseVisualStyleBackColor = true;
-            this.buttonFindAndPerformAllSequenceElement.Click += new System.EventHandler(this.FindAndPerformThisActionButton_Click);
+            this.buttonFindAndPerformAllSequenceElement.Click += new System.EventHandler(this.FindAndPerformAllActionsButton_Click);
             // 
             // TestButton
             // 
-            this.TestButton.Location = new System.Drawing.Point(5, 392);
+            this.TestButton.Location = new System.Drawing.Point(3, 358);
             this.TestButton.Margin = new System.Windows.Forms.Padding(2);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(75, 58);
@@ -635,7 +637,7 @@
             // 
             // buttonFindAndPerformThisSequenceElement
             // 
-            this.buttonFindAndPerformThisSequenceElement.Location = new System.Drawing.Point(5, 92);
+            this.buttonFindAndPerformThisSequenceElement.Location = new System.Drawing.Point(3, 58);
             this.buttonFindAndPerformThisSequenceElement.Margin = new System.Windows.Forms.Padding(2);
             this.buttonFindAndPerformThisSequenceElement.Name = "buttonFindAndPerformThisSequenceElement";
             this.buttonFindAndPerformThisSequenceElement.Size = new System.Drawing.Size(188, 47);
@@ -646,7 +648,7 @@
             // 
             // buttonPrevSequenceElement
             // 
-            this.buttonPrevSequenceElement.Location = new System.Drawing.Point(5, 170);
+            this.buttonPrevSequenceElement.Location = new System.Drawing.Point(3, 136);
             this.buttonPrevSequenceElement.Margin = new System.Windows.Forms.Padding(2);
             this.buttonPrevSequenceElement.Name = "buttonPrevSequenceElement";
             this.buttonPrevSequenceElement.Size = new System.Drawing.Size(89, 40);
@@ -657,7 +659,7 @@
             // 
             // buttonNextSequenceElement
             // 
-            this.buttonNextSequenceElement.Location = new System.Drawing.Point(98, 170);
+            this.buttonNextSequenceElement.Location = new System.Drawing.Point(96, 136);
             this.buttonNextSequenceElement.Margin = new System.Windows.Forms.Padding(2);
             this.buttonNextSequenceElement.Name = "buttonNextSequenceElement";
             this.buttonNextSequenceElement.Size = new System.Drawing.Size(89, 40);
@@ -668,7 +670,7 @@
             // 
             // buttonAddSequenceElement
             // 
-            this.buttonAddSequenceElement.Location = new System.Drawing.Point(5, 232);
+            this.buttonAddSequenceElement.Location = new System.Drawing.Point(3, 198);
             this.buttonAddSequenceElement.Name = "buttonAddSequenceElement";
             this.buttonAddSequenceElement.Size = new System.Drawing.Size(89, 41);
             this.buttonAddSequenceElement.TabIndex = 30;
@@ -680,7 +682,7 @@
             // 
             this.labelNumberOfSearchAndAction.AutoSize = true;
             this.labelNumberOfSearchAndAction.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelNumberOfSearchAndAction.Location = new System.Drawing.Point(12, 148);
+            this.labelNumberOfSearchAndAction.Location = new System.Drawing.Point(10, 114);
             this.labelNumberOfSearchAndAction.Name = "labelNumberOfSearchAndAction";
             this.labelNumberOfSearchAndAction.Size = new System.Drawing.Size(170, 20);
             this.labelNumberOfSearchAndAction.TabIndex = 31;
@@ -803,7 +805,7 @@
             // labelNameOfLisActions
             // 
             this.labelNameOfLisActions.AutoSize = true;
-            this.labelNameOfLisActions.Location = new System.Drawing.Point(5, 351);
+            this.labelNameOfLisActions.Location = new System.Drawing.Point(3, 317);
             this.labelNameOfLisActions.Name = "labelNameOfLisActions";
             this.labelNameOfLisActions.Size = new System.Drawing.Size(166, 13);
             this.labelNameOfLisActions.TabIndex = 25;
@@ -811,7 +813,7 @@
             // 
             // textBoxNameOfLisActions
             // 
-            this.textBoxNameOfLisActions.Location = new System.Drawing.Point(9, 367);
+            this.textBoxNameOfLisActions.Location = new System.Drawing.Point(7, 333);
             this.textBoxNameOfLisActions.Name = "textBoxNameOfLisActions";
             this.textBoxNameOfLisActions.Size = new System.Drawing.Size(162, 20);
             this.textBoxNameOfLisActions.TabIndex = 24;
@@ -820,7 +822,7 @@
             // 
             // buttonCloneThisSequenceElement
             // 
-            this.buttonCloneThisSequenceElement.Location = new System.Drawing.Point(100, 231);
+            this.buttonCloneThisSequenceElement.Location = new System.Drawing.Point(98, 197);
             this.buttonCloneThisSequenceElement.Name = "buttonCloneThisSequenceElement";
             this.buttonCloneThisSequenceElement.Size = new System.Drawing.Size(89, 41);
             this.buttonCloneThisSequenceElement.TabIndex = 35;
@@ -830,7 +832,7 @@
             // 
             // buttonDeleteSequenceElement
             // 
-            this.buttonDeleteSequenceElement.Location = new System.Drawing.Point(5, 279);
+            this.buttonDeleteSequenceElement.Location = new System.Drawing.Point(3, 245);
             this.buttonDeleteSequenceElement.Name = "buttonDeleteSequenceElement";
             this.buttonDeleteSequenceElement.Size = new System.Drawing.Size(89, 41);
             this.buttonDeleteSequenceElement.TabIndex = 36;
@@ -842,7 +844,7 @@
             // 
             this.generalTabControlOfConfiguration.Controls.Add(this.tabPageConfigurationOfSearch);
             this.generalTabControlOfConfiguration.Controls.Add(this.tabPageConfigurationOfAction);
-            this.generalTabControlOfConfiguration.Location = new System.Drawing.Point(198, 36);
+            this.generalTabControlOfConfiguration.Location = new System.Drawing.Point(208, 27);
             this.generalTabControlOfConfiguration.Name = "generalTabControlOfConfiguration";
             this.generalTabControlOfConfiguration.SelectedIndex = 0;
             this.generalTabControlOfConfiguration.Size = new System.Drawing.Size(1012, 625);
@@ -918,7 +920,7 @@
             this.tabPageConfigurationOfAction.Controls.Add(this.label5);
             this.tabPageConfigurationOfAction.Controls.Add(this.numericUpDownnNumberOfTimesGoTo);
             this.tabPageConfigurationOfAction.Controls.Add(this.numericUpDownGoToNumberOfSequence);
-            this.tabPageConfigurationOfAction.Controls.Add(this.label4);
+            this.tabPageConfigurationOfAction.Controls.Add(this.labelListOfActions);
             this.tabPageConfigurationOfAction.Controls.Add(this.buttonDeleteAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.buttonAddAction);
             this.tabPageConfigurationOfAction.Controls.Add(this.listBoxForListOfActions);
@@ -933,6 +935,19 @@
             this.tabPageConfigurationOfAction.Size = new System.Drawing.Size(1004, 599);
             this.tabPageConfigurationOfAction.TabIndex = 1;
             this.tabPageConfigurationOfAction.Text = "Настройки действий";
+            // 
+            // checkBoxListActionForLuckSearch
+            // 
+            this.checkBoxListActionForLuckSearch.AutoSize = true;
+            this.checkBoxListActionForLuckSearch.Checked = true;
+            this.checkBoxListActionForLuckSearch.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxListActionForLuckSearch.Location = new System.Drawing.Point(223, 11);
+            this.checkBoxListActionForLuckSearch.Name = "checkBoxListActionForLuckSearch";
+            this.checkBoxListActionForLuckSearch.Size = new System.Drawing.Size(221, 17);
+            this.checkBoxListActionForLuckSearch.TabIndex = 44;
+            this.checkBoxListActionForLuckSearch.Text = "Список действий для удачного поиска";
+            this.checkBoxListActionForLuckSearch.UseVisualStyleBackColor = true;
+            this.checkBoxListActionForLuckSearch.CheckedChanged += new System.EventHandler(this.CheckBoxListActionForLuckSearch_CheckedChanged);
             // 
             // label6
             // 
@@ -954,7 +969,12 @@
             // 
             // numericUpDownnNumberOfTimesGoTo
             // 
-            this.numericUpDownnNumberOfTimesGoTo.Location = new System.Drawing.Point(219, 151);
+            this.numericUpDownnNumberOfTimesGoTo.Location = new System.Drawing.Point(223, 151);
+            this.numericUpDownnNumberOfTimesGoTo.Maximum = new decimal(new int[] {
+            -469762049,
+            -590869294,
+            5421010,
+            0});
             this.numericUpDownnNumberOfTimesGoTo.Name = "numericUpDownnNumberOfTimesGoTo";
             this.numericUpDownnNumberOfTimesGoTo.Size = new System.Drawing.Size(81, 20);
             this.numericUpDownnNumberOfTimesGoTo.TabIndex = 41;
@@ -966,7 +986,12 @@
             // 
             // numericUpDownGoToNumberOfSequence
             // 
-            this.numericUpDownGoToNumberOfSequence.Location = new System.Drawing.Point(219, 107);
+            this.numericUpDownGoToNumberOfSequence.Location = new System.Drawing.Point(223, 112);
+            this.numericUpDownGoToNumberOfSequence.Maximum = new decimal(new int[] {
+            -402653185,
+            -1613725636,
+            54210108,
+            0});
             this.numericUpDownGoToNumberOfSequence.Name = "numericUpDownGoToNumberOfSequence";
             this.numericUpDownGoToNumberOfSequence.Size = new System.Drawing.Size(81, 20);
             this.numericUpDownGoToNumberOfSequence.TabIndex = 40;
@@ -976,14 +1001,14 @@
             0,
             0});
             // 
-            // label4
+            // labelListOfActions
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 6);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 13);
-            this.label4.TabIndex = 39;
-            this.label4.Text = "Список действий";
+            this.labelListOfActions.AutoSize = true;
+            this.labelListOfActions.Location = new System.Drawing.Point(6, 6);
+            this.labelListOfActions.Name = "labelListOfActions";
+            this.labelListOfActions.Size = new System.Drawing.Size(204, 13);
+            this.labelListOfActions.TabIndex = 39;
+            this.labelListOfActions.Text = "Список действий. Выбрано действие 0";
             // 
             // buttonDeleteAction
             // 
@@ -1013,7 +1038,6 @@
             this.listBoxForListOfActions.Name = "listBoxForListOfActions";
             this.listBoxForListOfActions.Size = new System.Drawing.Size(210, 95);
             this.listBoxForListOfActions.TabIndex = 35;
-            this.listBoxForListOfActions.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ListBoxForListOfActions_DrawItem);
             this.listBoxForListOfActions.SelectedIndexChanged += new System.EventHandler(this.ListBoxForListOfActions_SelectedIndexChanged);
             // 
             // richTextBoxForExemplarOfAction
@@ -1036,18 +1060,23 @@
             this.comboBoxTypeOfAction.TabIndex = 33;
             this.comboBoxTypeOfAction.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTypeOfAction_SelectedIndexChanged);
             // 
-            // checkBoxListActionForLuckSearch
+            // panelForButtonSequence
             // 
-            this.checkBoxListActionForLuckSearch.AutoSize = true;
-            this.checkBoxListActionForLuckSearch.Checked = true;
-            this.checkBoxListActionForLuckSearch.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxListActionForLuckSearch.Location = new System.Drawing.Point(223, 11);
-            this.checkBoxListActionForLuckSearch.Name = "checkBoxListActionForLuckSearch";
-            this.checkBoxListActionForLuckSearch.Size = new System.Drawing.Size(221, 17);
-            this.checkBoxListActionForLuckSearch.TabIndex = 44;
-            this.checkBoxListActionForLuckSearch.Text = "Список действий для удачного поиска";
-            this.checkBoxListActionForLuckSearch.UseVisualStyleBackColor = true;
-            this.checkBoxListActionForLuckSearch.CheckedChanged += new System.EventHandler(this.CheckBoxListActionForLuckSearch_CheckedChanged);
+            this.panelForButtonSequence.Controls.Add(this.buttonFindAndPerformAllSequenceElement);
+            this.panelForButtonSequence.Controls.Add(this.TestButton);
+            this.panelForButtonSequence.Controls.Add(this.buttonDeleteSequenceElement);
+            this.panelForButtonSequence.Controls.Add(this.buttonFindAndPerformThisSequenceElement);
+            this.panelForButtonSequence.Controls.Add(this.buttonCloneThisSequenceElement);
+            this.panelForButtonSequence.Controls.Add(this.buttonNextSequenceElement);
+            this.panelForButtonSequence.Controls.Add(this.labelNameOfLisActions);
+            this.panelForButtonSequence.Controls.Add(this.buttonPrevSequenceElement);
+            this.panelForButtonSequence.Controls.Add(this.textBoxNameOfLisActions);
+            this.panelForButtonSequence.Controls.Add(this.buttonAddSequenceElement);
+            this.panelForButtonSequence.Controls.Add(this.labelNumberOfSearchAndAction);
+            this.panelForButtonSequence.Location = new System.Drawing.Point(6, 27);
+            this.panelForButtonSequence.Name = "panelForButtonSequence";
+            this.panelForButtonSequence.Size = new System.Drawing.Size(196, 421);
+            this.panelForButtonSequence.TabIndex = 30;
             // 
             // MyLittleMonion
             // 
@@ -1055,19 +1084,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(1210, 662);
+            this.Controls.Add(this.panelForButtonSequence);
             this.Controls.Add(this.generalTabControlOfConfiguration);
-            this.Controls.Add(this.buttonDeleteSequenceElement);
-            this.Controls.Add(this.buttonCloneThisSequenceElement);
-            this.Controls.Add(this.labelNameOfLisActions);
-            this.Controls.Add(this.textBoxNameOfLisActions);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.labelNumberOfSearchAndAction);
-            this.Controls.Add(this.buttonAddSequenceElement);
-            this.Controls.Add(this.buttonPrevSequenceElement);
-            this.Controls.Add(this.buttonNextSequenceElement);
-            this.Controls.Add(this.buttonFindAndPerformThisSequenceElement);
-            this.Controls.Add(this.TestButton);
-            this.Controls.Add(this.buttonFindAndPerformAllSequenceElement);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -1105,6 +1124,8 @@
             this.tabPageConfigurationOfAction.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownnNumberOfTimesGoTo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGoToNumberOfSequence)).EndInit();
+            this.panelForButtonSequence.ResumeLayout(false);
+            this.panelForButtonSequence.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1186,13 +1207,14 @@
         private System.Windows.Forms.ListBox listBoxForListOfActions;
         private System.Windows.Forms.Button buttonDeleteAction;
         private System.Windows.Forms.Button buttonAddAction;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelListOfActions;
         private System.Windows.Forms.NumericUpDown numericUpDownnNumberOfTimesGoTo;
         private System.Windows.Forms.NumericUpDown numericUpDownGoToNumberOfSequence;
         private System.Windows.Forms.ToolStripMenuItem логиToolStripMenuItem;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBoxListActionForLuckSearch;
+        private System.Windows.Forms.Panel panelForButtonSequence;
     }
 }
 

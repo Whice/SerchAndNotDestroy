@@ -135,6 +135,7 @@ namespace MyLittleMinion
             listNameOfMauseAction[2].Add("Ничего не делать");
             listNameOfMauseAction[2].Add("Отправиться к действию по номеру заданое количество раз");
             listNameOfMauseAction[2].Add("Вывести сообщение, что не удалось.(для тестов)");
+            listNameOfMauseAction[2].Add("Повторить поиск");//дописать логику простое готу на свой номер
 
 
         }
@@ -152,6 +153,8 @@ namespace MyLittleMinion
             cloneOfActionOfMinion.numberOfAction = this.numberOfAction;
             cloneOfActionOfMinion.timeOfWaitingAfterActionInSecond = this.timeOfWaitingAfterActionInSecond;
             cloneOfActionOfMinion.textForAction = this.textForAction;
+            cloneOfActionOfMinion.GoToNumberOfSequence = this.GoToNumberOfSequence;
+            cloneOfActionOfMinion.NumberOfTimesGoTo = this.NumberOfTimesGoTo;
 
             return cloneOfActionOfMinion;
         }
@@ -331,7 +334,14 @@ namespace MyLittleMinion
         #endregion
 
         #region//Методы реализующие дополнительные дейcтвия
+
+        /// <summary>
+        /// Хранит колчиство раз для выполнения перемщений согласно GoToNumberOfSequence.
+        /// </summary>
         public int NumberOfTimesGoTo { get; set; }
+        /// <summary>
+        /// Хранит номер в последовательности, к которому надо переместиться.
+        /// </summary>
         public int GoToNumberOfSequence { get; set; }
         /// <summary>
         /// Указывает на экземпляр объекта, который содержит этот экземпляр объекта.

@@ -31,7 +31,7 @@ namespace MyLittleMinion
                 this.isFoundPrivate = value;
                 this.numberActionInListPrivate = 0;
                 //после получения значения, общему списку назначается нужный из конекретных.
-                if (this.isFoundPrivate)
+                if (value)
                     actionsOfMinion = actionsOfMinionForFound;
                 else
                     actionsOfMinion = actionsOfMinionForNotFound;
