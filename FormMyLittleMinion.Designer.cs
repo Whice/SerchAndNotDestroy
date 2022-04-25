@@ -395,6 +395,7 @@
             0,
             0,
             0});
+            this.numericUpDownCountOfThreads.ValueChanged += new System.EventHandler(this.numericUpDownCountOfThreads_ValueChanged);
             // 
             // checkBoxShowNotCorrectModel
             // 
@@ -462,6 +463,7 @@
             this.checkBoxFirstFoundModelIsEnd.TabIndex = 12;
             this.checkBoxFirstFoundModelIsEnd.Text = "Иcкать до первого найденного";
             this.checkBoxFirstFoundModelIsEnd.UseVisualStyleBackColor = true;
+            this.checkBoxFirstFoundModelIsEnd.CheckedChanged += new System.EventHandler(this.checkBoxFirstFoundModelIsEnd_CheckedChanged);
             // 
             // checkBoxParallelSearch
             // 

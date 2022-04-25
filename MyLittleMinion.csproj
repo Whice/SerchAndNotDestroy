@@ -92,6 +92,7 @@
     <Compile Include="Classes\ActionOfMinion.cs" />
     <Compile Include="Classes\AdditionalFunctions.cs" />
     <Compile Include="Classes\ListActionOfMinion.cs" />
+    <Compile Include="Classes\SettingOfMinion.cs" />
     <Compile Include="Forms\DialogWindowWithTextBox.cs">
       <SubType>Form</SubType>
     </Compile>

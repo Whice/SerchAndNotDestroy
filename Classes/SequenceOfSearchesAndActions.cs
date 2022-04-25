@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using SerchAndNotDestroy.Classes;
 
 namespace MyLittleMinion
 {
@@ -181,7 +182,7 @@ namespace MyLittleMinion
             for (int i = 0; i < thisActions.count; i++)
             {
                 //Если поиск выполнялся до первой найденой, то только она и должна быть дана для выполнения действий
-                if (thisSearch.stopSearchingAfterFirstPointFound)
+                if (thisSearch.isStopSearchingAfterFirstPointFound)
                 {
                     //Даэе если точек больше 1, то все равно первой считается первая в массиве
                     thisActions.GetAction().cursorPosition = thisSearch.foundPoints[0];

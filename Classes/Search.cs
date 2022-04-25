@@ -49,7 +49,7 @@ namespace MyLittleMinion
             this.isEnableMultyThreadsPrivate = false;
 
             this.percentageComplianceWithModelPivate = 100;
-            this.stopSearchingAfterFirstPointFound = true;
+            this.isStopSearchingAfterFirstPointFound = true;
             this.searchTimePrivate = DateTime.MaxValue - DateTime.MinValue;
 
             this.SetPlaceForSearchForFullMonitor();
@@ -750,7 +750,7 @@ namespace MyLittleMinion
         /// <summary>
         /// Определяет выполнятеся ли поиск до первого найденого элемента.
         /// </summary>
-        public bool stopSearchingAfterFirstPointFound { get; set; }
+        public bool isStopSearchingAfterFirstPointFound;
         /// <summary>
         /// Поле процентного соответсвия эталону. Значение должно быть от 1 до 100, где 100 полное соответсвие эталону(100%).
         /// По умолчанию 100.
@@ -941,7 +941,7 @@ namespace MyLittleMinion
                                     listFoundPoints.Add(new Point(
                                         i - pixelOfModelForSearch.X + this.locationOfPlaceForSearchPrivate.X,
                                         j - pixelOfModelForSearch.Y + this.locationOfPlaceForSearchPrivate.Y));
-                                    if (this.stopSearchingAfterFirstPointFound)
+                                    if (this.isStopSearchingAfterFirstPointFound)
                                     {
                                         ListToMassiveOfFoundPoints(listFoundPoints);
                                         return true;
@@ -1569,7 +1569,7 @@ namespace MyLittleMinion
             cloneThisSearch.isCreateScreenWindowPrivate = this.isCreateScreenWindowPrivate;
             cloneThisSearch.pointerOnActiveWindow = this.pointerOnActiveWindow;
             cloneThisSearch.percentageComplianceWithModelPivate = this.percentageComplianceWithModelPivate;
-            cloneThisSearch.stopSearchingAfterFirstPointFound = this.stopSearchingAfterFirstPointFound;
+            cloneThisSearch.isStopSearchingAfterFirstPointFound = this.isStopSearchingAfterFirstPointFound;
 
             return cloneThisSearch;
         }

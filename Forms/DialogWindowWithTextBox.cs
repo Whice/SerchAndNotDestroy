@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using SerchAndNotDestroy.Classes;
 
 namespace MyLittleMinion
 {
@@ -13,8 +14,8 @@ namespace MyLittleMinion
         public DialogWindowForSetting()
         {
             InitializeComponent();
-            settingInDialog = new SettingOfMinion();
-            settingInDialog.GetFullPathOfExeMinion();
+            this.settingInDialog = new SettingOfMinion();
+            this.settingInDialog.GetFullPathOfExeMinion();
             OpenSettingOfMinion();
         }
 
@@ -25,7 +26,7 @@ namespace MyLittleMinion
             this.settingInDialog.GetFullPathOfExeMinion();
             OpenSettingOfMinion();
             setting = this.settingInDialog;
-            textBoxOfPathForSaveFile.Text = settingInDialog.pathForSaveOfList;
+            textBoxOfPathForSaveFile.Text = this.settingInDialog.pathForSaveOfList;
         }
 
         private void ButtonSaveChanges_Click(object sender, EventArgs e)
@@ -34,7 +35,7 @@ namespace MyLittleMinion
         }
         public void SaveChanges()
         {
-            settingInDialog.pathForSaveOfList = textBoxOfPathForSaveFile.Text;
+            this.settingInDialog.pathForSaveOfList = textBoxOfPathForSaveFile.Text;
             SaveSettingOfMinion();
 
             this.Close();
@@ -47,8 +48,8 @@ namespace MyLittleMinion
 
         private void ButtonSetDefaultSettings_Click(object sender, EventArgs e)
         {
-            settingInDialog.SetSettingDefault();
-            textBoxOfPathForSaveFile.Text = settingInDialog.pathForSaveOfList;
+            this.settingInDialog.SetSettingDefault();
+            textBoxOfPathForSaveFile.Text = this.settingInDialog.pathForSaveOfList;
         }
         private void ButtonChangePathForSaveFile_Click(object sender, EventArgs e)
         {
@@ -63,7 +64,7 @@ namespace MyLittleMinion
 
         void SaveSettingOfMinion()
         {
-            string FileName = settingInDialog.fullPathOfExeOfMinion + "SettingOfMinion.saveFile";
+            string FileName = this.settingInDialog.fullPathOfExeOfMinion + "SettingOfMinion.saveFile";
             Stream SaveFileStream = File.Create(FileName);
             BinaryFormatter serializer = new BinaryFormatter();
             serializer.Serialize(SaveFileStream, this.settingInDialog);
@@ -71,7 +72,7 @@ namespace MyLittleMinion
         }
         void OpenSettingOfMinion()
         {
-            string FileName = settingInDialog.fullPathOfExeOfMinion + "SettingOfMinion.saveFile";
+            string FileName = this.settingInDialog.fullPathOfExeOfMinion + "SettingOfMinion.saveFile";
             if (File.Exists(FileName))
             {
                 Stream openFileStream = File.OpenRead(FileName);
@@ -93,7 +94,6 @@ namespace MyLittleMinion
         /// <summary>
         /// Помещает в fullPathOfExeOfMinion экземпляра путь к exe помощника.
         /// </summary>
-
     }
 }
 
